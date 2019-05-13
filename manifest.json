@@ -19,6 +19,7 @@
   "optional_permissions": [
     "management"
   ],
+  "short_name": "下载管理",
   "permissions": [
     "downloads",
     "downloads.open",
