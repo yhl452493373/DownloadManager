@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>下载管理</title>
+        <link rel="stylesheet" href="font/iconfont.css">
+        <link rel="stylesheet" href="css/main.css">
+    </head>
+    <body>
+        <div class="modal">
+            <ul class="contextmenu">
+                <li class="open-file">
+                    <span>打开文件</span>
+                </li>
+                <li class="open-file-folder">
+                    <span>打开文件目录</span>
+                </li>
+                <li class="copy-filename">
+                    <span>复制文件名</span>
+                </li>
+                <li class="copy-download-url">
+                    <span>复制下载地址</span>
+                </li>
+                <li class="re-download">
+                    <span>重新下载</span>
+                </li>
+            </ul>
+        </div>
+        <div class="container">
+            <div class="header">
+                <div class="search">
+                    <i class="iconfont icon-search"></i>
+                    <input class="search-text" type="search" placeholder="搜索">
+                </div>
+                <div class="operation">
+                    <div class="event open-download-folder" title="打开默认下载目录">
+                        <i class="iconfont icon-folder"></i>
+                        <span class="icontext">下载目录</span>
+                    </div>
+                    <div class="event clear-download-item" title="清空所有下载记录">
+                        <i class="iconfont icon-clean"></i>
+                        <span class="icontext">清空</span>
+                    </div>
+                </div>
+            </div>
+            <div class="body" id="body"></div>
+        </div>
+        <script type="module" src="js/main.js"></script>
+    </body>
+</html>
