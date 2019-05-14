@@ -65,7 +65,7 @@ body {
     left: 2px;
     display: inline-block;
     width: 20px;
-    height: 27px;
+    height: 24px;
     line-height: 24px;
     text-align: center;
     z-index: 10;
@@ -79,7 +79,6 @@ body {
     border: 1px solid #ccc;
     border-radius: 0;
     position: relative;
-    bottom: 2px;
     padding-left: 20px;
     padding-right: 5px;
     outline: none;
@@ -111,6 +110,19 @@ body {
     left: 0;
     right: 0;
     overflow: auto;
+}
+
+#empty{
+    font-size: 16px;
+    text-align: center;
+    height: 30px;
+    width: 100px;
+    line-height: 30px;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    margin-left: -50px;
+    margin-top: -35px;
 }
 
 .body .item {

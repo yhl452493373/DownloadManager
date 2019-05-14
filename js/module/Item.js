@@ -54,16 +54,9 @@ class Item {
     };
 
     speed() {
-        if (this.data.estimatedEndTime == null) {
-            let speed = this.data.bytesReceived === 0 ? '0B/s' : Util.formatBytes(this.data.bytesReceived - this.lastBytesReceived) + '/s';
-            this.lastBytesReceived = this.data.bytesReceived;
-            return speed;
-        } else {
-            // 根据时间计算速度
-            if (!this.data.estimatedEndTime) return "0B/s";
-            let time = (new Date(this.data.estimatedEndTime).getTime() - (new Date).getTime()) / 1e3;
-            return time <= 0 ? "0B/s" : Util.formatBytes((this.data.totalBytes - this.data.bytesReceived) / time) + "/s"
-        }
+        let speed = this.data.bytesReceived === 0 ? '0B/s' : Util.formatBytes(this.data.bytesReceived - this.lastBytesReceived) + '/s';
+        this.lastBytesReceived = this.data.bytesReceived;
+        return speed;
     }
 
     /**
@@ -161,6 +154,9 @@ class Item {
     eraseDownloadItem() {
         let div = Util.getElement('#item_' + this.data.id);
         div.remove();
+        if (Util.getElementAll('.item').length === 0) {
+            Util.getElement('#empty').style.display = 'block';
+        }
     }
 
     cancelDownloadItem() {

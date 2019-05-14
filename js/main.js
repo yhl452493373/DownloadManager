@@ -167,6 +167,7 @@ const downloadComplete = function (downloadDelta) {
 const createDownloadItem = function (data) {
     let item = new Item(data).render();
     let body = Util.getElement('#body');
+    Util.getElement('#empty').style.display = 'none';
     Util.getElement('.operation .icon-delete', item).parentNode.title = "取消下载";
     if (body.childNodes.length === 0) {
         body.appendChild(item);
@@ -222,6 +223,8 @@ chrome.runtime.onMessage.addListener(function (request) {
 chrome.downloads.search({
     orderBy: ["-startTime"]
 }, function (results) {
+    if (results.length > 0)
+        Util.getElement('#empty').style.display = 'none';
     results.forEach(function (result) {
         if (Util.emptyString(result.filename))
             return;
