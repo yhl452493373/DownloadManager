@@ -75,17 +75,51 @@ chrome.downloads.onChanged.addListener(function (downloadDelta) {
         });
     }
 
+    if (downloadDelta.state && downloadDelta.state.current === State.interrupted.code) {
+        //下载页面取消下载
+        chrome.runtime.sendMessage({
+            method: 'cancelDownloadItem',
+            data: downloadDelta.id
+        });
+    }
+
     if (downloadDelta.paused) {
+        //下载页面暂停,恢复下载
         if (downloadDelta.paused.current) {
-            //从下载变为暂停
-            chrome.runtime.sendMessage({
-                method: 'pauseDownloadItem',
-                data: downloadDelta.id
-            });
+            if (downloadDelta.canResume.current) {
+                //从下载变为暂停,并且可以恢复
+                chrome.runtime.sendMessage({
+                    method: 'pauseDownloadItem',
+                    data: downloadDelta.id
+                });
+            } else {
+                //从下载变为暂停,并且不可恢复
+                chrome.runtime.sendMessage({
+                    method: 'cancelDownloadItem',
+                    data: downloadDelta.id
+                });
+            }
         } else {
-            //从暂停变为下载
-            pullProgress();
+            //从暂停变为下载,并且之前状态指明可以回复
+            if (downloadDelta.canResume.previous) {
+                pullProgress();
+            } else {
+                //从下暂停变为下载,并且之前状态指明不可恢复
+                chrome.runtime.sendMessage({
+                    method: 'cancelDownloadItem',
+                    data: downloadDelta.id
+                });
+            }
         }
+    }
+
+    if (downloadDelta.exists && !downloadDelta.exists.current) {
+        //文件不存在
+        chrome.downloads.erase({
+            id: downloadDelta.id
+        }, function () {
+
+        });
     }
 });
 
