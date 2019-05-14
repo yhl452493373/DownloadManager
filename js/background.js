@@ -42,7 +42,7 @@ chrome.downloads.onChanged.addListener(function (downloadDelta) {
 
     if (downloadDelta.state && downloadDelta.state.current === State.complete.code) {
         //下载完成更新图标
-        cacheIcon(downloadDelta.id, true,function (cachedIcon) {
+        cacheIcon(downloadDelta.id, true, function (cachedIcon) {
             //发送文件下载完成请求
             chrome.runtime.sendMessage({
                 method: 'downloadComplete',
@@ -73,6 +73,19 @@ chrome.downloads.onChanged.addListener(function (downloadDelta) {
                 }
             });
         });
+    }
+
+    if (downloadDelta.paused) {
+        if (downloadDelta.paused.current) {
+            //从下载变为暂停
+            chrome.runtime.sendMessage({
+                method: 'pauseDownloadItem',
+                data: downloadDelta.id
+            });
+        } else {
+            //从暂停变为下载
+            pullProgress();
+        }
     }
 });
 
@@ -186,7 +199,7 @@ function pullProgress() {
                     data: downLoadingFiles
                 });
             });
-        }, 200);
+        }, 1000);
     }
 }
 

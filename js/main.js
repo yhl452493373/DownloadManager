@@ -212,6 +212,8 @@ chrome.runtime.onMessage.addListener(function (request) {
         updateIcon(request.data);
     } else if (request.method === 'eraseDownloadItem') {
         eraseDownloadItem(request.data);
+    } else if (request.method === 'pauseDownloadItem') {
+        pauseDownloadItem(request.data);
     }
 });
 

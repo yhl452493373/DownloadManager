@@ -111,6 +111,8 @@ class Util {
      * }}
      */
     static dataProcess(data) {
+        if (data.totalBytes <= 0)
+            data.totalBytes = -1;
         if (typeof data.state === 'string')
             data.state = State.valueOf(data.state);
         if (typeof data.danger === 'string')
@@ -151,10 +153,10 @@ class Util {
      */
     static calculate(data) {
         let filename = data.filename;
-        let total = data.totalBytes, finalSize = Util.formatBytes(total);
+        let total = data.totalBytes === -1 ? data.bytesReceived : data.totalBytes, finalSize = Util.formatBytes(total);
         let received = data.bytesReceived, finalReceived = Util.formatBytes(received);
         let progress = (received / total).toFixed(4) * 100 + '%';
-        if (progress === '100%') {
+        if (progress === '100%' && data.totalBytes !== -1) {
             finalReceived = null;
         }
         let id = data['id'];

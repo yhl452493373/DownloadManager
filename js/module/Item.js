@@ -28,6 +28,7 @@ class Item {
      */
     constructor(data) {
         this.data = Util.dataProcess(data);
+        this.lastBytesReceived = this.data.bytesReceived;
     }
 
     /**
@@ -42,7 +43,7 @@ class Item {
         if (this.data.state === State.complete) {
             return render.completed();
         } else if (this.data.state === State.in_progress) {
-            if (processedData.progress === '100%')
+            if (processedData.progress === '100%' && this.data.totalBytes !== -1)
                 return render.pending();
             return render.downloading();
         } else if (this.data.state === State.pause) {
@@ -53,9 +54,16 @@ class Item {
     };
 
     speed() {
-        if (!this.data.estimatedEndTime) return "0B/s";
-        let time = (new Date(this.data.estimatedEndTime).getTime() - (new Date).getTime()) / 1e3;
-        return time <= 0 ? "0B/s" : Util.formatBytes((this.data.totalBytes - this.data.bytesReceived) / time) + "/s"
+        if (this.data.estimatedEndTime == null) {
+            let speed = this.data.bytesReceived === 0 ? '0B/s' : Util.formatBytes(this.data.bytesReceived - this.lastBytesReceived) + '/s';
+            this.lastBytesReceived = this.data.bytesReceived;
+            return speed;
+        } else {
+            // 根据时间计算速度
+            if (!this.data.estimatedEndTime) return "0B/s";
+            let time = (new Date(this.data.estimatedEndTime).getTime() - (new Date).getTime()) / 1e3;
+            return time <= 0 ? "0B/s" : Util.formatBytes((this.data.totalBytes - this.data.bytesReceived) / time) + "/s"
+        }
     }
 
     /**
@@ -99,13 +107,25 @@ class Item {
         processedData.speed = this.speed();
         Util.getElement('.progress .current', div).style.width = processedData.progress;
         if (processedData.progress === '100%') {
-            Util.getElement('.status .state', div).innerText = State.pending.name;
-            Util.getElement('.status .speed', div).classList.add('hide');
-            Util.getElement('.status .received', div).classList.add('hide');
+            // Util.getElement('.status .state', div).innerText = State.pending.name;
+            // Util.getElement('.status .speed', div).classList.add('hide');
+            // Util.getElement('.status .received', div).classList.add('hide');
             Util.getElement('.operation .icon-refresh', div).parentNode.classList.add('hide');
             Util.getElement('.operation .icon-pause', div).parentNode.classList.remove('hide');
             Util.getElement('.operation .icon-resume', div).parentNode.classList.add('hide');
             Util.getElement('.operation .icon-open', div).parentNode.classList.add('hide');
+            if (this.data.totalBytes === -1) {
+                Util.getElement('.status .speed', div).classList.remove('hide');
+                Util.getElement('.status .received', div).classList.remove('hide');
+                Util.getElement('.status .state', div).innerText = State.in_progress.name;
+                Util.getElement('.status .speed', div).innerText = `, ${processedData.speed} -`;
+                Util.getElement('.status .received', div).innerText = processedData.received;
+                Util.getElement('.status .size').innerText = `, 共${processedData.size}`;
+            } else {
+                Util.getElement('.status .state', div).innerText = State.pending.name;
+                Util.getElement('.status .speed', div).classList.add('hide');
+                Util.getElement('.status .received', div).classList.add('hide');
+            }
         } else {
             Util.getElement('.status .speed', div).innerText = `, ${processedData.speed} -`;
             Util.getElement('.status .received', div).innerText = processedData.received;
