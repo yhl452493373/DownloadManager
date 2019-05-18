@@ -44,7 +44,7 @@ class Item {
         if (this.data.state === State.complete) {
             return render.completed();
         } else if (this.data.state === State.in_progress) {
-            if (this.data.danger !== DangerType.safe || this.data.danger !== DangerType.accepted) {
+            if (this.data.danger !== DangerType.safe && this.data.danger !== DangerType.accepted) {
                 return render.danger();
             }
             if (processedData.progress === '100%' && this.data.totalBytes !== -1)
@@ -104,7 +104,7 @@ class Item {
         let processedData = Util.calculate(this.data);
         processedData.speed = this.speed();
         Util.getElement('.progress .current', div).style.width = processedData.progress;
-        if (this.data.danger !== DangerType.safe || this.data.danger !== DangerType.accepted) {
+        if (this.data.danger !== DangerType.safe && this.data.danger !== DangerType.accepted) {
             Util.getElement('.info .danger .danger-type', div).innerText = this.data.danger.name;
             Util.getElement('.info .status', div).classList.add('hide');
             Util.getElement('.info .danger', div).classList.remove('hide');
