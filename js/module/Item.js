@@ -1,5 +1,6 @@
 import {Util} from './Util.js'
 import {State} from './State.js'
+import {DangerType} from "./DangerType.js";
 
 class Item {
     /**
@@ -43,6 +44,9 @@ class Item {
         if (this.data.state === State.complete) {
             return render.completed();
         } else if (this.data.state === State.in_progress) {
+            if (this.data.danger !== DangerType.safe || this.data.danger !== DangerType.accepted) {
+                return render.danger();
+            }
             if (processedData.progress === '100%' && this.data.totalBytes !== -1)
                 return render.pending();
             return render.downloading();
@@ -51,6 +55,7 @@ class Item {
         } else if (this.data.state === State.interrupted) {
             return render.interrupted();
         }
+
     };
 
     speed() {
@@ -99,33 +104,48 @@ class Item {
         let processedData = Util.calculate(this.data);
         processedData.speed = this.speed();
         Util.getElement('.progress .current', div).style.width = processedData.progress;
-        if (processedData.progress === '100%') {
-            // Util.getElement('.status .state', div).innerText = State.pending.name;
-            // Util.getElement('.status .speed', div).classList.add('hide');
-            // Util.getElement('.status .received', div).classList.add('hide');
+        if (this.data.danger !== DangerType.safe || this.data.danger !== DangerType.accepted) {
+            Util.getElement('.info .danger .danger-type', div).innerText = this.data.danger.name;
+            Util.getElement('.info .status', div).classList.add('hide');
+            Util.getElement('.info .danger', div).classList.remove('hide');
             Util.getElement('.operation .icon-refresh', div).parentNode.classList.add('hide');
-            Util.getElement('.operation .icon-pause', div).parentNode.classList.remove('hide');
+            Util.getElement('.operation .icon-pause', div).parentNode.classList.add('hide');
             Util.getElement('.operation .icon-resume', div).parentNode.classList.add('hide');
             Util.getElement('.operation .icon-open', div).parentNode.classList.add('hide');
-            if (this.data.totalBytes === -1) {
-                Util.getElement('.status .speed', div).classList.remove('hide');
-                Util.getElement('.status .received', div).classList.remove('hide');
-                Util.getElement('.status .state', div).innerText = State.in_progress.name;
+            Util.getElement('.operation .icon-delete', div).parentNode.classList.add('hide');
+            Util.getElement('.operation .accept', div).parentNode.classList.remove('hide');
+            Util.getElement('.operation .reject', div).parentNode.classList.remove('hide');
+        } else {
+            Util.getElement('.info .status', div).classList.remove('hide');
+            Util.getElement('.info .danger', div).classList.add('hide');
+            if (processedData.progress === '100%') {
+                Util.getElement('.operation .icon-refresh', div).parentNode.classList.add('hide');
+                Util.getElement('.operation .icon-pause', div).parentNode.classList.remove('hide');
+                Util.getElement('.operation .icon-resume', div).parentNode.classList.add('hide');
+                Util.getElement('.operation .icon-open', div).parentNode.classList.add('hide');
+                if (this.data.totalBytes === -1) {
+                    Util.getElement('.status .speed', div).classList.remove('hide');
+                    Util.getElement('.status .received', div).classList.remove('hide');
+                    Util.getElement('.status .state', div).innerText = State.in_progress.name;
+                    Util.getElement('.status .speed', div).innerText = `, ${processedData.speed} -`;
+                    Util.getElement('.status .received', div).innerText = processedData.received;
+                    Util.getElement('.status .size').innerText = `, 共${processedData.size}`;
+                } else {
+                    Util.getElement('.status .state', div).innerText = State.pending.name;
+                    Util.getElement('.status .speed', div).classList.add('hide');
+                    Util.getElement('.status .received', div).classList.add('hide');
+                }
+            } else {
                 Util.getElement('.status .speed', div).innerText = `, ${processedData.speed} -`;
                 Util.getElement('.status .received', div).innerText = processedData.received;
-                Util.getElement('.status .size').innerText = `, 共${processedData.size}`;
-            } else {
-                Util.getElement('.status .state', div).innerText = State.pending.name;
-                Util.getElement('.status .speed', div).classList.add('hide');
-                Util.getElement('.status .received', div).classList.add('hide');
+                Util.getElement('.operation .icon-refresh', div).parentNode.classList.add('hide');
+                Util.getElement('.operation .icon-pause', div).parentNode.classList.remove('hide');
+                Util.getElement('.operation .icon-resume', div).parentNode.classList.add('hide');
+                Util.getElement('.operation .icon-open', div).parentNode.classList.add('hide');
             }
-        } else {
-            Util.getElement('.status .speed', div).innerText = `, ${processedData.speed} -`;
-            Util.getElement('.status .received', div).innerText = processedData.received;
-            Util.getElement('.operation .icon-refresh', div).parentNode.classList.add('hide');
-            Util.getElement('.operation .icon-pause', div).parentNode.classList.remove('hide');
-            Util.getElement('.operation .icon-resume', div).parentNode.classList.add('hide');
-            Util.getElement('.operation .icon-open', div).parentNode.classList.add('hide');
+            Util.getElement('.operation .icon-delete', div).parentNode.classList.remove('hide');
+            Util.getElement('.operation .accept', div).parentNode.classList.add('hide');
+            Util.getElement('.operation .reject', div).parentNode.classList.add('hide');
         }
     }
 
@@ -139,6 +159,8 @@ class Item {
         this.data = Util.dataProcess(data);
         let div = Util.getElement('#item_' + this.data.id);
         let processedData = Util.calculate(this.data);
+        Util.getElement('.info .danger', div).classList.add('hide');
+        Util.getElement('.info .status', div).classList.remove('hide');
         Util.getElement('.progress .current', div).style.width = '100%';
         Util.getElement('.status .state', div).innerText = State.complete.name;
         Util.getElement('.status .size', div).innerText = ', 共' + processedData.size;
@@ -149,6 +171,9 @@ class Item {
         Util.getElement('.operation .icon-resume', div).parentNode.classList.add('hide');
         Util.getElement('.operation .icon-open', div).parentNode.classList.remove('hide');
         Util.getElement('.operation .icon-delete', div).parentNode.title = "刪除记录";
+        Util.getElement('.operation .icon-delete', div).parentNode.classList.remove('hide');
+        Util.getElement('.operation .accept', div).parentNode.classList.add('hide');
+        Util.getElement('.operation .reject', div).parentNode.classList.add('hide');
     }
 
     eraseDownloadItem() {
@@ -161,6 +186,8 @@ class Item {
 
     cancelDownloadItem() {
         let div = Util.getElement('#item_' + this.data.id);
+        Util.getElement('.info .danger', div).classList.add('hide');
+        Util.getElement('.info .status', div).classList.remove('hide');
         Util.getElement('.progress .current', div).style.width = '0%';
         Util.getElement('.status .state', div).innerText = State.interrupted.name;
         Util.getElement('.status .speed', div).classList.add('hide');
@@ -170,6 +197,9 @@ class Item {
         Util.getElement('.operation .icon-resume', div).parentNode.classList.add('hide');
         Util.getElement('.operation .icon-open', div).parentNode.classList.add('hide');
         Util.getElement('.operation .icon-delete', div).parentNode.title = "刪除记录";
+        Util.getElement('.operation .icon-delete', div).parentNode.classList.remove('hide');
+        Util.getElement('.operation .accept', div).parentNode.classList.add('hide');
+        Util.getElement('.operation .reject', div).parentNode.classList.add('hide');
         div.classList.add('not-exists');
     }
 

@@ -84,6 +84,10 @@ body {
     outline: none;
 }
 
+.header input:hover {
+    cursor: text;
+}
+
 .header .operation {
     flex: 0 0 140px;
     display: flex;
@@ -112,7 +116,7 @@ body {
     overflow: auto;
 }
 
-#empty{
+#empty {
     font-size: 16px;
     text-align: center;
     height: 30px;
@@ -208,7 +212,7 @@ body {
 }
 
 .body .operation {
-    flex: 0 0 70px;
+    flex: 0 0 110px;
     display: flex;
     line-height: 60px;
     padding: 0 15px;
@@ -225,6 +229,31 @@ body {
     font-size: 14px;
 }
 
+.body .event .accept,
+.body .event .reject {
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    width: 30px;
+    height: 26px;
+    line-height: 26px;
+    outline: none;
+    display: inline-block;
+    font-size: 14px;
+    margin-top: 17px;
+    border-bottom: 2px solid #777;
+}
+
+.body .event .accept:hover {
+    color: #dc1300;
+    border-bottom-color: #DC1300;
+}
+
+.body .event .reject:hover {
+    color: #367eed;
+    border-bottom-color: #367eed;
+}
+
 .event {
     font-size: 0;
     flex: 1;
@@ -234,6 +263,30 @@ body {
 
 .event * {
     cursor: pointer;
+}
+
+.body .danger {
+    flex: 1;
+    line-height: 30px;
+    font-size: 12px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    color: #dc1300;
+}
+
+.body .danger .danger-type {
+    position: relative;
+}
+
+.body .danger .danger-type:after {
+    height: 2px;
+    content: '';
+    background: #dc1300;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -2px;
 }
 
 .modal {
@@ -273,7 +326,7 @@ body {
 
 .contextmenu li span {
     display: block;
-    padding: 7px 10px;
+    padding: 5px 10px;
     color: #757575;
     text-decoration: none;
     transition: ease 0.3s;

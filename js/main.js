@@ -259,7 +259,9 @@ const copyToClipboard = function (text) {
     input.remove();
 };
 
-$(document).on('click', '.event .icon-delete', function (e) {
+$(document).on('dblclick', '.item > .type, .item > .info', function (e) {
+    chrome.downloads.open(getDownloadItemId(e.target));
+}).on('click', '.event .icon-delete, .event .reject', function (e) {
     let id = getDownloadItemId(e.target);
     chrome.downloads.search({
         id: id,
@@ -322,6 +324,8 @@ $(document).on('click', '.event .icon-delete', function (e) {
     });
 }).on('click', '.event .icon-open', function (e) {
     chrome.downloads.open(getDownloadItemId(e.target));
+}).on('click', '.event .accept', function (e) {
+    chrome.downloads.acceptDanger(getDownloadItemId(e.target));
 }).on('click', '.open-download-folder', function (e) {
     chrome.downloads.showDefaultFolder();
 }).on('click', '.clear-download-item', function (e) {
@@ -364,6 +368,16 @@ $(document).on('contextmenu', '#body .item', function (e) {
     $('.modal').show();
     //获取下载文件id
     let downloadId = getDownloadItemId(this);
+    let $contextmenu = $(".contextmenu");
+
+    let item = Item.of(downloadId);
+    if (item.data.state !== State.complete) {
+        $contextmenu.find('.open-file').hide();
+        $contextmenu.find('.open-file-folder').hide();
+    } else {
+        $contextmenu.find('.open-file').show();
+        $contextmenu.find('.open-file-folder').show();
+    }
 
     // 获取窗口尺寸
     let winWidth = $(document).width();
@@ -372,7 +386,6 @@ $(document).on('contextmenu', '#body .item', function (e) {
     let mouseX = e.pageX;
     let mouseY = e.pageY;
     // ul标签的宽高
-    let $contextmenu = $(".contextmenu");
     let menuWidth = $contextmenu.width();
     let menuHeight = $contextmenu.height();
     // 最小边缘margin(具体窗口边缘最小的距离)
@@ -422,7 +435,7 @@ $(document).on('contextmenu', '#body .item', function (e) {
         chrome.downloads.search({id: downloadId}, function (results) {
             if (results.length > 0) {
                 let result = results[0];
-                copyToClipboard(result.url);
+                copyToClipboard(result.finalUrl || result.url);
             }
         });
     }).on('click', '.re-download', function () {
@@ -439,6 +452,8 @@ $(document).on('contextmenu', '#body .item', function (e) {
                 });
             }
         });
+    }).on('click', '.delete-file', function () {
+        chrome.downloads.removeFile(downloadId);
     });
     // 阻止浏览器默认的右键菜单事件
     return false;

@@ -15,7 +15,7 @@ class Util {
             let o = {
                 "M+": this.getMonth() + 1, //月份
                 "d+": this.getDate(), //日
-                "h+": this.getHours() % 12 == 0 ? 12 : this.getHours() % 12, //小时
+                "h+": this.getHours() % 12 === 0 ? 12 : this.getHours() % 12, //小时
                 "H+": this.getHours(), //小时
                 "m+": this.getMinutes(), //分
                 "s+": this.getSeconds(), //秒
@@ -213,6 +213,9 @@ class Util {
                 <span class="received">${data.received}</span>
                 <span class="size">, 共${data.size}</span>            
             </div>
+            <div class="danger hide">
+                <span class="danger-type"></span>
+            </div>
         </div>
         <div class="operation">
             <div class="event hide" title="重新下载">
@@ -229,6 +232,12 @@ class Util {
             </div>
             <div class="event" title="删除记录">
                 <i class="iconfont icon-delete"></i>
+            </div>
+            <div class="event hide" title="取消下载">
+                <span class="reject">取消</span>
+            </div>
+            <div class="event hide" title="保留文件">
+                <span class="accept">保留</span>
             </div>
         </div>
           `;
@@ -263,13 +272,16 @@ class Util {
                downloading: (function(): HTMLElement),
                pause: (function(): HTMLElement),
                interrupted: (function(): HTMLElement),
-               pending: (function(): HTMLElement)
+               pending: (function(): HTMLElement),
+               danger: (function(): HTMLElement)
      * }}
      */
     static render(item) {
         let that = this;
         return {
             completed: function () {
+                that.getElement('.info .status', item).classList.remove('hide');
+                that.getElement('.info .danger', item).classList.add('hide');
                 that.getElement('.status .speed', item).remove();
                 that.getElement('.status .received', item).remove();
                 let instance = item.instance;
@@ -282,39 +294,76 @@ class Util {
                 }
                 that.getElement('.operation .icon-pause', item).parentNode.classList.add('hide');
                 that.getElement('.operation .icon-resume', item).parentNode.classList.add('hide');
+                that.getElement('.operation .icon-delete', item).parentNode.classList.remove('hide');
+                that.getElement('.operation .accept', item).parentNode.classList.add('hide');
+                that.getElement('.operation .reject', item).parentNode.classList.add('hide');
                 return item;
             },
             downloading: function () {
-                Util.getElement('.operation .icon-refresh', item).parentNode.classList.add('hide');
-                Util.getElement('.operation .icon-pause', item).parentNode.classList.remove('hide');
-                Util.getElement('.operation .icon-resume', item).parentNode.classList.add('hide');
+                that.getElement('.info .status', item).classList.remove('hide');
+                that.getElement('.info .danger', item).classList.add('hide');
+                that.getElement('.operation .icon-refresh', item).parentNode.classList.add('hide');
+                that.getElement('.operation .icon-pause', item).parentNode.classList.remove('hide');
+                that.getElement('.operation .icon-resume', item).parentNode.classList.add('hide');
                 that.getElement('.operation .icon-open', item).parentNode.classList.add('hide');
+                that.getElement('.operation .icon-delete', item).parentNode.classList.remove('hide');
+                that.getElement('.operation .accept', item).parentNode.classList.add('hide');
+                that.getElement('.operation .reject', item).parentNode.classList.add('hide');
                 return item;
             },
             pending: function () {
-                Util.getElement('.status .state', item).innerText = State.pending.name;
-                Util.getElement('.status .speed', item).classList.add('hide');
-                Util.getElement('.status .received', item).classList.add('hide');
-                Util.getElement('.operation .icon-refresh', item).parentNode.classList.remove('hide');
-                Util.getElement('.operation .icon-pause', item).parentNode.classList.add('hide');
-                Util.getElement('.operation .icon-resume', item).parentNode.classList.add('hide');
+                that.getElement('.info .status', item).classList.remove('hide');
+                that.getElement('.info .danger', item).classList.add('hide');
+                that.getElement('.status .state', item).innerText = State.pending.name;
+                that.getElement('.status .speed', item).classList.add('hide');
+                that.getElement('.status .received', item).classList.add('hide');
+                that.getElement('.operation .icon-refresh', item).parentNode.classList.remove('hide');
+                that.getElement('.operation .icon-pause', item).parentNode.classList.add('hide');
+                that.getElement('.operation .icon-resume', item).parentNode.classList.add('hide');
                 that.getElement('.operation .icon-open', item).parentNode.classList.add('hide');
+                that.getElement('.operation .icon-delete', item).parentNode.classList.remove('hide');
+                that.getElement('.operation .accept', item).parentNode.classList.add('hide');
+                that.getElement('.operation .reject', item).parentNode.classList.add('hide');
                 return item;
             },
             pause: function () {
-                Util.getElement('.operation .icon-refresh', item).parentNode.classList.add('hide');
-                Util.getElement('.operation .icon-pause', item).parentNode.classList.add('hide');
-                Util.getElement('.operation .icon-resume', item).parentNode.classList.remove('hide');
+                that.getElement('.info .status', item).classList.remove('hide');
+                that.getElement('.info .danger', item).classList.add('hide');
+                that.getElement('.operation .icon-refresh', item).parentNode.classList.add('hide');
+                that.getElement('.operation .icon-pause', item).parentNode.classList.add('hide');
+                that.getElement('.operation .icon-resume', item).parentNode.classList.remove('hide');
                 that.getElement('.operation .icon-open', item).parentNode.classList.add('hide');
+                that.getElement('.operation .icon-delete', item).parentNode.classList.remove('hide');
+                that.getElement('.operation .accept', item).parentNode.classList.add('hide');
+                that.getElement('.operation .reject', item).parentNode.classList.add('hide');
                 return item;
             },
             interrupted: function () {
+                that.getElement('.info .status', item).classList.remove('hide');
+                that.getElement('.info .danger', item).classList.add('hide');
                 that.getElement('.status .speed', item).remove();
                 that.getElement('.status .received', item).remove();
                 that.getElement('.operation .icon-refresh', item).parentNode.classList.remove('hide');
                 that.getElement('.operation .icon-pause', item).parentNode.classList.add('hide');
                 that.getElement('.operation .icon-resume', item).parentNode.classList.add('hide');
                 that.getElement('.operation .icon-open', item).parentNode.classList.add('hide');
+                that.getElement('.operation .icon-delete', item).parentNode.classList.remove('hide');
+                that.getElement('.operation .accept', item).parentNode.classList.add('hide');
+                that.getElement('.operation .reject', item).parentNode.classList.add('hide');
+                return item;
+            },
+            danger: function () {
+                let instance = item.instance;
+                that.getElement('.info .danger .danger-type', item).innerText = instance.data.danger.name;
+                that.getElement('.info .status', item).classList.add('hide');
+                that.getElement('.info .danger', item).classList.remove('hide');
+                that.getElement('.operation .icon-refresh', item).parentNode.classList.add('hide');
+                that.getElement('.operation .icon-pause', item).parentNode.classList.add('hide');
+                that.getElement('.operation .icon-resume', item).parentNode.classList.add('hide');
+                that.getElement('.operation .icon-open', item).parentNode.classList.add('hide');
+                that.getElement('.operation .icon-delete', item).parentNode.classList.add('hide');
+                that.getElement('.operation .accept', item).parentNode.classList.remove('hide');
+                that.getElement('.operation .reject', item).parentNode.classList.remove('hide');
                 return item;
             }
         };
