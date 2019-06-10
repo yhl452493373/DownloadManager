@@ -33,7 +33,7 @@ chrome.downloads.onChanged.addListener(function (downloadDelta) {
                         if (Array.isArray(arr) && arr.length > 0) {
                             chrome.notifications.create('danger-' + downloadDelta.id, {
                                 type: 'basic',
-                                title: '安全警告',
+                                title: chrome.i18n.getMessage('safetyWaring'),
                                 message: Util.filename(arr[0].filename),
                                 contextMessage: DangerType.valueOf(downloadDelta.danger.current).name,
                                 iconUrl: cachedIcon.icon || '../img/icon_green.png',
@@ -76,8 +76,8 @@ chrome.downloads.onChanged.addListener(function (downloadDelta) {
 
             chrome.notifications.create('start-' + downloadDelta.id, {
                 type: 'basic',
-                title: '下载提示',
-                message: '开始下载：' + Util.filename(downloadDelta.filename.current),
+                title: chrome.i18n.getMessage('downloadStart'),
+                message: chrome.i18n.getMessage('downloadStart') + '：' + Util.filename(downloadDelta.filename.current),
                 iconUrl: iconCache[downloadDelta.id] && iconCache[downloadDelta.id].icon || '../img/icon_green.png',
                 isClickable: true
             }, notificationId => {
@@ -99,13 +99,13 @@ chrome.downloads.onChanged.addListener(function (downloadDelta) {
                             if (Array.isArray(results) && results.length > 0) {
                                 chrome.notifications.create('complete-' + downloadDelta.id, {
                                     type: 'basic',
-                                    title: '下载完成',
+                                    title: chrome.i18n.getMessage('downloadComplete'),
                                     message: results[0].filename,
                                     iconUrl: cachedIcon.icon || '../img/icon_green.png',
                                     buttons: [{
-                                        title: '打开',
+                                        title: chrome.i18n.getMessage('open'),
                                     }, {
-                                        title: '打开目录',
+                                        title: chrome.i18n.getMessage('openFolder'),
                                     }],
                                     isClickable: true
                                 }, notificationId => {
@@ -174,7 +174,7 @@ chrome.downloads.onChanged.addListener(function (downloadDelta) {
                         if (results.length > 0) {
                             chrome.notifications.create('danger-' + downloadDelta.id, {
                                 type: 'basic',
-                                title: '安全警告',
+                                title: chrome.i18n.getMessage('safetyWaring'),
                                 message: Util.filename(results[0].filename),
                                 contextMessage: DangerType.valueOf(downloadDelta.danger.current).name,
                                 iconUrl: iconCache[downloadDelta.id] || '../img/icon_green.png',

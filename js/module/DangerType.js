@@ -2,21 +2,21 @@ import {Enum} from "./Enum.js";
 
 class DangerType extends Enum {
     // noinspection JSUnusedGlobalSymbols
-    static file = new Enum("file", "这种类型的文件可能会损害您的计算机");
+    static file = new Enum("file", chrome.i18n.getMessage('fileDanger'));
     // noinspection JSUnusedGlobalSymbols
-    static  url = new Enum('url', '下载项的 URL 已知是恶意的');
+    static  url = new Enum('url', chrome.i18n.getMessage('urlDanger'));
     // noinspection JSUnusedGlobalSymbols
-    static content = new Enum('content', '已下载的文件已知是恶意的');
+    static content = new Enum('content', chrome.i18n.getMessage('contentDanger'));
     // noinspection JSUnusedGlobalSymbols
-    static uncommon = new Enum('uncommon', '下载项的 URL 不常见，可能有风险');
+    static uncommon = new Enum('uncommon', chrome.i18n.getMessage('uncommonDanger'));
     // noinspection JSUnusedGlobalSymbols
-    static host = new Enum('host', '下载项来自已知发布恶意软件的主机，可能有风险');
+    static host = new Enum('host', chrome.i18n.getMessage('hostDanger'));
     // noinspection JSUnusedGlobalSymbols
-    static unwanted = new Enum('unwanted', '下载项可能不是所需要的或者不安全，例如它可能会更改浏览器或计算机设置');
+    static unwanted = new Enum('unwanted', chrome.i18n.getMessage('unwantedDanger'));
     // noinspection JSUnusedGlobalSymbols
-    static safe = new Enum('safe', '下载项对用户的计算机没有已知风险');
+    static safe = new Enum('safe', chrome.i18n.getMessage('safeDanger'));
     // noinspection JSUnusedGlobalSymbols
-    static accepted = new Enum('accepted', '用户已经接受了有风险的下载');
+    static accepted = new Enum('accepted', chrome.i18n.getMessage('acceptedDanger'));
 }
 
 export {DangerType}

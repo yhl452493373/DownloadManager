@@ -211,33 +211,33 @@ class Util {
                 <span class="state">${data.state}</span>
                 <span class="speed">, ${data.speed} - </span>
                 <span class="received">${data.received}</span>
-                <span class="size">, 共${data.size}</span>            
+                <span class="size">, ` + chrome.i18n.getMessage('total') + ` ${data.size}</span>            
             </div>
             <div class="danger hide">
                 <span class="danger-type"></span>
             </div>
         </div>
         <div class="operation">
-            <div class="event hide" title="重新下载">
+            <div class="event hide" title="` + chrome.i18n.getMessage('reDownload') + `">
                 <i class="iconfont icon-refresh"></i>
             </div>
-            <div class="event hide" title="继续下载">
+            <div class="event hide" title="` + chrome.i18n.getMessage('continueDownload') + `">
                 <i class="iconfont icon-resume"></i>
             </div>
-            <div class="event hide" title="暂停下载">
+            <div class="event hide" title="` + chrome.i18n.getMessage('pauseDownload') + `">
                 <i class="iconfont icon-pause"></i>
             </div>     
-            <div class="event hide" title="打开文件">
+            <div class="event hide" title="` + chrome.i18n.getMessage('openFile') + `">
                 <i class="iconfont icon-open"></i>
             </div>
-            <div class="event" title="删除记录">
+            <div class="event" title="` + chrome.i18n.getMessage('deleteHistory') + `">
                 <i class="iconfont icon-delete"></i>
             </div>
-            <div class="event hide" title="取消下载">
-                <span class="reject">取消</span>
+            <div class="event hide" title="` + chrome.i18n.getMessage('cancelDownload') + `">
+                <span class="reject">` + chrome.i18n.getMessage('cancel') + `</span>
             </div>
-            <div class="event hide" title="保留文件">
-                <span class="accept">保留</span>
+            <div class="event hide" title="` + chrome.i18n.getMessage('saveFile') + `">
+                <span class="accept">` + chrome.i18n.getMessage('accept') + `</span>
             </div>
         </div>
           `;

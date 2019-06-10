@@ -1,0 +1,170 @@
+{
+  "extName": {
+    "message": "Download Manager",
+    "description": "the name of extension"
+  },
+  "extTitle": {
+    "message": "Download Manager",
+    "description": "the name of extension with browser_action"
+  },
+  "extShortName": {
+    "message": "Download Manager",
+    "description": "the short name of extension"
+  },
+  "extDescription": {
+    "message": "This is use to replace the download function of browser.",
+    "description": "the description of extension"
+  },
+  "openFile": {
+    "message": "Open File",
+    "description": "open file in contextmenu"
+  },
+  "openFileFolder": {
+    "message": "Open File Folder",
+    "description": "open file folder in contextmenu"
+  },
+  "copyFilename": {
+    "message": "Copy Filename",
+    "description": "copy filename in contextmenu"
+  },
+  "copyDownloadUrl": {
+    "message": "Copy Url",
+    "description": "copy download url in contextmenu"
+  },
+  "reDownload": {
+    "message": "Re-Download",
+    "description": "re-download in contextmenu"
+  },
+  "deleteFile": {
+    "message": "Delete File",
+    "description": "delete file in contextmenu"
+  },
+  "search": {
+    "message": "Search",
+    "description": "the placeholder of search box"
+  },
+  "openDownloadFolder": {
+    "message": "Open Download Folder",
+    "description": "the tips of open download folder button"
+  },
+  "downloadFolder": {
+    "message": "Folder",
+    "description": "the text of open download folder button"
+  },
+  "clearAllHistory": {
+    "message": "Clear All History",
+    "description": "the tips of clear all history button"
+  },
+  "clear": {
+    "message": "Clear",
+    "description": "the text of clear all history button"
+  },
+  "empty": {
+    "message": "Empty",
+    "description": "the text with an empty history"
+  },
+  "cancelDownload": {
+    "message": "Cancel Download",
+    "description": "the tips of cancel download button"
+  },
+  "cancel": {
+    "message": "Cancel",
+    "description": "the text of cancel download button"
+  },
+  "safetyWaring": {
+    "message": "Safety Warning",
+    "description": "the warning of danger file"
+  },
+  "downloadStart": {
+    "message": "Start Downloading",
+    "description": "the tips of staring downloading"
+  },
+  "downloadComplete": {
+    "message": "Download Complete",
+    "description": "the tips of download complete"
+  },
+  "open": {
+    "message": "Open",
+    "description": "the text of open button in notice"
+  },
+  "openFolder": {
+    "message": "Open Folder",
+    "description": "the text of open folder button in notice"
+  },
+  "fileDanger": {
+    "message": "The download's filename is suspicious.",
+    "description": "file Danger"
+  },
+  "urlDanger": {
+    "message": "The download's URL is known to be malicious.",
+    "description": "url Danger"
+  },
+  "contentDanger": {
+    "message": "The downloaded file is known to be malicious.",
+    "description": "content"
+  },
+  "uncommonDanger": {
+    "message": "The download's URL is not commonly downloaded and could be dangerous.",
+    "description": "uncommon Danger"
+  },
+  "hostDanger": {
+    "message": "The download came from a host known to distribute malicious binaries and is likely dangerous.",
+    "description": "host Danger"
+  },
+  "unwantedDanger": {
+    "message": "The download is potentially unwanted or unsafe. E.g. it could make changes to browser or computer settings.",
+    "description": "unwanted Danger"
+  },
+  "safeDanger": {
+    "message": "The download presents no known danger to the user's computer.",
+    "description": "safe Danger"
+  },
+  "acceptedDanger": {
+    "message": "The user has accepted the dangerous download.",
+    "description": "accepted Danger"
+  },
+  "total": {
+    "message": "Total",
+    "description": "the tips of file total size"
+  },
+  "deleteHistory": {
+    "message": "Delete History",
+    "description": "the tips of delete history in downloading"
+  },
+  "inProgress": {
+    "message": "Downloading",
+    "description": "in_progress"
+  },
+  "interrupted": {
+    "message": "Interrupted",
+    "description": "interrupted"
+  },
+  "complete": {
+    "message": "Complete",
+    "description": "complete"
+  },
+  "pause": {
+    "message": "Pause",
+    "description": "pause"
+  },
+  "pending": {
+    "message": "Pending",
+    "description": "pending"
+  },
+  "continueDownload": {
+    "message": "Continue",
+    "description": "the tips of continue download"
+  },
+  "pauseDownload": {
+    "message": "Pause",
+    "description": "the tips of pause download"
+  },
+  "accept": {
+    "message": "Accept",
+    "description": "the text of accept danger download button"
+  },
+  "saveFile": {
+    "message": "Save File",
+    "description": "the tips of accept danger download"
+  }
+}

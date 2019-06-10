@@ -129,7 +129,7 @@ class Item {
                     Util.getElement('.status .state', div).innerText = State.in_progress.name;
                     Util.getElement('.status .speed', div).innerText = `, ${processedData.speed} -`;
                     Util.getElement('.status .received', div).innerText = processedData.received;
-                    Util.getElement('.status .size').innerText = `, 共${processedData.size}`;
+                    Util.getElement('.status .size').innerText = `, ` + chrome.i18n.getMessage('total') + ` ${processedData.size}`;
                 } else {
                     Util.getElement('.status .state', div).innerText = State.pending.name;
                     Util.getElement('.status .speed', div).classList.add('hide');
@@ -163,14 +163,14 @@ class Item {
         Util.getElement('.info .status', div).classList.remove('hide');
         Util.getElement('.progress .current', div).style.width = '100%';
         Util.getElement('.status .state', div).innerText = State.complete.name;
-        Util.getElement('.status .size', div).innerText = ', 共' + processedData.size;
+        Util.getElement('.status .size', div).innerText = ', ' + chrome.i18n.getMessage('total') + ' ' + processedData.size;
         Util.getElement('.status .speed', div).classList.add('hide');
         Util.getElement('.status .received', div).classList.add('hide');
         Util.getElement('.operation .icon-refresh', div).parentNode.classList.add('hide');
         Util.getElement('.operation .icon-pause', div).parentNode.classList.add('hide');
         Util.getElement('.operation .icon-resume', div).parentNode.classList.add('hide');
         Util.getElement('.operation .icon-open', div).parentNode.classList.remove('hide');
-        Util.getElement('.operation .icon-delete', div).parentNode.title = "刪除记录";
+        Util.getElement('.operation .icon-delete', div).parentNode.title = chrome.i18n.getMessage('deleteHistory');
         Util.getElement('.operation .icon-delete', div).parentNode.classList.remove('hide');
         Util.getElement('.operation .accept', div).parentNode.classList.add('hide');
         Util.getElement('.operation .reject', div).parentNode.classList.add('hide');
@@ -196,7 +196,7 @@ class Item {
         Util.getElement('.operation .icon-pause', div).parentNode.classList.add('hide');
         Util.getElement('.operation .icon-resume', div).parentNode.classList.add('hide');
         Util.getElement('.operation .icon-open', div).parentNode.classList.add('hide');
-        Util.getElement('.operation .icon-delete', div).parentNode.title = "刪除记录";
+        Util.getElement('.operation .icon-delete', div).parentNode.title = chrome.i18n.getMessage('deleteHistory');
         Util.getElement('.operation .icon-delete', div).parentNode.classList.remove('hide');
         Util.getElement('.operation .accept', div).parentNode.classList.add('hide');
         Util.getElement('.operation .reject', div).parentNode.classList.add('hide');
@@ -211,13 +211,13 @@ class Item {
         Util.getElement('.operation .icon-pause', div).parentNode.classList.add('hide');
         Util.getElement('.operation .icon-resume', div).parentNode.classList.remove('hide');
         Util.getElement('.operation .icon-open', div).parentNode.classList.add('hide');
-        Util.getElement('.operation .icon-delete', div).parentNode.title = "取消下载";
+        Util.getElement('.operation .icon-delete', div).parentNode.title = chrome.i18n.getMessage('cancelDownload');
     }
 
     resumeDownloadItem() {
         let div = Util.getElement('#item_' + this.data.id);
         Util.getElement('.status .state', div).innerText = State.in_progress.name;
-        Util.getElement('.operation .icon-delete', div).parentNode.title = "取消下载";
+        Util.getElement('.operation .icon-delete', div).parentNode.title = chrome.i18n.getMessage('cancelDownload');
     }
 }
 

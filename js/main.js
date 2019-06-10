@@ -168,7 +168,7 @@ const createDownloadItem = function (data) {
     let item = new Item(data).render();
     let body = Util.getElement('#body');
     Util.getElement('#empty').style.display = 'none';
-    Util.getElement('.operation .icon-delete', item).parentNode.title = "取消下载";
+    Util.getElement('.operation .icon-delete', item).parentNode.title = chrome.i18n.getMessage('cancelDownload');
     if (body.childNodes.length === 0) {
         body.appendChild(item);
     } else {
@@ -464,3 +464,17 @@ $(document).on('click', function () {
     $(".contextmenu").hide();
     $('.modal').hide();
 });
+
+$('title').text(chrome.i18n.getMessage('extName'));
+$('#openFile').text(chrome.i18n.getMessage('openFile'));
+$('#openFileFolder').text(chrome.i18n.getMessage('openFileFolder'));
+$('#copyFilename').text(chrome.i18n.getMessage('copyFilename'));
+$('#copyDownloadUrl').text(chrome.i18n.getMessage('copyDownloadUrl'));
+$('#reDownload').text(chrome.i18n.getMessage('reDownload'));
+$('#deleteFile').text(chrome.i18n.getMessage('deleteFile'));
+$('#search').attr('placeholder', chrome.i18n.getMessage('search'));
+$('#openDownloadFolder').attr('title',chrome.i18n.getMessage('openDownloadFolder'));
+$('#downloadFolder').text(chrome.i18n.getMessage('downloadFolder'));
+$('#clearAllHistory').attr('title',chrome.i18n.getMessage('clearAllHistory'));
+$('#clear').text(chrome.i18n.getMessage('clear'));
+$('#empty').text(chrome.i18n.getMessage('empty'));

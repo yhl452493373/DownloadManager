@@ -10,22 +10,22 @@
         <div class="modal">
             <ul class="contextmenu">
                 <li class="open-file">
-                    <span>打开文件</span>
+                    <span id="openFile">打开文件</span>
                 </li>
                 <li class="open-file-folder">
-                    <span>打开文件目录</span>
+                    <span id="openFileFolder">打开文件目录</span>
                 </li>
                 <li class="copy-filename">
-                    <span>复制文件名</span>
+                    <span id="copyFilename">复制文件名</span>
                 </li>
                 <li class="copy-download-url">
-                    <span>复制下载地址</span>
+                    <span id="copyDownloadUrl">复制下载地址</span>
                 </li>
                 <li class="re-download">
-                    <span>重新下载</span>
+                    <span id="reDownload">重新下载</span>
                 </li>
                 <li class="delete-file">
-                    <span>删除文件</span>
+                    <span id="deleteFile">删除文件</span>
                 </li>
             </ul>
         </div>
@@ -33,16 +33,16 @@
             <div class="header">
                 <div class="search">
                     <i class="iconfont icon-search"></i>
-                    <input class="search-text" type="search" placeholder="搜索">
+                    <input class="search-text" type="search" placeholder="搜索" id="search">
                 </div>
                 <div class="operation">
-                    <div class="event open-download-folder" title="打开默认下载目录">
+                    <div class="event open-download-folder" title="打开下载目录" id="openDownloadFolder">
                         <i class="iconfont icon-folder"></i>
-                        <span class="icontext">下载目录</span>
+                        <span class="icontext" id="downloadFolder">下载目录</span>
                     </div>
-                    <div class="event clear-download-item" title="清空所有下载记录">
+                    <div class="event clear-download-item" title="清空所有下载记录" id="clearAllHistory">
                         <i class="iconfont icon-clean"></i>
-                        <span class="icontext">清空</span>
+                        <span class="icontext" id="clear">清空</span>
                     </div>
                 </div>
             </div>

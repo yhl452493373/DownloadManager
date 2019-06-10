@@ -1,0 +1,170 @@
+{
+  "extName": {
+    "message": "下载管理",
+    "description": "扩展名字"
+  },
+  "extTitle": {
+    "message": "下载管理",
+    "description": "扩展在浏览器地址栏中的标题"
+  },
+  "extShortName": {
+    "message": "下载管理",
+    "description": "扩展简称"
+  },
+  "extDescription": {
+    "message": "用于接管浏览器自带的下载功能,免去打开下载页面来查看下载文件的麻烦.",
+    "description": "扩展描述"
+  },
+  "openFile": {
+    "message": "打开文件",
+    "description": "右键菜单中的打开文件"
+  },
+  "openFileFolder": {
+    "message": "打开文件目录",
+    "description": "右键菜单中的打开文件所在目录"
+  },
+  "copyFilename": {
+    "message": "复制文件名",
+    "description": "右键菜单中的复制文件名"
+  },
+  "copyDownloadUrl": {
+    "message": "复制下载地址",
+    "description": "右键菜单中的复制下载地址"
+  },
+  "reDownload": {
+    "message": "重新下载",
+    "description": "右键菜单中的重新下载"
+  },
+  "deleteFile": {
+    "message": "删除文件",
+    "description": "右键菜单中的删除文件"
+  },
+  "search": {
+    "message": "搜索",
+    "description": "搜索框的提示文字"
+  },
+  "openDownloadFolder": {
+    "message": "打开下载目录",
+    "description": "打开下载目录的提示文字"
+  },
+  "downloadFolder": {
+    "message": "下载目录",
+    "description": "打开下载目录的按钮文字"
+  },
+  "clearAllHistory": {
+    "message": "清空所有下载历史",
+    "description": "清空下载历史的提示文字"
+  },
+  "clear": {
+    "message": "清空",
+    "description": "清空下载历史的按钮文字"
+  },
+  "empty": {
+    "message": "没有下载记录",
+    "description": "没有下载记录时的提示文字"
+  },
+  "cancelDownload": {
+    "message": "取消下载",
+    "description": "取消下载按钮的提示文字"
+  },
+  "cancel": {
+    "message": "取消",
+    "description": "取消下载按钮的文字"
+  },
+  "safetyWaring": {
+    "message": "安全警告",
+    "description": "文件安全提示的警告标题"
+  },
+  "downloadStart": {
+    "message": "开始下载",
+    "description": "下载开始时的提示内容"
+  },
+  "downloadComplete": {
+    "message": "下载完成",
+    "description": "下载完成时的提示内容"
+  },
+  "open": {
+    "message": "打开",
+    "description": "下载完成提示中的打开按钮"
+  },
+  "openFolder": {
+    "message": "打开目录",
+    "description": "下载完成提示中的打开目录按钮"
+  },
+  "fileDanger": {
+    "message": "下载的文件的文件名可疑",
+    "description": "file Danger"
+  },
+  "urlDanger": {
+    "message": "下载项的URL已知是恶意的",
+    "description": "url Danger"
+  },
+  "contentDanger": {
+    "message": "已下载的文件已知是恶意的",
+    "description": "content"
+  },
+  "uncommonDanger": {
+    "message": "下载的URL通常不被下载，可能很危险",
+    "description": "uncommon Danger"
+  },
+  "hostDanger": {
+    "message": "下载项来自已知发布恶意软件的主机，可能有风险",
+    "description": "host Danger"
+  },
+  "unwantedDanger": {
+    "message": "下载项可能不是所需要的或者不安全，例如它可能会更改浏览器或计算机设置",
+    "description": "unwanted Danger"
+  },
+  "safeDanger": {
+    "message": "下载项对用户的计算机没有已知风险",
+    "description": "safe Danger"
+  },
+  "acceptedDanger": {
+    "message": "用户已经接受了有风险的下载",
+    "description": "accepted Danger"
+  },
+  "total": {
+    "message": "共",
+    "description": "下载文件总大小的提示文字"
+  },
+  "deleteHistory": {
+    "message": "删除记录",
+    "description": "下载文件过程中删除记录按钮的提示文字"
+  },
+  "inProgress": {
+    "message": "下载中",
+    "description": "in_progress"
+  },
+  "interrupted": {
+    "message": "已取消",
+    "description": "interrupted"
+  },
+  "complete": {
+    "message": "已完成",
+    "description": "complete"
+  },
+  "pause": {
+    "message": "已暂停",
+    "description": "pause"
+  },
+  "pending": {
+    "message": "处理中",
+    "description": "pending"
+  },
+  "continueDownload": {
+    "message": "继续下载",
+    "description": "继续下载按钮提示文字"
+  },
+  "pauseDownload": {
+    "message": "暂停下载",
+    "description": "暂停下载按钮提示文字"
+  },
+  "accept": {
+    "message": "保留",
+    "description": "危险提示中的保留文件按钮"
+  },
+  "saveFile": {
+    "message": "保留文件",
+    "description": "危险提示中的保留文件提示"
+  }
+}
