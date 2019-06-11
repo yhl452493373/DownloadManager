@@ -453,7 +453,19 @@ $(document).on('contextmenu', '#body .item', function (e) {
             }
         });
     }).on('click', '.delete-file', function () {
-        chrome.downloads.removeFile(downloadId);
+        chrome.downloads.search({
+            id: downloadId
+        }, function (results) {
+            if (results.length > 0) {
+                if (results[0].state !== State.complete.code) {
+                    chrome.downloads.erase({
+                        id: downloadId
+                    });
+                } else {
+                    chrome.downloads.removeFile(downloadId);
+                }
+            }
+        });
     });
     // 阻止浏览器默认的右键菜单事件
     return false;
@@ -473,8 +485,8 @@ $('#copyDownloadUrl').text(chrome.i18n.getMessage('copyDownloadUrl'));
 $('#reDownload').text(chrome.i18n.getMessage('reDownload'));
 $('#deleteFile').text(chrome.i18n.getMessage('deleteFile'));
 $('#search').attr('placeholder', chrome.i18n.getMessage('search'));
-$('#openDownloadFolder').attr('title',chrome.i18n.getMessage('openDownloadFolder'));
+$('#openDownloadFolder').attr('title', chrome.i18n.getMessage('openDownloadFolder'));
 $('#downloadFolder').text(chrome.i18n.getMessage('downloadFolder'));
-$('#clearAllHistory').attr('title',chrome.i18n.getMessage('clearAllHistory'));
+$('#clearAllHistory').attr('title', chrome.i18n.getMessage('clearAllHistory'));
 $('#clear').text(chrome.i18n.getMessage('clear'));
 $('#empty').text(chrome.i18n.getMessage('empty'));
