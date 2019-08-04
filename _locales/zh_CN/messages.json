@@ -92,19 +92,19 @@
     "description": "下载完成提示中的打开目录按钮"
   },
   "fileDanger": {
-    "message": "下载的文件的文件名可疑",
+    "message": "下载的文件可能损害您的计算机",
     "description": "file Danger"
   },
   "urlDanger": {
-    "message": "下载项的URL已知是恶意的",
+    "message": "该URL下载的文件可能损害您的计算机",
     "description": "url Danger"
   },
   "contentDanger": {
-    "message": "已下载的文件已知是恶意的",
+    "message": "下载的文件是恶意文件",
     "description": "content"
   },
   "uncommonDanger": {
-    "message": "下载的URL通常不被下载，可能很危险",
+    "message": "该URL的文件不建议下载，可能很危险",
     "description": "uncommon Danger"
   },
   "hostDanger": {
@@ -116,11 +116,11 @@
     "description": "unwanted Danger"
   },
   "safeDanger": {
-    "message": "下载项对用户的计算机没有已知风险",
+    "message": "下载项对用户的计算机没有风险",
     "description": "safe Danger"
   },
   "acceptedDanger": {
-    "message": "用户已经接受了有风险的下载",
+    "message": "用户接受了有风险的下载",
     "description": "accepted Danger"
   },
   "total": {
