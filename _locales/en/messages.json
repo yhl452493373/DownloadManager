@@ -166,5 +166,17 @@
   "saveFile": {
     "message": "Save File",
     "description": "the tips of accept danger download"
+  },
+  "options": {
+    "message": "Options",
+    "description": "the title of DownloadManager config page"
+  },
+  "lightIcon": {
+    "message": "Light Icon",
+    "description": "a light icon for dark mode"
+  },
+  "downloadNotice": {
+    "message": "Download Notification",
+    "description": "send a notification to user when you are downloading"
   }
 }

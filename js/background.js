@@ -7,6 +7,21 @@ let downLoadingFiles = [], iconCache = {};
 if (chrome.downloads && chrome.downloads.setShelfEnabled)
     chrome.downloads.setShelfEnabled(false);
 
+let normalIcon = '/img/icon_gray.png';
+let notice = false;
+chrome.storage.sync.get(
+    {
+        lightIcon: false,
+        downloadNotice: false
+    }, function (obj) {
+        if (obj.lightIcon) {
+            normalIcon = '/img/icon_light.png';
+            chrome.browserAction.setIcon({path: '/img/icon_light.png'});
+        }
+        notice = obj.downloadNotice;
+    }
+);
+
 chrome.runtime.onMessage.addListener(function (request) {
     if (request.method === 'pullProgress') {
         pullProgress();
@@ -27,25 +42,26 @@ chrome.downloads.onChanged.addListener(function (downloadDelta) {
     }
     if (downloadDelta.danger && downloadDelta.danger.current !== DangerType.safe.code && downloadDelta.danger.current !== DangerType.accepted.code) {
         cacheIcon(downloadDelta.id, false, function (cachedIcon) {
-            chrome.notifications.getPermissionLevel(function (level) {
-                if (level === 'granted') {
-                    chrome.downloads.search({id: downloadDelta.id}, arr => {
-                        if (Array.isArray(arr) && arr.length > 0) {
-                            chrome.notifications.create('danger-' + downloadDelta.id, {
-                                type: 'basic',
-                                title: chrome.i18n.getMessage('safetyWaring'),
-                                message: Util.filename(arr[0].filename),
-                                contextMessage: DangerType.valueOf(downloadDelta.danger.current).name,
-                                iconUrl: cachedIcon.icon || '../img/icon_green.png',
-                                isClickable: true
-                            }, notificationId => {
+            if (notice)
+                chrome.notifications.getPermissionLevel(function (level) {
+                    if (level === 'granted') {
+                        chrome.downloads.search({id: downloadDelta.id}, arr => {
+                            if (Array.isArray(arr) && arr.length > 0 && notice) {
+                                chrome.notifications.create('danger-' + downloadDelta.id, {
+                                    type: 'basic',
+                                    title: chrome.i18n.getMessage('safetyWaring'),
+                                    message: Util.filename(arr[0].filename),
+                                    contextMessage: DangerType.valueOf(downloadDelta.danger.current).name,
+                                    iconUrl: cachedIcon.icon || '/img/icon_green.png',
+                                    isClickable: true
+                                }, notificationId => {
 
-                            });
+                                });
 
-                        }
-                    });
-                }
-            });
+                            }
+                        });
+                    }
+                });
             pullProgress();
             chrome.browserAction.setBadgeText({
                 text: downLoadingFiles.length + ''
@@ -73,16 +89,16 @@ chrome.downloads.onChanged.addListener(function (downloadDelta) {
                 method: 'createDownloadItem',
                 data: downloadItem
             });
+            if (notice)
+                chrome.notifications.create('start-' + downloadDelta.id, {
+                    type: 'basic',
+                    title: chrome.i18n.getMessage('downloadStart'),
+                    message: chrome.i18n.getMessage('downloadStart') + '：' + Util.filename(downloadDelta.filename.current),
+                    iconUrl: iconCache[downloadDelta.id] && iconCache[downloadDelta.id].icon || '/img/icon_green.png',
+                    isClickable: true
+                }, notificationId => {
 
-            chrome.notifications.create('start-' + downloadDelta.id, {
-                type: 'basic',
-                title: chrome.i18n.getMessage('downloadStart'),
-                message: chrome.i18n.getMessage('downloadStart') + '：' + Util.filename(downloadDelta.filename.current),
-                iconUrl: iconCache[downloadDelta.id] && iconCache[downloadDelta.id].icon || '../img/icon_green.png',
-                isClickable: true
-            }, notificationId => {
-
-            });
+                });
         }
 
         if (downloadDelta.state && downloadDelta.state.current === State.complete.code) {
@@ -93,30 +109,31 @@ chrome.downloads.onChanged.addListener(function (downloadDelta) {
                     method: 'downloadComplete',
                     data: downloadDelta
                 });
-                chrome.notifications.getPermissionLevel(function (level) {
-                    if (level === 'granted') {
-                        chrome.downloads.search({id: downloadDelta.id}, results => {
-                            if (Array.isArray(results) && results.length > 0) {
-                                chrome.notifications.create('complete-' + downloadDelta.id, {
-                                    type: 'basic',
-                                    title: chrome.i18n.getMessage('downloadComplete'),
-                                    message: results[0].filename,
-                                    iconUrl: cachedIcon.icon || '../img/icon_green.png',
-                                    buttons: [{
-                                        title: chrome.i18n.getMessage('open'),
-                                    }, {
-                                        title: chrome.i18n.getMessage('openFolder'),
-                                    }],
-                                    isClickable: true
-                                }, notificationId => {
+                if (notice)
+                    chrome.notifications.getPermissionLevel(function (level) {
+                        if (level === 'granted') {
+                            chrome.downloads.search({id: downloadDelta.id}, results => {
+                                if (Array.isArray(results) && results.length > 0 && notice) {
+                                    chrome.notifications.create('complete-' + downloadDelta.id, {
+                                        type: 'basic',
+                                        title: chrome.i18n.getMessage('downloadComplete'),
+                                        message: results[0].filename,
+                                        iconUrl: cachedIcon.icon || '/img/icon_green.png',
+                                        buttons: [{
+                                            title: chrome.i18n.getMessage('open'),
+                                        }, {
+                                            title: chrome.i18n.getMessage('openFolder'),
+                                        }],
+                                        isClickable: true
+                                    }, notificationId => {
 
-                                });
+                                    });
 
-                            }
-                        });
+                                }
+                            });
 
-                    }
-                });
+                        }
+                    });
             });
         }
 
@@ -167,17 +184,17 @@ chrome.downloads.onChanged.addListener(function (downloadDelta) {
             });
         }
 
-        if (downloadDelta.danger && downloadDelta.danger.current !== DangerType.safe.code && downloadDelta.danger.current !== DangerType.accepted.code) {
+        if (downloadDelta.danger && downloadDelta.danger.current !== DangerType.safe.code && downloadDelta.danger.current !== DangerType.accepted.code && notice) {
             chrome.notifications.getPermissionLevel(function (level) {
                 if (level === 'granted') {
                     chrome.downloads.search({id: downloadDelta.id}, results => {
-                        if (results.length > 0) {
+                        if (results.length > 0 && notice) {
                             chrome.notifications.create('danger-' + downloadDelta.id, {
                                 type: 'basic',
                                 title: chrome.i18n.getMessage('safetyWaring'),
                                 message: Util.filename(results[0].filename),
                                 contextMessage: DangerType.valueOf(downloadDelta.danger.current).name,
-                                iconUrl: iconCache[downloadDelta.id] || '../img/icon_green.png',
+                                iconUrl: iconCache[downloadDelta.id] || '/img/icon_green.png',
                                 isClickable: true
                             }, notificationId => {
 
@@ -279,9 +296,9 @@ function pullProgress() {
                 if (!results || results.length === 0) {
                     window.clearInterval(intervalId);
                     intervalId = -1;
-                    //todo 这个方法无效
+                    //todo 恢复默认图标
                     chrome.browserAction.setIcon({
-                        path: '../img/icon_gray.png'
+                        path: normalIcon
                     }, function () {
                         // body...
                     });
@@ -295,7 +312,7 @@ function pullProgress() {
                 });
                 //todo 这个方法无效
                 chrome.browserAction.setIcon({
-                    path: '../img/icon_green.png'
+                    path: '/img/icon_green.png'
                 }, function () {
                     // body...
                 });

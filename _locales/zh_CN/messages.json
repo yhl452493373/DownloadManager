@@ -166,5 +166,17 @@
   "saveFile": {
     "message": "保留文件",
     "description": "危险提示中的保留文件提示"
+  },
+  "options": {
+    "message": "下载管理配置",
+    "description": "下载管理配置页面标题"
+  },
+  "lightIcon": {
+    "message": "浅色图标",
+    "description": "适用于深色模式的图标"
+  },
+  "downloadNotice": {
+    "message": "下载通知",
+    "description": "下载时发送一个通知以提醒用户"
   }
 }
