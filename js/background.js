@@ -2,7 +2,7 @@ import {State} from "./module/State.js";
 import {Util} from "./module/Util.js";
 import {DangerType} from "./module/DangerType.js";
 
-let intervalId = -1;
+let progressRunning = false;
 let downLoadingFiles = [], iconCache = {};
 if (chrome.downloads && chrome.downloads.setShelfEnabled)
     chrome.downloads.setShelfEnabled(false);
@@ -16,7 +16,7 @@ chrome.storage.sync.get(
     }, function (obj) {
         if (obj.lightIcon) {
             normalIcon = '/img/icon_light.png';
-            chrome.browserAction.setIcon({path: '/img/icon_light.png'});
+            chrome.browserAction.setIcon({path: normalIcon});
         }
         notice = obj.downloadNotice;
     }
@@ -24,11 +24,16 @@ chrome.storage.sync.get(
 
 chrome.runtime.onMessage.addListener(function (request) {
     if (request.method === 'pullProgress') {
-        pullProgress();
+        if (!progressRunning)
+            pullProgress();
     } else if (request.method === 'cacheIcon') {
         cacheIcon(request.data);
     } else if (request.method === 'deleteIconCache') {
         delete iconCache[request.data];
+    } else if (request.method === 'changeIcon') {
+        normalIcon = request.data;
+    } else if (request.method === 'changeNotice') {
+        notice = request.data;
     }
 });
 
@@ -40,13 +45,14 @@ chrome.downloads.onChanged.addListener(function (downloadDelta) {
     if (!iconCache.hasOwnProperty(downloadDelta.id) || Util.emptyString(iconCache[downloadDelta.id].icon)) {
         cacheIcon(downloadDelta.id);
     }
-    if (downloadDelta.danger && downloadDelta.danger.current !== DangerType.safe.code && downloadDelta.danger.current !== DangerType.accepted.code) {
+    if (downloadDelta.danger && downloadDelta.danger.current !== DangerType.safe.code
+        && downloadDelta.danger.current !== DangerType.accepted.code) {
         cacheIcon(downloadDelta.id, false, function (cachedIcon) {
-            if (notice)
+            if (notice) {
                 chrome.notifications.getPermissionLevel(function (level) {
                     if (level === 'granted') {
                         chrome.downloads.search({id: downloadDelta.id}, arr => {
-                            if (Array.isArray(arr) && arr.length > 0 && notice) {
+                            if (Array.isArray(arr) && arr.length > 0) {
                                 chrome.notifications.create('danger-' + downloadDelta.id, {
                                     type: 'basic',
                                     title: chrome.i18n.getMessage('safetyWaring'),
@@ -62,7 +68,9 @@ chrome.downloads.onChanged.addListener(function (downloadDelta) {
                         });
                     }
                 });
-            pullProgress();
+            }
+            if (!progressRunning)
+                pullProgress();
             chrome.browserAction.setBadgeText({
                 text: downLoadingFiles.length + ''
             });
@@ -77,7 +85,8 @@ chrome.downloads.onChanged.addListener(function (downloadDelta) {
         });
     } else {
         if (downloadDelta.filename && downloadDelta.filename.current) {
-            pullProgress();
+            if (!progressRunning)
+                pullProgress();
             chrome.browserAction.setBadgeText({
                 text: downLoadingFiles.length + ''
             });
@@ -89,7 +98,7 @@ chrome.downloads.onChanged.addListener(function (downloadDelta) {
                 method: 'createDownloadItem',
                 data: downloadItem
             });
-            if (notice)
+            if (notice) {
                 chrome.notifications.create('start-' + downloadDelta.id, {
                     type: 'basic',
                     title: chrome.i18n.getMessage('downloadStart'),
@@ -99,6 +108,7 @@ chrome.downloads.onChanged.addListener(function (downloadDelta) {
                 }, notificationId => {
 
                 });
+            }
         }
 
         if (downloadDelta.state && downloadDelta.state.current === State.complete.code) {
@@ -109,11 +119,11 @@ chrome.downloads.onChanged.addListener(function (downloadDelta) {
                     method: 'downloadComplete',
                     data: downloadDelta
                 });
-                if (notice)
+                if (notice) {
                     chrome.notifications.getPermissionLevel(function (level) {
                         if (level === 'granted') {
                             chrome.downloads.search({id: downloadDelta.id}, results => {
-                                if (Array.isArray(results) && results.length > 0 && notice) {
+                                if (Array.isArray(results) && results.length > 0) {
                                     chrome.notifications.create('complete-' + downloadDelta.id, {
                                         type: 'basic',
                                         title: chrome.i18n.getMessage('downloadComplete'),
@@ -131,9 +141,23 @@ chrome.downloads.onChanged.addListener(function (downloadDelta) {
 
                                 }
                             });
-
                         }
                     });
+                }
+            });
+            chrome.downloads.search({
+                state: State.in_progress.code,
+                paused: false
+            }, function (results) {
+                //若没有正在下载的文件，则把图标改回默认
+                if (results.length === 0) {
+                    chrome.browserAction.setIcon({
+                        path: normalIcon
+                    });
+                    chrome.browserAction.setBadgeText({
+                        text: ''
+                    });
+                }
             });
         }
 
@@ -164,7 +188,8 @@ chrome.downloads.onChanged.addListener(function (downloadDelta) {
             } else {
                 //从暂停变为下载,并且之前状态指明可以回复
                 if (downloadDelta.canResume.previous) {
-                    pullProgress();
+                    if (!progressRunning)
+                        pullProgress();
                 } else {
                     //从下暂停变为下载,并且之前状态指明不可恢复
                     chrome.runtime.sendMessage({
@@ -184,11 +209,12 @@ chrome.downloads.onChanged.addListener(function (downloadDelta) {
             });
         }
 
-        if (downloadDelta.danger && downloadDelta.danger.current !== DangerType.safe.code && downloadDelta.danger.current !== DangerType.accepted.code && notice) {
+        if (downloadDelta.danger && downloadDelta.danger.current !== DangerType.safe.code
+            && downloadDelta.danger.current !== DangerType.accepted.code && notice) {
             chrome.notifications.getPermissionLevel(function (level) {
                 if (level === 'granted') {
                     chrome.downloads.search({id: downloadDelta.id}, results => {
-                        if (results.length > 0 && notice) {
+                        if (results.length > 0) {
                             chrome.notifications.create('danger-' + downloadDelta.id, {
                                 type: 'basic',
                                 title: chrome.i18n.getMessage('safetyWaring'),
@@ -283,47 +309,47 @@ chrome.downloads.search({}, function (results) {
 });
 
 /**
- * 循环读取文件下载进度
+ * 回调读取文件下载进度
  */
 function pullProgress() {
-    if (intervalId === -1) {
-        intervalId = window.setInterval(() => {
-            chrome.downloads.search({
-                state: State.in_progress.code,
-                paused: false
-            }, function (results) {
-                downLoadingFiles = results;
-                if (!results || results.length === 0) {
-                    window.clearInterval(intervalId);
-                    intervalId = -1;
-                    //todo 恢复默认图标
-                    chrome.browserAction.setIcon({
-                        path: normalIcon
-                    }, function () {
-                        // body...
-                    });
-                    chrome.browserAction.setBadgeText({
-                        text: ''
-                    });
-                    return;
-                }
-                chrome.browserAction.setBadgeText({
-                    text: downLoadingFiles.length + ''
-                });
-                //todo 这个方法无效
-                chrome.browserAction.setIcon({
-                    path: '/img/icon_green.png'
-                }, function () {
-                    // body...
-                });
-                //发送更新文件进度请求
-                chrome.runtime.sendMessage({
-                    method: 'updateProgress',
-                    data: downLoadingFiles
-                });
+    progressRunning = true;
+    var startTime = new Date().getTime();
+    chrome.downloads.search({
+        state: State.in_progress.code,
+        paused: false
+    }, function (results) {
+        downLoadingFiles = results;
+        //若没有正在下载的文件，则把图标改回默认
+        if (results.length === 0) {
+            chrome.browserAction.setIcon({
+                path: normalIcon
             });
-        }, 1000);
-    }
+            chrome.browserAction.setBadgeText({
+                text: ''
+            });
+            progressRunning = false;
+            return;
+        }
+        //否则改下载图标，改下载进度
+        chrome.browserAction.setBadgeText({
+            text: downLoadingFiles.length + ''
+        });
+        chrome.browserAction.setIcon({
+            path: '/img/icon_green.png'
+        }, function () {
+            // body...
+        });
+        //发送更新文件进度请求
+        chrome.runtime.sendMessage({
+            method: 'updateProgress',
+            data: downLoadingFiles
+        });
+        var endTime = new Date().getTime();
+        var timer = setTimeout(function () {
+            clearTimeout(timer);
+            pullProgress();
+        }, 1000 - (endTime - startTime));
+    });
 }
 
 pullProgress();

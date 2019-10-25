@@ -14,17 +14,22 @@ chrome.storage.sync.get(
 
 document.querySelector("#lightIcon").onchange = function () {
     let checked = this.checked;
+    let icon = '/img/icon_gray.png';
+    if (checked)
+        icon = '/img/icon_light.png';
     chrome.storage.sync.set(
         {
             lightIcon: checked
         }, function () {
-            if (checked) {
-                chrome.browserAction.setIcon({path: '/img/icon_light.png'});
-            } else {
-                chrome.browserAction.setIcon({path: '/img/icon_gray.png'});
-            }
+            chrome.browserAction.setIcon({path: icon});
         }
     );
+    chrome.runtime.sendMessage({
+        method: 'changeIcon',
+        data: icon
+    }, function () {
+
+    });
 };
 
 document.querySelector("#downloadNotice").onchange = function () {
@@ -36,4 +41,10 @@ document.querySelector("#downloadNotice").onchange = function () {
 
         }
     );
+    chrome.runtime.sendMessage({
+        method: 'changeNotice',
+        data: checked
+    }, function () {
+
+    });
 };

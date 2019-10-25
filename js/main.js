@@ -77,7 +77,8 @@ const updateIcon = function (data) {
 const updateProgress = function (dataList) {
     dataList.forEach(function (data) {
         let item = Item.of(data.id);
-        item.updateProgress(data);
+        if (item != null)
+            item.updateProgress(data);
     });
 };
 
@@ -109,7 +110,8 @@ const updateFilename = function (data) {
     if (data == null)
         return;
     let item = Item.of(data.id);
-    item.updateFilename(Util.filename(data.filename));
+    if (item != null)
+        item.updateFilename(Util.filename(data.filename));
 };
 
 /**
@@ -134,10 +136,12 @@ const updateFilename = function (data) {
  */
 const downloadComplete = function (downloadDelta) {
     let item = Item.of(downloadDelta.id);
-    let data = Util.convertDelta(downloadDelta);
-    if (data == null)
-        return;
-    item.downloadComplete(data);
+    if (item != null) {
+        let data = Util.convertDelta(downloadDelta);
+        if (data == null)
+            return;
+        item.downloadComplete(data);
+    }
 };
 
 /**
@@ -183,7 +187,8 @@ const createDownloadItem = function (data) {
  */
 const eraseDownloadItem = function (id) {
     let item = Item.of(id);
-    item.eraseDownloadItem();
+    if (item != null)
+        item.eraseDownloadItem();
     chrome.runtime.sendMessage({
         method: 'deleteIconCache',
         data: id
@@ -192,12 +197,14 @@ const eraseDownloadItem = function (id) {
 
 const cancelDownloadItem = function (id) {
     let item = Item.of(id);
-    item.cancelDownloadItem();
+    if (item != null)
+        item.cancelDownloadItem();
 };
 
 const pauseDownloadItem = function (id) {
     let item = Item.of(id);
-    item.pauseDownloadItem();
+    if (item != null)
+        item.pauseDownloadItem();
 };
 
 chrome.runtime.onMessage.addListener(function (request) {
@@ -288,7 +295,8 @@ $(document).on('dblclick', '.item > .type, .item > .info', function (e) {
             if (results[0].paused) {
                 chrome.downloads.resume(id, function () {
                     let item = Item.of(id);
-                    item.resumeDownloadItem();
+                    if (item != null)
+                        item.resumeDownloadItem();
                     chrome.runtime.sendMessage({
                         method: 'pullProgress'
                     });
@@ -371,13 +379,14 @@ $(document).on('contextmenu', '#body .item', function (e) {
     let $contextmenu = $(".contextmenu");
 
     let item = Item.of(downloadId);
-    if (item.data.state !== State.complete) {
-        $contextmenu.find('.open-file').hide();
-        $contextmenu.find('.open-file-folder').hide();
-    } else {
-        $contextmenu.find('.open-file').show();
-        $contextmenu.find('.open-file-folder').show();
-    }
+    if (item != null)
+        if (item.data.state !== State.complete) {
+            $contextmenu.find('.open-file').hide();
+            $contextmenu.find('.open-file-folder').hide();
+        } else {
+            $contextmenu.find('.open-file').show();
+            $contextmenu.find('.open-file-folder').show();
+        }
 
     // 获取窗口尺寸
     let winWidth = $(document).width();
