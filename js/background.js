@@ -157,6 +157,7 @@ chrome.downloads.onChanged.addListener(function (downloadDelta) {
                     chrome.browserAction.setBadgeText({
                         text: ''
                     });
+                    progressRunning = false;
                 }
             });
         }
