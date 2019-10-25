@@ -171,12 +171,24 @@
     "message": "下载管理配置",
     "description": "下载管理配置页面标题"
   },
-  "lightIcon": {
+  "iconDark": {
+    "message": "深色图标",
+    "description": "适用于浅色模式的图标"
+  },
+  "iconLight": {
     "message": "浅色图标",
     "description": "适用于深色模式的图标"
+  },
+  "iconAuto": {
+    "message": "自动",
+    "description": "根据浏览器颜色模式选择图标"
   },
   "downloadNotice": {
     "message": "下载通知",
     "description": "下载时发送一个通知以提醒用户"
+  },
+  "iconType": {
+    "message": "插件图标",
+    "description": "设置插件图标"
   }
 }

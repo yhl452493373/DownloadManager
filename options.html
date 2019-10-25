@@ -4,24 +4,30 @@
     <meta charset="UTF-8">
     <title>options</title>
     <style>
+        body {
+            font-size: 16px;
+        }
+
+        /*以下checkbox*/
+
         input[type=checkbox] {
             display: none;
         }
 
         input[type=checkbox] + label {
             padding: 2px 5px;
-            border-radius: 0;
             display: inline-block;
             position: relative;
             margin-right: 30px;
             background: #F7836D;
-            border: 1px solid #e65d59;
-            width: 35px;
-            height: 1.5em;
-            line-height: 1.5em;
-            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.1), 0 0 10px rgba(245, 146, 146, 0.4);
+            border: 2px solid #e65d59;
+            width: 50px;
+            height: 20px;
+            line-height: 20px;
             user-select: none;
             cursor: pointer;
+            vertical-align: middle;
+            border-radius: 15px;
         }
 
         input[type=checkbox] + label:before {
@@ -31,13 +37,13 @@
             top: 0;
             z-index: 99999;
             left: 0;
-            width: 20px;
+            width: 30px;
             color: #FFF;
-            height: 1.5em;
+            height: 20px;
             padding: 2px 0;
-            border-radius: 0;
             box-shadow: 0 0 1px rgba(0, 0, 0, 0.6);
             transition: all 0.1s ease-in;
+            border-radius: 15px 0 0 15px;
         }
 
         input[type=checkbox] + label:after {
@@ -52,35 +58,88 @@
 
         input[type=checkbox]:checked + label {
             background: #67A5DF;
-            border: 1px solid #3a749b;
+            border: 2px solid #3a749b;
             box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.1), 0 0 10px rgba(146, 196, 245, 0.4);
         }
 
         input[type=checkbox]:checked + label:after {
             content: '是';
-            left: 7px;
+            left: 8px;
         }
 
         input[type=checkbox]:checked + label:before {
             content: ' ';
             position: absolute;
             z-index: 99999;
-            left: 25px;
+            left: 30px;
+            border-radius: 0 15px 15px 0;
         }
 
         input[type=checkbox] + label:after {
-            right: 7px;
+            right: 8px;
+        }
+
+        /* 以下radio */
+        input[type=radio] {
+            /*去除浏览器默认样式*/
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            /*自定义样式*/
+            width: 22px;
+            height: 22px;
+            border: 2px solid #e65d59;
+            border-radius: 50%;
+            outline: none;
+            position: relative;
+            margin: 0;
+            vertical-align: middle;
+        }
+
+        input[type=radio]::after {
+            content: '';
+            display: block;
+            width: 14px;
+            height: 14px;
+            background: #F7836D;
+            border-radius: 12px;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            transform: scale(0);
+            -webkit-transform: scale(0);
+            -moz-transform: scale(0);
+            transition: all ease-in-out 300ms;
+            -webkit-transition: all ease-in-out 300ms;
+            -moz-transition: all ease-in-out 300ms;
+        }
+
+        input[type=radio]:checked {
+            border: 2px solid #3a749b;
+        }
+
+        input[type=radio]:checked::after {
+            background: #67A5DF;
+            transform: scale(1);
+        }
+
+        input[type=radio] + label {
+            vertical-align: middle;
         }
     </style>
 </head>
 <body>
 <table>
     <tr>
-        <td id="lightIconText">浅色图标</td>
+        <td id="iconType">图标颜色</td>
         <td>:</td>
         <td>
-            <input type="checkbox" id="lightIcon">
-            <label for="lightIcon"></label>
+            <input type="radio" name="iconType" value="dark" id="dark" checked>
+            <label for="dark" id="iconDark">深色图标</label>
+            <input type="radio" name="iconType" value="light" id="light">
+            <label for="light" id="iconLight">浅色图标</label>
+            <input type="radio" name="iconType" value="auto" id="auto">
+            <label for="auto" id="iconAuto">自动颜色图标</label>
         </td>
     </tr>
     <tr>

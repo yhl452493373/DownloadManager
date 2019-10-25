@@ -171,12 +171,24 @@
     "message": "Options",
     "description": "the title of DownloadManager config page"
   },
-  "lightIcon": {
+  "iconDark": {
+    "message": "Dark Icon",
+    "description": "a icon for light mode"
+  },
+  "iconLight": {
     "message": "Light Icon",
-    "description": "a light icon for dark mode"
+    "description": "a icon for dark mode"
+  },
+  "iconAuto": {
+    "message": "Auto",
+    "description": "auto set icon by browser's theme type"
   },
   "downloadNotice": {
     "message": "Download Notification",
     "description": "send a notification to user when you are downloading"
+  },
+  "iconType": {
+    "message": "Extension Icon",
+    "description": "set the icon of extension"
   }
 }

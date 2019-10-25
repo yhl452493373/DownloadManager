@@ -241,6 +241,12 @@ class Util {
             </div>
         </div>
           `;
+        if (!data.exists) {
+            //以下用于去除下载完成后的进度条
+            this.getElement('.name', item).style.marginTop = '4px';
+            this.getElement('.progress', item).style.display = 'none';
+            this.getElement('.status', item).style.marginTop = '-12px';
+        }
         return item;
     };
 
@@ -297,6 +303,11 @@ class Util {
                 that.getElement('.operation .icon-delete', item).parentNode.classList.remove('hide');
                 that.getElement('.operation .accept', item).parentNode.classList.add('hide');
                 that.getElement('.operation .reject', item).parentNode.classList.add('hide');
+
+                //以下用于去除下载完成后的进度条
+                that.getElement('.name', item).style.marginTop = '4px';
+                that.getElement('.progress', item).style.display = 'none';
+                that.getElement('.status', item).style.marginTop = '-12px';
                 return item;
             },
             downloading: function () {

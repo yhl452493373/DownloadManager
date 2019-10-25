@@ -174,6 +174,11 @@ class Item {
         Util.getElement('.operation .icon-delete', div).parentNode.classList.remove('hide');
         Util.getElement('.operation .accept', div).parentNode.classList.add('hide');
         Util.getElement('.operation .reject', div).parentNode.classList.add('hide');
+
+        //以下用于去除下载完成后的进度条
+        Util.getElement('.name', div).style.marginTop = '4px';
+        Util.getElement('.progress', div).style.display = 'none';
+        Util.getElement('.status', div).style.marginTop = '-12px';
     }
 
     eraseDownloadItem() {
@@ -201,6 +206,11 @@ class Item {
         Util.getElement('.operation .accept', div).parentNode.classList.add('hide');
         Util.getElement('.operation .reject', div).parentNode.classList.add('hide');
         div.classList.add('not-exists');
+
+        //以下用于去除下载完成后的进度条
+        Util.getElement('.name', div).style.marginTop = '4px';
+        Util.getElement('.progress', div).style.display = 'none';
+        Util.getElement('.status', div).style.marginTop = '-12px';
     }
 
     pauseDownloadItem() {
