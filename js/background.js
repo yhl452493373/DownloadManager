@@ -9,29 +9,17 @@ if (chrome.downloads && chrome.downloads.setShelfEnabled)
 
 let normalIcon = '/img/icon_gray.png';
 let notice = false;
+
+changeIcon();
+
 chrome.storage.sync.get(
     {
-        iconType: 'dark',
         downloadNotice: false
     }, function (obj) {
-        let iconType = obj.iconType;
-        let icon = '/img/icon_gray.png';
-        if (iconType === 'dark') {
-            icon = '/img/icon_gray.png';
-        } else if (iconType === 'light') {
-            icon = '/img/icon_light.png';
-        } else {
-            if (isDark()) {
-                icon = '/img/icon_light.png';
-            } else {
-                icon = '/img/icon_gray.png';
-            }
-        }
-        normalIcon = icon;
-        chrome.browserAction.setIcon({path: normalIcon});
         notice = obj.downloadNotice;
     }
 );
+
 
 chrome.runtime.onMessage.addListener(function (request) {
     if (request.method === 'pullProgress') {
@@ -41,8 +29,6 @@ chrome.runtime.onMessage.addListener(function (request) {
         cacheIcon(request.data);
     } else if (request.method === 'deleteIconCache') {
         delete iconCache[request.data];
-    } else if (request.method === 'changeIcon') {
-        normalIcon = request.data;
     } else if (request.method === 'changeNotice') {
         notice = request.data;
     }
@@ -367,6 +353,15 @@ function pullProgress() {
 //是否深色模式
 function isDark() {
     return window.matchMedia("(prefers-color-scheme: dark)").matches;
+}
+
+function changeIcon() {
+    if (isDark()) {
+        normalIcon = '/img/icon_light.png';
+    } else {
+        normalIcon = '/img/icon_gray.png';
+    }
+    chrome.browserAction.setIcon({path: normalIcon});
 }
 
 pullProgress();

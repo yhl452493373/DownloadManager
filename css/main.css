@@ -10,7 +10,7 @@ html, body {
 }
 
 body {
-    font-family: PingFang SC, Verdana, Helvetica Neue, Microsoft Yahei, Hiragino Sans GB, Microsoft Sans Serif, WenQuanYi Micro Hei, sans-serif;    
+    font-family: PingFang SC, Verdana, Helvetica Neue, Microsoft Yahei, Hiragino Sans GB, Microsoft Sans Serif, WenQuanYi Micro Hei, sans-serif;
 }
 
 .hide {
@@ -334,4 +334,50 @@ body {
 
 .contextmenu li:hover span {
     color: #FF0000;
+}
+
+@media (prefers-color-scheme: dark) {
+    .header {
+        background: rgb(70, 70, 70) !important;
+        border-bottom-color: rgb(62, 64, 66) !important;
+        color: rgb(247, 247, 247) !important;
+    }
+
+    .header .search i {
+        color: rgb(247, 247, 247) !important;
+    }
+
+    .header input {
+        background: rgb(38, 38, 38) !important;
+        border-color: rgb(38, 38, 38) !important;
+        color: rgb(247, 247, 247) !important;
+    }
+
+    .header input::-webkit-input-placeholder {
+        color: rgb(247, 247, 247) !important;
+    }
+
+    .body {
+        background: rgb(51, 51, 51);
+        color: rgb(247, 247, 247) !important;
+    }
+
+    .body .item:hover {
+        background: rgb(60, 60, 60) !important;
+    }
+
+    .contextmenu {
+        background: rgb(45, 45, 45) !important;
+        box-shadow: 5px 5px 5px rgb(55, 55, 55) !important;
+        border-color: rgb(55, 55, 55) !important;
+    }
+
+    .contextmenu li span {
+        color: rgb(247, 247, 247) !important;
+    }
+
+    .contextmenu li:hover {
+        background: rgb(75, 75, 75) !important;
+        border-left-color: rgb(90, 90, 90);
+    }
 }
