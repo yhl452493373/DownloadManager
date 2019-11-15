@@ -20,12 +20,13 @@ chrome.storage.sync.get(
     }, function (obj) {
         document.querySelector("input[name=iconType][value=" + obj.iconType + "]").click();
         document.querySelector("input[name=downloadSound][value=" + obj.downloadSound + "]").click();
-        if (typeof obj.downloadNotice === "string")
-            document.querySelector("input[name=downloadNotice][value=" + obj.downloadNotice + "]").click();
+        if (typeof obj.downloadNotice === "string" || obj.downloadNotice.length === 0)
+            document.querySelector("input[name=downloadNotice][value=off]").click();
         else if (Array.isArray(obj.downloadNotice)) {
-            obj.downloadNotice.forEach(function (value) {
-                document.querySelector("input[name=downloadNotice][value=" + value + "]").click();
-            });
+            if (obj.downloadNotice.length > 0)
+                obj.downloadNotice.forEach(function (value) {
+                    document.querySelector("input[name=downloadNotice][value=" + value + "]").click();
+                });
         }
     }
 );
@@ -97,7 +98,6 @@ document.querySelectorAll("input[name=downloadNotice]").forEach(function (input)
             if (notices.length === 0)
                 document.querySelector("input[name=downloadNotice][value=off]").checked = true;
         }
-        console.log(notices);
         chrome.storage.sync.set(
             {
                 downloadNotice: notices
