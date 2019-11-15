@@ -8,15 +8,34 @@ if (chrome.downloads && chrome.downloads.setShelfEnabled)
     chrome.downloads.setShelfEnabled(false);
 
 let normalIcon = '/img/icon_gray.png';
-let notice = false;
+let notice = 'off';
+let sound = 'off';
 
 changeIcon();
 
 chrome.storage.sync.get(
     {
-        downloadNotice: false
+        iconType: 'auto',
+        downloadNotice: false,
+        downloadSound: false
     }, function (obj) {
+        let iconType = obj.iconType;
+        let icon = '/img/icon_gray.png';
+        if (iconType === 'dark') {
+            icon = '/img/icon_gray.png';
+        } else if (iconType === 'light') {
+            icon = '/img/icon_light.png';
+        } else {
+            if (isDark()) {
+                icon = '/img/icon_light.png';
+            } else {
+                icon = '/img/icon_gray.png';
+            }
+        }
+        normalIcon = icon;
         notice = obj.downloadNotice;
+        sound = obj.downloadSound;
+        chrome.browserAction.setIcon({path: normalIcon});
     }
 );
 
@@ -29,8 +48,22 @@ chrome.runtime.onMessage.addListener(function (request) {
         cacheIcon(request.data);
     } else if (request.method === 'deleteIconCache') {
         delete iconCache[request.data];
+    } else if (request.method === 'changeIcon') {
+        normalIcon = request.data;
+        chrome.downloads.search({
+            state: State.in_progress.code
+        }, function (results) {
+            //若没有正在下载的文件，则修改图标
+            if (results.length === 0) {
+                chrome.browserAction.setIcon({
+                    path: normalIcon
+                });
+            }
+        });
     } else if (request.method === 'changeNotice') {
         notice = request.data;
+    } else if (request.method === 'changeSound') {
+        sound = request.data;
     }
 });
 
@@ -45,7 +78,7 @@ chrome.downloads.onChanged.addListener(function (downloadDelta) {
     if (downloadDelta.danger && downloadDelta.danger.current !== DangerType.safe.code
         && downloadDelta.danger.current !== DangerType.accepted.code) {
         cacheIcon(downloadDelta.id, false, function (cachedIcon) {
-            if (notice) {
+            if (Array.isArray(notice) && notice.indexOf('danger') !== -1) {
                 chrome.notifications.getPermissionLevel(function (level) {
                     if (level === 'granted') {
                         chrome.downloads.search({id: downloadDelta.id}, arr => {
@@ -95,7 +128,7 @@ chrome.downloads.onChanged.addListener(function (downloadDelta) {
                 method: 'createDownloadItem',
                 data: downloadItem
             });
-            if (notice) {
+            if (Array.isArray(notice) && notice.indexOf('start') !== -1) {
                 chrome.notifications.create('start-' + downloadDelta.id, {
                     type: 'basic',
                     title: chrome.i18n.getMessage('downloadStart'),
@@ -109,6 +142,8 @@ chrome.downloads.onChanged.addListener(function (downloadDelta) {
         }
 
         if (downloadDelta.state && downloadDelta.state.current === State.complete.code) {
+            if (sound === 'on')
+                playSound();
             //下载完成更新图标
             cacheIcon(downloadDelta.id, true, function (cachedIcon) {
                 //发送文件下载完成请求
@@ -116,7 +151,7 @@ chrome.downloads.onChanged.addListener(function (downloadDelta) {
                     method: 'downloadComplete',
                     data: downloadDelta
                 });
-                if (notice) {
+                if (Array.isArray(notice) && notice.indexOf('complete') !== -1) {
                     chrome.notifications.getPermissionLevel(function (level) {
                         if (level === 'granted') {
                             chrome.downloads.search({id: downloadDelta.id}, results => {
@@ -362,6 +397,13 @@ function changeIcon() {
         normalIcon = '/img/icon_gray.png';
     }
     chrome.browserAction.setIcon({path: normalIcon});
+}
+
+let wav = "audio/download-complete.wav";
+let audio = new Audio(wav);
+
+function playSound() {
+    audio.play();
 }
 
 pullProgress();

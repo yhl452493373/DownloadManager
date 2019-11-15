@@ -171,8 +171,52 @@
     "message": "Options",
     "description": "the title of DownloadManager config page"
   },
+  "iconType": {
+    "message": "Extension Icon",
+    "description": "set the icon of extension"
+  },
+  "iconAuto": {
+    "message": "Auto",
+    "description": "auto set icon by browser's theme type"
+  },
+  "iconDark": {
+    "message": "Dark",
+    "description": "a icon for light mode"
+  },
+  "iconLight": {
+    "message": "Light",
+    "description": "a icon for dark mode"
+  },
+  "downloadSound": {
+    "message": "Download Sound",
+    "description": "play sound when download complete"
+  },
+  "soundOn": {
+    "message": "Enable",
+    "description": "play sound when download complete"
+  },
+  "soundOff": {
+    "message": "Disable",
+    "description": "does not play sound when download complete"
+  },
   "downloadNotice": {
     "message": "Download Notification",
     "description": "send a notification to user when you are downloading"
+  },
+  "noticeOff": {
+    "message": "Disable",
+    "description": "disable download notification"
+  },
+  "startNotice": {
+    "message": "Start",
+    "description": "send a notification to user when you start downloading"
+  },
+  "completeNotice": {
+    "message": "Complete",
+    "description": "send a notification to user when download complete"
+  },
+  "dangerNotice": {
+    "message": "Danger",
+    "description": "send a notification to user when download file is danger"
   }
 }

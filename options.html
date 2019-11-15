@@ -6,16 +6,60 @@
     <link rel="stylesheet" href="css/options.css">
 </head>
 <body>
-<table>
-    <tr>
-        <td id="downloadNoticeText">下载通知</td>
-        <td>:</td>
-        <td>
-            <input type="checkbox" id="downloadNotice">
-            <label for="downloadNotice"></label>
-        </td>
-    </tr>
-</table>
+<ul class="ul_box">
+    <li>
+        <div class="label" id="iconType">图标颜色：</div>
+        <div class="label_box">
+            <label>
+                <input type="radio" name="iconType"  value="auto">
+                <span id="iconAuto">自动</span>
+            </label>
+            <label>
+                <input type="radio" name="iconType" value="dark">
+                <span id="iconDark">深色</span>
+            </label>
+            <label>
+                <input type="radio" name="iconType" value="light">
+                <span id="iconLight">浅色</span>
+            </label>
+        </div>
+    </li>
+    <li>
+        <div class="label" id="downloadNotice">下载通知：</div>
+        <div class="label_box">
+            <label>
+                <input type="checkbox" name="downloadNotice" value="off">
+                <span id="noticeOff">关闭</span>
+            </label>
+            <label>
+                <input type="checkbox" name="downloadNotice" value="start">
+                <span id="downloadStart">下载开始</span>
+            </label>
+            <label>
+                <input type="checkbox" name="downloadNotice" value="complete">
+                <span id="downloadComplete">下载完成</span>
+            </label>
+            <label>
+                <input type="checkbox" name="downloadNotice" value="danger">
+                <span id="downloadDanger">下载警告</span>
+            </label>
+        </div>
+    </li>
+    <li>
+        <div class="label" id="downloadSound">下载提示音：</div>
+        <div class="label_box">
+            <label>
+                <input type="radio" name="downloadSound" value="off">
+                <span id="soundOff">关闭</span>
+            </label>
+            <label>
+                <input type="radio" name="downloadSound"  value="on">
+                <span id="soundOn">开启</span>
+            </label>
+        </div>
+    </li>
+</ul>
+
 <script type="module" src="js/options.js"></script>
 </body>
 </html>
