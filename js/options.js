@@ -84,6 +84,7 @@ document.querySelectorAll("input[name=downloadNotice]").forEach(function (input)
         notices = [];
         if (this.value === 'off') {
             notices = [];
+            this.checked = true;
             document.querySelectorAll("input[name=downloadNotice]").forEach(function (input) {
                 if (input.value !== 'off')
                     input.checked = false;
