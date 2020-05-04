@@ -37,7 +37,13 @@ const updateIcon = function (data) {
         return;
     let id = data.id;
     if (data.hasOwnProperty('icon')) {
-        document.querySelector('#item_' + id).querySelector('img.icon').src = data.icon;
+        let dom = document.querySelector('#item_' + id);
+        if(dom){
+            let imgDom = dom.querySelector('img.icon');
+            if(imgDom){
+                imgDom.src = data.icon;
+            }
+        }
     } else {
         chrome.runtime.sendMessage({
             method: 'cacheIcon',
