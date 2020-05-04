@@ -120,7 +120,7 @@ class Util {
         if (typeof data.error === 'string')
             data.error = InterruptReason.valueOf(data.error);
         if (data.canResume)
-        // noinspection JSValidateTypes
+            // noinspection JSValidateTypes
             data.state = State.pause;
         // noinspection JSValidateTypes
         return data;
@@ -171,7 +171,7 @@ class Util {
             state: data.state,
             exists: data.state === State.interrupted ? false : data.exists
         };
-        }
+    }
 
     /**
      *
@@ -196,7 +196,7 @@ class Util {
         }
         item.innerHTML = `
         <div class="type">
-            <img class="icon" src="${data.icon}" alt="">
+            <img class="icon" src="${data.icon || 'img/icon_gray.png'}" alt="">
         </div>
         <div class="info">
             <div class="name">
