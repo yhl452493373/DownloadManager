@@ -290,7 +290,8 @@ $(document).on('dblclick', '.item > .type, .item > .info', function (e) {
         id: id
     }, function (results) {
         if (results.length > 0) {
-            if (results[0].paused) {
+            let item = results[0];
+            if (item.paused || item.state === State.interrupted.code) {//如果是暂停了。或者状态是中断了
                 chrome.downloads.resume(id, function () {
                     let item = Item.of(id);
                     if (item != null)
