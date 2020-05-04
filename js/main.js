@@ -42,8 +42,6 @@ const updateIcon = function (data) {
         chrome.runtime.sendMessage({
             method: 'cacheIcon',
             data: id
-        }, function () {
-
         });
     }
 };
