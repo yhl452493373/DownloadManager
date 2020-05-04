@@ -75,8 +75,7 @@ chrome.downloads.onChanged.addListener(function (downloadDelta) {
     if (!iconCache.hasOwnProperty(downloadDelta.id) || Util.emptyString(iconCache[downloadDelta.id].icon)) {
         cacheIcon(downloadDelta.id);
     }
-    if (downloadDelta.danger && downloadDelta.danger.current !== DangerType.safe.code
-        && downloadDelta.danger.current !== DangerType.accepted.code) {
+    if (downloadDelta.danger && downloadDelta.danger.current !== DangerType.safe.code && downloadDelta.danger.current !== DangerType.accepted.code) {
         cacheIcon(downloadDelta.id, false, function (cachedIcon) {
             if (Array.isArray(notice) && notice.indexOf('danger') !== -1) {
                 chrome.notifications.getPermissionLevel(function (level) {
@@ -242,8 +241,7 @@ chrome.downloads.onChanged.addListener(function (downloadDelta) {
             });
         }
 
-        if (downloadDelta.danger && downloadDelta.danger.current !== DangerType.safe.code
-            && downloadDelta.danger.current !== DangerType.accepted.code && notice) {
+        if (downloadDelta.danger && downloadDelta.danger.current !== DangerType.safe.code && downloadDelta.danger.current !== DangerType.accepted.code && notice) {
             chrome.notifications.getPermissionLevel(function (level) {
                 if (level === 'granted') {
                     chrome.downloads.search({id: downloadDelta.id}, results => {
@@ -278,7 +276,7 @@ chrome.downloads.onErased.addListener(function (id) {
 chrome.notifications.onClicked.addListener(notificationId => {
     if (notificationId.indexOf('danger') !== -1) {
         // 发送渲染有危险的条目请求
-        let itemId = parseInt(id.substring(id.indexOf("-") + 1))
+        let itemId = parseInt(id.substring(id.indexOf("-") + 1));
     }
     chrome.notifications.clear(notificationId);
 });
@@ -329,7 +327,9 @@ function cacheIcon(id, force = false, callback = null) {
                     method: 'updateIcon',
                     data: iconCache[id]
                 });
-                callback && callback(iconCache[id]);
+                if(callback){
+                    callback(iconCache[id]);
+                }
             }
         });
     }
@@ -338,7 +338,7 @@ function cacheIcon(id, force = false, callback = null) {
 chrome.downloads.search({}, function (results) {
     results.forEach(function (result) {
         cacheIcon(result.id);
-    })
+    });
 });
 
 /**

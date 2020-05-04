@@ -1,7 +1,7 @@
-import {DangerType} from "./DangerType.js";
-import {State} from "./State.js";
-import {InterruptReason} from "./InterruptReason.js";
-import {Item} from "./Item.js";
+import { DangerType } from "./DangerType.js";
+import { State } from "./State.js";
+import { InterruptReason } from "./InterruptReason.js";
+import { Item } from "./Item.js";
 
 class Util {
 
@@ -159,7 +159,7 @@ class Util {
         if (progress === '100%' && data.totalBytes !== -1) {
             finalReceived = null;
         }
-        let id = data['id'];
+        let id = data.id;
         return {
             id: id,
             speed: '0B/s',
@@ -170,8 +170,8 @@ class Util {
             progress: progress,
             state: data.state,
             exists: data.state === State.interrupted ? false : data.exists
+        };
         }
-    }
 
     /**
      *
@@ -179,7 +179,7 @@ class Util {
      * @return {string}
      */
     static filename(fullFilename) {
-        return fullFilename.substring(Math.max(fullFilename.lastIndexOf('\\'), fullFilename.lastIndexOf('/')) + 1)
+        return fullFilename.substring(Math.max(fullFilename.lastIndexOf('\\'), fullFilename.lastIndexOf('/')) + 1);
     }
 
     /**
@@ -248,7 +248,7 @@ class Util {
             this.getElement('.status', item).style.marginTop = '-12px';
         }
         return item;
-    };
+    }
 
     /**
      *
@@ -443,4 +443,4 @@ class Util {
     }
 }
 
-export {Util}
+export { Util };

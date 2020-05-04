@@ -10,4 +10,4 @@ class DoubleDelta {
     }
 }
 
-export {DoubleDelta}
+export { DoubleDelta };

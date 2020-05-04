@@ -1,4 +1,4 @@
-import {Enum} from "./Enum.js";
+import { Enum } from "./Enum.js";
 
 class State extends Enum {
     // noinspection JSUnusedGlobalSymbols
@@ -13,4 +13,4 @@ class State extends Enum {
     static pending = new Enum('pending', chrome.i18n.getMessage('pending'));
 }
 
-export {State}
+export { State };

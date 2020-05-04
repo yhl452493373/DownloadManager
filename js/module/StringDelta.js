@@ -10,4 +10,4 @@ class StringDelta {
     }
 }
 
-export {StringDelta}
+export { StringDelta };

@@ -1,10 +1,10 @@
-import {Enum} from "./Enum.js";
+import { Enum } from "./Enum.js";
 
 class DangerType extends Enum {
     // noinspection JSUnusedGlobalSymbols
     static file = new Enum("file", chrome.i18n.getMessage('fileDanger'));
     // noinspection JSUnusedGlobalSymbols
-    static  url = new Enum('url', chrome.i18n.getMessage('urlDanger'));
+    static url = new Enum('url', chrome.i18n.getMessage('urlDanger'));
     // noinspection JSUnusedGlobalSymbols
     static content = new Enum('content', chrome.i18n.getMessage('contentDanger'));
     // noinspection JSUnusedGlobalSymbols
@@ -19,4 +19,4 @@ class DangerType extends Enum {
     static accepted = new Enum('accepted', chrome.i18n.getMessage('acceptedDanger'));
 }
 
-export {DangerType}
+export { DangerType };

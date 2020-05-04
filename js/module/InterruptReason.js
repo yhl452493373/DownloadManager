@@ -1,4 +1,4 @@
-import {Enum} from "./Enum.js";
+import { Enum } from "./Enum.js";
 
 class InterruptReason extends Enum {
     // noinspection JSUnusedGlobalSymbols
@@ -61,4 +61,4 @@ class InterruptReason extends Enum {
     static CRASH = new Enum("CRASH");
 }
 
-export {InterruptReason}
+export { InterruptReason };

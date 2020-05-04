@@ -13,4 +13,4 @@ class Enum {
     }
 }
 
-export {Enum}
+export { Enum };

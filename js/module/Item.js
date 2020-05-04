@@ -1,6 +1,6 @@
-import {Util} from './Util.js'
-import {State} from './State.js'
-import {DangerType} from "./DangerType.js";
+import { Util } from './Util.js';
+import { State } from './State.js';
+import { DangerType } from "./DangerType.js";
 
 class Item {
     /**
@@ -55,8 +55,7 @@ class Item {
         } else if (this.data.state === State.interrupted) {
             return render.interrupted();
         }
-
-    };
+    }
 
     speed() {
         let speed = this.data.bytesReceived === 0 ? '0B/s' : Util.formatBytes(this.data.bytesReceived - this.lastBytesReceived) + '/s';
@@ -231,4 +230,4 @@ class Item {
     }
 }
 
-export {Item}
+export { Item };

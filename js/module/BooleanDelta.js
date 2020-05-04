@@ -10,4 +10,4 @@ class BooleanDelta {
     }
 }
 
-export {BooleanDelta}
+export { BooleanDelta };
