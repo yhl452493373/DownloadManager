@@ -211,33 +211,33 @@ class Util {
                 <span class="state">${data.state}</span>
                 <span class="speed">, ${data.speed} - </span>
                 <span class="received">${data.received}</span>
-                <span class="size">, ` + chrome.i18n.getMessage('total') + ` ${data.size}</span>            
+                <span class="size">, ${chrome.i18n.getMessage('total')} ${data.size}</span>            
             </div>
             <div class="danger hide">
                 <span class="danger-type"></span>
             </div>
         </div>
         <div class="operation">
-            <div class="event hide" title="` + chrome.i18n.getMessage('reDownload') + `">
+            <div class="event hide" title="${chrome.i18n.getMessage('reDownload')}">
                 <i class="iconfont icon-refresh"></i>
             </div>
-            <div class="event hide" title="` + chrome.i18n.getMessage('continueDownload') + `">
+            <div class="event hide" title="${chrome.i18n.getMessage('continueDownload')}">
                 <i class="iconfont icon-resume"></i>
             </div>
-            <div class="event hide" title="` + chrome.i18n.getMessage('pauseDownload') + `">
+            <div class="event hide" title="${chrome.i18n.getMessage('pauseDownload')}">
                 <i class="iconfont icon-pause"></i>
             </div>     
-            <div class="event hide" title="` + chrome.i18n.getMessage('openFile') + `">
+            <div class="event hide" title="${chrome.i18n.getMessage('openFile')}">
                 <i class="iconfont icon-open"></i>
             </div>
-            <div class="event" title="` + chrome.i18n.getMessage('deleteHistory') + `">
+            <div class="event" title="${chrome.i18n.getMessage('deleteHistory')}">
                 <i class="iconfont icon-delete"></i>
             </div>
-            <div class="event hide" title="` + chrome.i18n.getMessage('cancelDownload') + `">
-                <span class="reject">` + chrome.i18n.getMessage('cancel') + `</span>
+            <div class="event hide" title="${chrome.i18n.getMessage('cancelDownload')}">
+                <span class="reject">${chrome.i18n.getMessage('cancel')}</span>
             </div>
-            <div class="event hide" title="` + chrome.i18n.getMessage('saveFile') + `">
-                <span class="accept">` + chrome.i18n.getMessage('accept') + `</span>
+            <div class="event hide" title="${chrome.i18n.getMessage('saveFile')}">
+                <span class="accept">${chrome.i18n.getMessage('accept')}</span>
             </div>
         </div>
           `;
