@@ -326,7 +326,8 @@ $(document).on('dblclick', '.item > .type, .item > .info', function (e) {
         id: id
     }, function (results) {
         if (results.length > 0) {
-            let url = results[0].url;
+            let item = results[0];
+            let url = item.finalUrl || item.url;
             chrome.downloads.download({url: url}, function () {
                 chrome.downloads.erase({
                     id: id
