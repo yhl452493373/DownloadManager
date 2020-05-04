@@ -1,9 +1,9 @@
-import {Util} from "./module/Util.js";
-import {Item} from "./module/Item.js";
-import {StringDelta} from "./module/StringDelta.js";
-import {BooleanDelta} from "./module/BooleanDelta.js";
-import {DoubleDelta} from "./module/DoubleDelta.js";
-import {State} from "./module/State.js";
+import { Util } from "./module/Util.js";
+import { Item } from "./module/Item.js";
+import { StringDelta } from "./module/StringDelta.js";
+import { BooleanDelta } from "./module/BooleanDelta.js";
+import { DoubleDelta } from "./module/DoubleDelta.js";
+import { State } from "./module/State.js";
 import $ from "./module/jquery.min.js";
 
 /**
@@ -38,9 +38,9 @@ const updateIcon = function (data) {
     let id = data.id;
     if (data.hasOwnProperty('icon')) {
         let dom = document.querySelector('#item_' + id);
-        if(dom){
+        if (dom) {
             let imgDom = dom.querySelector('img.icon');
-            if(imgDom){
+            if (imgDom) {
                 imgDom.src = data.icon;
             }
         }
@@ -81,8 +81,9 @@ const updateIcon = function (data) {
 const updateProgress = function (dataList) {
     dataList.forEach(function (data) {
         let item = Item.of(data.id);
-        if (item != null)
+        if (item != null){
             item.updateProgress(data);
+        }
     });
 };
 
@@ -142,9 +143,9 @@ const downloadComplete = function (downloadDelta) {
     let item = Item.of(downloadDelta.id);
     if (item != null) {
         let data = Util.convertDelta(downloadDelta);
-        if (data == null)
-            return;
-        item.downloadComplete(data);
+        if (data !== null){
+            item.downloadComplete(data);
+        }
     }
 };
 
@@ -191,8 +192,9 @@ const createDownloadItem = function (data) {
  */
 const eraseDownloadItem = function (id) {
     let item = Item.of(id);
-    if (item != null)
+    if (item != null){
         item.eraseDownloadItem();
+    }
     chrome.runtime.sendMessage({
         method: 'deleteIconCache',
         data: id
@@ -201,15 +203,57 @@ const eraseDownloadItem = function (id) {
 
 const cancelDownloadItem = function (id) {
     let item = Item.of(id);
-    if (item != null)
+    if (item != null){
+        //先将当前任务标记为取消下载的状态
         item.cancelDownloadItem();
+    }
+};
+
+/**
+ * 恢复下载
+ * @param {*} id
+ */
+const resumeDownloadItem = function(id){
+    let item = Item.of(id);
+    if (item != null){
+        item.resumeDownloadItem();
+        chrome.runtime.sendMessage({
+            method: 'pullProgress'
+        });
+    }
+};
+
+/**
+ * 尝试恢复下载
+ * @param {*} id 
+ */
+const tryResumeDownloadWait = function(id){
+    let item = Item.of(id);
+    if (item != null){
+        item.tryResumeWaitDownloadItem();
+    }
+};
+
+
+/**
+ * 尝试恢复下载失败
+ * @param {*} id 
+ */
+const tryResumeDownloadFail = function(id){
+    let item = Item.of(id);
+    if (item != null){
+        item.tryAutoResumeFailDownloadItem();
+    }
 };
 
 const pauseDownloadItem = function (id) {
     let item = Item.of(id);
-    if (item != null)
+    if (item != null) {
         item.pauseDownloadItem();
+    }
 };
+
+
 
 chrome.runtime.onMessage.addListener(function (request) {
     if (request.method === 'updateProgress') {
@@ -228,21 +272,28 @@ chrome.runtime.onMessage.addListener(function (request) {
         pauseDownloadItem(request.data);
     } else if (request.method === 'cancelDownloadItem') {
         cancelDownloadItem(request.data);
+    } else if (request.method === 'resumeDownloadItem'){
+        resumeDownloadItem(request.data);
+    } else if (request.method === 'tryResumeDownloadWait'){
+        tryResumeDownloadWait(request.data);
+    } else if (request.method === 'tryResumeDownloadFail'){
+        tryResumeDownloadFail(request.data);
     }
 });
 
 chrome.downloads.search({
     orderBy: ["-startTime"]
 }, function (results) {
-    if (results.length > 0)
+    if (results.length > 0){
         Util.getElement('#empty').style.display = 'none';
-    results.forEach(function (result) {
-        if (Util.emptyString(result.filename))
-            return;
-        let item = new Item(result).render();
-        Util.getElement('#body').appendChild(item);
-        updateIcon(result);
-    });
+        results.forEach(function (result) {
+            if (!Util.emptyString(result.filename)){
+                let item = new Item(result).render();
+                Util.getElement('#body').appendChild(item);
+                updateIcon(result);
+            }
+        });
+    }
 });
 
 /**
@@ -292,22 +343,9 @@ $(document).on('dblclick', '.item > .type, .item > .info', function (e) {
     });
 }).on('click', '.event .icon-resume', function (e) {
     let id = getDownloadItemId(e.target);
-    chrome.downloads.search({
-        id: id
-    }, function (results) {
-        if (results.length > 0) {
-            let item = results[0];
-            if (item.paused || item.state === State.interrupted.code) {//如果是暂停了。或者状态是中断了
-                chrome.downloads.resume(id, function () {
-                    let item = Item.of(id);
-                    if (item != null)
-                        item.resumeDownloadItem();
-                    chrome.runtime.sendMessage({
-                        method: 'pullProgress'
-                    });
-                });
-            }
-        }
+    chrome.runtime.sendMessage({
+        method : 'resumeTask',
+        data : id
     });
 }).on('click', '.event .icon-pause', function (e) {
     let id = getDownloadItemId(e.target);
@@ -328,7 +366,7 @@ $(document).on('dblclick', '.item > .type, .item > .info', function (e) {
         if (results.length > 0) {
             let item = results[0];
             let url = item.finalUrl || item.url;
-            chrome.downloads.download({url: url}, function () {
+            chrome.downloads.download({ url: url }, function () {
                 chrome.downloads.erase({
                     id: id
                 }, function () {
@@ -345,7 +383,7 @@ $(document).on('dblclick', '.item > .type, .item > .info', function (e) {
 }).on('click', '.clear-download-item', function (e) {
     chrome.downloads.search({}, function (results) {
         results.forEach(function (result) {
-            chrome.downloads.erase({id: result.id}, function (erasedIds) {
+            chrome.downloads.erase({ id: result.id }, function (erasedIds) {
                 eraseDownloadItem(erasedIds[0]);
             });
         });
@@ -439,7 +477,7 @@ $(document).on('contextmenu', '#body .item', function (e) {
     }).on('click', '.open-file-folder', function () {
         chrome.downloads.show(downloadId);
     }).on('click', '.copy-filename', function () {
-        chrome.downloads.search({id: downloadId}, function (results) {
+        chrome.downloads.search({ id: downloadId }, function (results) {
             if (results.length > 0) {
                 let result = results[0];
                 let filename = Util.filename(result.filename);
@@ -447,7 +485,7 @@ $(document).on('contextmenu', '#body .item', function (e) {
             }
         });
     }).on('click', '.copy-download-url', function () {
-        chrome.downloads.search({id: downloadId}, function (results) {
+        chrome.downloads.search({ id: downloadId }, function (results) {
             if (results.length > 0) {
                 let result = results[0];
                 copyToClipboard(result.finalUrl || result.url);
@@ -459,7 +497,7 @@ $(document).on('contextmenu', '#body .item', function (e) {
         }, function (results) {
             if (results.length > 0) {
                 let url = results[0].url;
-                chrome.downloads.download({url: url}, function () {
+                chrome.downloads.download({ url: url }, function () {
                     chrome.downloads.erase({
                         id: id
                     }, function () {

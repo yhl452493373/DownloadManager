@@ -10,6 +10,7 @@ if (chrome.downloads && chrome.downloads.setShelfEnabled)
 let normalIcon = '/img/icon_gray.png';
 let notice = 'off';
 let sound = 'off';
+let autoResume = false;
 
 changeIcon();
 
@@ -17,7 +18,8 @@ chrome.storage.sync.get(
     {
         iconType: 'auto',
         downloadNotice: false,
-        downloadSound: false
+        downloadSound: false,
+        downloadAutoResume : 'off'
     }, function (obj) {
         let iconType = obj.iconType;
         let icon = '/img/icon_gray.png';
@@ -35,6 +37,7 @@ chrome.storage.sync.get(
         normalIcon = icon;
         notice = obj.downloadNotice;
         sound = obj.downloadSound;
+        autoResume = 'on' === obj.downloadAutoResume;
         chrome.browserAction.setIcon({path: normalIcon});
     }
 );
@@ -42,8 +45,9 @@ chrome.storage.sync.get(
 
 chrome.runtime.onMessage.addListener(function (request) {
     if (request.method === 'pullProgress') {
-        if (!progressRunning)
+        if (!progressRunning){
             pullProgress();
+        }
     } else if (request.method === 'cacheIcon') {
         cacheIcon(request.data);
     } else if (request.method === 'deleteIconCache') {
@@ -64,6 +68,10 @@ chrome.runtime.onMessage.addListener(function (request) {
         notice = request.data;
     } else if (request.method === 'changeSound') {
         sound = request.data;
+    } else if (request.method === 'changeAutoResume'){
+        autoResume = "on" === request.data;
+    } else if(request.method === 'resumeTask'){//恢复下载的功能，应该是放在后台执行的
+        resumeTask(request.data);
     }
 });
 
@@ -141,8 +149,10 @@ chrome.downloads.onChanged.addListener(function (downloadDelta) {
         }
 
         if (downloadDelta.state && downloadDelta.state.current === State.complete.code) {
-            if (sound === 'on')
+            if (sound === 'on'){
                 playSound();
+            }
+
             //下载完成更新图标
             cacheIcon(downloadDelta.id, true, function (cachedIcon) {
                 //发送文件下载完成请求
@@ -194,11 +204,7 @@ chrome.downloads.onChanged.addListener(function (downloadDelta) {
         }
 
         if (downloadDelta.state && downloadDelta.state.current === State.interrupted.code) {
-            //下载页面取消下载
-            chrome.runtime.sendMessage({
-                method: 'cancelDownloadItem',
-                data: downloadDelta.id
-            });
+            onDownloadInterrupted(downloadDelta);
         }
 
         if (downloadDelta.paused) {
@@ -342,6 +348,71 @@ chrome.downloads.search({}, function (results) {
 });
 
 /**
+ * 下载中断事件处理
+ * @param {*} downloadDelta 
+ */
+function onDownloadInterrupted(downloadDelta){
+    let id = downloadDelta.id;
+    if(downloadDelta.error && downloadDelta.error.current === 'USER_CANCELED'){//用户取消下载
+        //下载页面取消下载
+        chrome.runtime.sendMessage({
+            method: 'cancelDownloadItem',
+            data: id
+        });
+    }else{//其他原因导致的中断，那么应该隶属于暂停范畴
+        //更新状态，取消下载事件得到后，这个任务有可能会变为可继续下载的状态
+        chrome.downloads.search({
+            id: id
+        }, function (results) {
+            if (results.length > 0){
+                let result = results[0];
+                if(!result.canResume){//如果这个任务不能继续下载了
+                    //下载页面取消下载
+                    chrome.runtime.sendMessage({
+                        method: 'cancelDownloadItem',
+                        data: id
+                    });
+                }else{//如果这个任务已经变为可以继续下载了
+                    //那么先显示成暂停状态
+                    chrome.runtime.sendMessage({
+                        method: 'pauseDownloadItem',
+                        data: id
+                    });
+
+                    //根据用户配置，尝试自动继续下载
+                    tryAutoResume(id);
+                }
+            }
+        });
+    }
+}
+
+/**
+ * 尝试自动继续下载
+ * @param {*} id 
+ */
+function tryAutoResume(id){
+    if(autoResume){//如果启用了自动继续下载
+        //构建随机范围，防止远程服务器机器人判定（弱版）
+        let min = 300;
+        let max = 1200;
+        let sleepTime = min + (max - min) * Math.random();
+
+        //通知界面要开始尝试恢复这个任务了
+        chrome.runtime.sendMessage({
+            method : 'tryResumeDownloadWait',
+            data : id
+        });
+
+        //延迟执行
+        setTimeout(function(){
+            //执行任务恢复
+            resumeTask(id);
+        }, sleepTime);
+    }
+}
+
+/**
  * 回调读取文件下载进度
  */
 function pullProgress() {
@@ -404,6 +475,51 @@ let audio = new Audio(wav);
 
 function playSound() {
     audio.play();
+}
+
+/**
+ * 继续下载任务
+ * @param {*} id 
+ */
+function resumeTask(id){
+    let obj = {
+        id : id
+    };
+    chrome.downloads.search(obj, function (results) {
+        if (results.length > 0) {
+            let item = results[0];
+            if (item.paused || item.state === State.interrupted.code) {//如果是暂停了。或者状态是中断了
+                chrome.downloads.resume(id, function () {
+                    //重新查询任务状态
+                    chrome.downloads.search(obj, function(results){
+                        if (results.length > 0) {
+                            let item = results[0];
+                            if(item.paused || item.state === State.interrupted.code){//如果恢复失败
+                                //通知界面本次自动恢复继续下载失败
+                                chrome.runtime.sendMessage({
+                                    method : 'tryResumeDownloadFail',
+                                    data : id
+                                });
+
+                                //重新尝试自动恢复
+                                let min = 3000;
+                                let max = 5000;
+                                let sleepTimeBasic = min + (max - min) * Math.random();
+                                setTimeout(function(){
+                                    tryAutoResume(id);
+                                }, sleepTimeBasic);
+                            }else{//如果恢复成功
+                                chrome.runtime.sendMessage({
+                                    method : 'resumeDownloadItem',
+                                    data : id
+                                });
+                            }
+                        }
+                    });
+                });
+            }
+        }
+    });
 }
 
 pullProgress();

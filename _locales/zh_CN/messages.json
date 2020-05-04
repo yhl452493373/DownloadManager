@@ -218,5 +218,25 @@
   "dangerNotice": {
     "message": "下载警告",
     "description": "下载时发送一个通知以提醒用户"
+  },
+  "tryAutoResumeWait":{
+    "message" : "等待自动继续",
+    "description": "等待自动尝试继续下载"
+  },
+  "tryAutoResumeFail":{
+    "message" : "恢复失败，会再尝试",
+    "description": "本次自动恢复任务失败，稍后会自动再次尝试恢复"
+  },
+  "downloadAutoResume":{
+    "message": "自动继续",
+    "description" : "这允许自动恢复由于非人为取消而失败的下载。"
+  },
+  "downloadAutoResumeOff":{
+    "message": "关闭",
+    "description" : "关闭自动继续下载的功能"
+  },
+  "downloadAutoResumeOn":{
+    "message": "开启",
+    "description" : "开启自动继续下载的功能"
   }
 }

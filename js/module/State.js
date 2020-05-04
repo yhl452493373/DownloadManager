@@ -11,6 +11,11 @@ class State extends Enum {
     static pause = new Enum('pause', chrome.i18n.getMessage('pause'));
     // noinspection JSUnusedGlobalSymbols
     static pending = new Enum('pending', chrome.i18n.getMessage('pending'));
+    // try auto resume
+    static tryAutoResumeWait = new Enum('tryAutoResumeWait', chrome.i18n.getMessage('tryAutoResumeWait'));
+    // auto resume fail
+    static tryAutoResumeFail = new Enum('tryAutoResumeFail', chrome.i18n.getMessage('tryAutoResumeFail'));
+    
 }
 
 export { State };

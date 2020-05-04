@@ -228,6 +228,17 @@ class Item {
         Util.getElement('.status .state', div).innerText = State.in_progress.name;
         Util.getElement('.operation .icon-delete', div).parentNode.title = chrome.i18n.getMessage('cancelDownload');
     }
+
+    tryResumeWaitDownloadItem(){
+        let div = Util.getElement('#item_' + this.data.id);
+        Util.getElement('.status .state', div).innerText = State.tryAutoResumeWait.name;
+    }
+    
+    tryAutoResumeFailDownloadItem(){
+        let div = Util.getElement('#item_' + this.data.id);
+        Util.getElement('.status .state', div).innerText = State.tryAutoResumeFail.name;
+    }
+    
 }
 
 export { Item };

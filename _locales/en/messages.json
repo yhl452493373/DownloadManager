@@ -218,5 +218,25 @@
   "dangerNotice": {
     "message": "Danger",
     "description": "send a notification to user when download file is danger"
+  },
+  "tryAutoResumeWait":{
+    "message" : "wait auto try resume",
+    "description": "wait auto try resume downloading"
+  },
+  "tryAutoResumeFail":{
+    "message" : "resume fail, will try again",
+    "description": "This automatic resume task failed, and will automatically try to recover again later"
+  },
+  "downloadAutoResume":{
+    "message": "Auto Resume",
+    "description" : "This allows the user to auto resume downloads that have failed due to non-human cancel."
+  },
+  "downloadAutoResumeOff":{
+    "message": "Off",
+    "description" : "disabled auto resume download"
+  },
+  "downloadAutoResumeOn":{
+    "message": "On",
+    "description" : "enabled auto resume download"
   }
 }
