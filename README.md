@@ -3,6 +3,7 @@
 #### 由于采用了ES6的模块写法,因此需要 ***Chrome版本51*** 以上才能运行
 #### 主要用于chrome,chromium,微软的新版edge浏览器
 #### chrome商店地址：[下载管理](https://chrome.google.com/webstore/detail/%E4%B8%8B%E8%BD%BD%E7%AE%A1%E7%90%86/nfmgapnodlagabglffakjglkalonidld)
+### edge商店地址:[下载管理](https://microsoftedge.microsoft.com/addons/detail/bmcfcnlpljkgdddadjjkibniidihfeno)
 ---
 #### 实现的功能(基于chrome的API实现):
 - 接管系统下载
