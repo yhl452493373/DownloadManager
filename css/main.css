@@ -183,6 +183,9 @@ body {
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
+
+    /*若.status使用绝对位置延伸到最右侧,.body .info没有使用overflow:hidden,则必须设置宽度,否则会有水平滚动条*/
+    width: 260px;
 }
 
 .body .progress {
