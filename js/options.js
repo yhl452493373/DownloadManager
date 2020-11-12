@@ -12,29 +12,28 @@ document.querySelector('#downloadStart').innerText = chrome.i18n.getMessage('sta
 document.querySelector('#downloadComplete').innerText = chrome.i18n.getMessage('completeNotice');
 document.querySelector('#downloadDanger').innerText = chrome.i18n.getMessage('dangerNotice');
 
-chrome.storage.sync.get(
-    {
+chrome.storage.sync.get({
         iconType: 'auto',
         downloadSound: 'off',
         downloadNotice: 'off'
-    }, function (obj) {
+    }, obj => {
         document.querySelector("input[name=iconType][value=" + obj.iconType + "]").click();
         document.querySelector("input[name=downloadSound][value=" + obj.downloadSound + "]").click();
         if (typeof obj.downloadNotice === "string" || obj.downloadNotice.length === 0)
             document.querySelector("input[name=downloadNotice][value=off]").click();
         else if (Array.isArray(obj.downloadNotice)) {
             if (obj.downloadNotice.length > 0)
-                obj.downloadNotice.forEach(function (value) {
+                obj.downloadNotice.forEach(value => {
                     document.querySelector("input[name=downloadNotice][value=" + value + "]").click();
                 });
         }
     }
 );
 
-document.querySelectorAll("input[name=iconType]").forEach(function (input) {
+document.querySelectorAll("input[name=iconType]").forEach(input => {
     input.onchange = function () {
         let iconType = this.value;
-        let icon = '/img/icon_gray.png';
+        let icon;
         if (iconType === 'dark') {
             icon = '/img/icon_gray.png';
         } else if (iconType === 'light') {
@@ -46,51 +45,43 @@ document.querySelectorAll("input[name=iconType]").forEach(function (input) {
                 icon = '/img/icon_gray.png';
             }
         }
-        chrome.storage.sync.set(
-            {
-                iconType: iconType
-            }, function () {
-            }
-        );
+        chrome.storage.sync.set({
+            iconType: iconType
+        });
         chrome.runtime.sendMessage({
-            method: 'changeIcon',
+            method: 'changeActionIcon',
             data: icon
-        }, function () {
         });
     };
 });
 
 
-document.querySelectorAll("input[name=downloadSound]").forEach(function (input) {
+document.querySelectorAll("input[name=downloadSound]").forEach(input => {
     input.onchange = function () {
         let downloadSound = this.value;
-        chrome.storage.sync.set(
-            {
-                downloadSound: downloadSound
-            }, function () {
-            }
-        );
+        chrome.storage.sync.set({
+            downloadSound: downloadSound
+        });
         chrome.runtime.sendMessage({
             method: 'changeSound',
             data: downloadSound
-        }, function () {
         });
     };
 });
 
 let notices = [];
-document.querySelectorAll("input[name=downloadNotice]").forEach(function (input) {
+document.querySelectorAll("input[name=downloadNotice]").forEach(input => {
     input.onchange = function () {
         notices = [];
         if (this.value === 'off') {
             notices = [];
             this.checked = true;
-            document.querySelectorAll("input[name=downloadNotice]").forEach(function (input) {
+            document.querySelectorAll("input[name=downloadNotice]").forEach(input => {
                 if (input.value !== 'off')
                     input.checked = false;
             });
         } else {
-            document.querySelectorAll("input[name=downloadNotice]").forEach(function (input) {
+            document.querySelectorAll("input[name=downloadNotice]").forEach(input => {
                 if (input.value === 'off')
                     input.checked = false;
                 if (input.checked)
@@ -108,11 +99,9 @@ document.querySelectorAll("input[name=downloadNotice]").forEach(function (input)
         chrome.runtime.sendMessage({
             method: 'changeNotice',
             data: notices
-        }, function () {
         });
     };
-})
-;
+});
 
 //是否深色模式
 function isDark() {

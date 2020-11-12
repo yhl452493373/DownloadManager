@@ -218,5 +218,21 @@
   "dangerNotice": {
     "message": "下载警告",
     "description": "下载时发送一个通知以提醒用户"
+  },
+  "remaining": {
+    "message": "剩余",
+    "description": "剩余时间前的提示文字"
+  },
+  "unknown": {
+    "message": "未知",
+    "description": "剩余时间未知时的文字"
+  },
+  "obtaining": {
+    "message": "获取中",
+    "description": "剩余时间正在获取时的文字"
+  },
+  "remainingTimeUnit": {
+    "message": "秒,分,时,天",
+    "description": "剩余时间的单位，必须用英文逗号分割"
   }
 }

@@ -1,175 +1,67 @@
 import {Util} from "./module/Util.js";
 import {Item} from "./module/Item.js";
-import {StringDelta} from "./module/StringDelta.js";
-import {BooleanDelta} from "./module/BooleanDelta.js";
-import {DoubleDelta} from "./module/DoubleDelta.js";
 import {State} from "./module/State.js";
+import {DownloadItem} from "./module/DownloadItem.js";
+import {DownloadDelta} from "./module/DownloadDelta.js";
 import $ from "./module/jquery.min.js";
+
+/**
+ * 右键菜单中点击的下载项id
+ * @type {number}
+ */
+let clickedItemId;
 
 /**
  *
  * 更新下载项图标
  *
- * @param data {{
-          id:number,
-          url:string,
-          finalUrl:string,
-          referrer:string,
-          filename:string,
-          incognito:boolean,
-          danger:string,
-          mime:string,
-          startTime:string,
-          endTime:string,
-          estimatedEndTime:string,
-          state:string,
-          paused:boolean,
-          canResume:boolean,
-          error:string,
-          bytesReceived:number,
-          totalBytes:number,
-          fileSize:number,
-          exists:boolean
- * }}
+ * @param data {{id:number,icon:string?}}
  */
-const updateIcon = function (data) {
-    if (data.id == null)
+function updateIcon(data) {
+    if (data.hasOwnProperty('id') && Util.emptyString(data.id))
         return;
     let id = data.id;
     if (data.hasOwnProperty('icon')) {
-        document.querySelector('#item_' + id).querySelector('img.icon').src = data.icon;
+        let item = document.querySelector('#item_' + id);
+        if (item != null)
+            item.querySelector('img.icon').src = data.icon;
     } else {
         chrome.runtime.sendMessage({
             method: 'cacheIcon',
             data: id
-        }, function () {
-
         });
     }
-};
+}
 
 /**
  *
  * 更新下载项进度条
  *
- * @param dataList {Array<{
-          id:number,
-          url:string,
-          finalUrl:string,
-          referrer:string,
-          filename:string,
-          incognito:boolean,
-          danger:string,
-          mime:string,
-          startTime:string,
-          endTime:string,
-          estimatedEndTime:string,
-          state:string,
-          paused:boolean,
-          canResume:boolean,
-          error:string,
-          bytesReceived:number,
-          totalBytes:number,
-          fileSize:number,
-          exists:boolean
- * }>}
+ * @param downloadItem {DownloadItem} 下载项列表
  */
-const updateProgress = function (dataList) {
-    dataList.forEach(function (data) {
-        let item = Item.of(data.id);
-        if (item != null)
-            item.updateProgress(data);
-    });
-};
-
-/**
- *
- * @param data {{
-          id:number,
-          url:string,
-          finalUrl:string,
-          referrer:string,
-          filename:string,
-          incognito:boolean,
-          danger:string,
-          mime:string,
-          startTime:string,
-          endTime:string,
-          estimatedEndTime:string,
-          state:string,
-          paused:boolean,
-          canResume:boolean,
-          error:string,
-          bytesReceived:number,
-          totalBytes:number,
-          fileSize:number,
-          exists:boolean
- * }}
- */
-const updateFilename = function (data) {
-    if (data == null)
-        return;
-    let item = Item.of(data.id);
+function updateProgress(downloadItem) {
+    let item = Item.of(downloadItem.id);
     if (item != null)
-        item.updateFilename(Util.filename(data.filename));
-};
+        item.updateProgress(downloadItem);
+}
 
 /**
  *
- * @param downloadDelta {{
-         id:number,
-         url:StringDelta,
-         finalUrl:StringDelta,
-         filename:StringDelta,
-         danger:StringDelta,
-         mime:StringDelta,
-         startTime:StringDelta,
-         endTime:StringDelta,
-         state:StringDelta,
-         canResume:BooleanDelta,
-         paused:BooleanDelta,
-         error:StringDelta,
-         totalBytes:DoubleDelta,
-         fileSize:DoubleDelta,
-         exists:BooleanDelta
- * }}
+ * @param downloadDelta {DownloadDelta}
  */
-const downloadComplete = function (downloadDelta) {
+function downloadComplete(downloadDelta) {
     let item = Item.of(downloadDelta.id);
     if (item != null) {
-        let data = Util.convertDelta(downloadDelta);
-        if (data == null)
-            return;
-        item.downloadComplete(data);
+        item.downloadComplete(downloadDelta);
     }
-};
+}
 
 /**
  *
- * @param data {{
-          id:number,
-          url:string,
-          finalUrl:string,
-          referrer:string,
-          filename:string,
-          incognito:boolean,
-          danger:string,
-          mime:string,
-          startTime:string,
-          endTime:string,
-          estimatedEndTime:string,
-          state:string,
-          paused:boolean,
-          canResume:boolean,
-          error:string,
-          bytesReceived:number,
-          totalBytes:number,
-          fileSize:number,
-          exists:boolean
- * }}
+ * @param downloadItem {DownloadItem}
  */
-const createDownloadItem = function (data) {
-    let item = new Item(data).render();
+function createDownloadItem(downloadItem) {
+    let item = new Item(downloadItem).render();
     let body = Util.getElement('#body');
     Util.getElement('#empty').style.display = 'none';
     Util.getElement('.operation .icon-delete', item).parentNode.title = chrome.i18n.getMessage('cancelDownload');
@@ -178,14 +70,14 @@ const createDownloadItem = function (data) {
     } else {
         body.insertBefore(item, body.childNodes[0]);
     }
-    updateIcon(data);
-};
+    updateIcon(downloadItem);
+}
 
 /**
  *
  * @param id {number}
  */
-const eraseDownloadItem = function (id) {
+function eraseDownloadItem(id) {
     let item = Item.of(id);
     if (item != null)
         item.eraseDownloadItem();
@@ -193,29 +85,29 @@ const eraseDownloadItem = function (id) {
         method: 'deleteIconCache',
         data: id
     });
-};
+}
 
-const cancelDownloadItem = function (id) {
+function cancelDownloadItem(id) {
     let item = Item.of(id);
     if (item != null)
         item.cancelDownloadItem();
-};
+}
 
-const pauseDownloadItem = function (id) {
+function pauseDownloadItem(id) {
     let item = Item.of(id);
     if (item != null)
         item.pauseDownloadItem();
-};
+}
 
-chrome.runtime.onMessage.addListener(function (request) {
+chrome.runtime.onMessage.addListener(request => {
     if (request.method === 'updateProgress') {
-        updateProgress(request.data);
+        request.data.forEach(file => {
+            updateProgress(new DownloadItem(file));
+        });
     } else if (request.method === 'downloadComplete') {
-        downloadComplete(request.data);
-    } else if (request.method === 'updateFilename') {
-        updateFilename(request.data);
+        downloadComplete(new DownloadDelta(request.data));
     } else if (request.method === 'createDownloadItem') {
-        createDownloadItem(request.data);
+        createDownloadItem(new DownloadItem(request.data));
     } else if (request.method === 'updateIcon') {
         updateIcon(request.data);
     } else if (request.method === 'eraseDownloadItem') {
@@ -227,17 +119,23 @@ chrome.runtime.onMessage.addListener(function (request) {
     }
 });
 
+/**
+ * 打开主页面时,将所有项都列出来,并按顺序倒序排列
+ */
 chrome.downloads.search({
     orderBy: ["-startTime"]
-}, function (results) {
+}, results => {
     if (results.length > 0)
         Util.getElement('#empty').style.display = 'none';
-    results.forEach(function (result) {
+    results.forEach(result => {
         if (Util.emptyString(result.filename))
             return;
-        let item = new Item(result).render();
+        let downloadItem = new DownloadItem(result);
+        let item = new Item(downloadItem).render();
         Util.getElement('#body').appendChild(item);
-        updateIcon(result);
+        updateIcon({
+            id: downloadItem.id
+        });
     });
 });
 
@@ -246,16 +144,16 @@ chrome.downloads.search({
  * @param target {Node|HTMLElement|EventTarget}
  * @return {number|null}
  */
-const getDownloadItemId = function (target) {
+function getDownloadItemId(target) {
     let id = $(target).closest('.item').attr('id');
     return Number(id.replace('item_', ''));
-};
+}
 
 /**
  * 复制文本到剪贴板
  * @param text {string|number} 文本内容
  */
-const copyToClipboard = function (text) {
+function copyToClipboard(text) {
     let input = document.createElement('input');
     input.value = text;
     input.style.position = 'fixed';
@@ -264,65 +162,65 @@ const copyToClipboard = function (text) {
     input.select(); // 选择对象
     document.execCommand("Copy"); // 执行浏览器复制命令
     input.remove();
-};
+}
 
-$(document).on('dblclick', '.item > .type, .item > .info', function (e) {
+$(document).on('dblclick', '.item > .type, .item > .info', e => {
     chrome.downloads.open(getDownloadItemId(e.target));
-}).on('click', '.event .icon-delete, .event .reject', function (e) {
+}).on('click', '.event .icon-delete, .event .reject', e => {
     let id = getDownloadItemId(e.target);
     chrome.downloads.search({
         id: id,
         state: State.in_progress.code
-    }, function (results) {
+    }, results => {
         if (results.length > 0) {
-            chrome.downloads.cancel(id, function () {
+            chrome.downloads.cancel(id, () => {
                 cancelDownloadItem(id);
             });
         } else {
             chrome.downloads.erase({
                 id: id
-            }, function () {
-
             });
         }
+        chrome.runtime.sendMessage({
+            method: 'changeActionIcon',
+            data: id
+        });
     });
-}).on('click', '.event .icon-resume', function (e) {
+}).on('click', '.event .icon-resume', e => {
     let id = getDownloadItemId(e.target);
     chrome.downloads.search({
         id: id
-    }, function (results) {
+    }, results => {
         if (results.length > 0) {
             if (results[0].paused) {
-                chrome.downloads.resume(id, function () {
+                chrome.downloads.resume(id, () => {
                     let item = Item.of(id);
-                    if (item != null)
+                    if (item != null) {
                         item.resumeDownloadItem();
-                    chrome.runtime.sendMessage({
-                        method: 'pullProgress'
-                    });
+                    }
                 });
             }
         }
     });
-}).on('click', '.event .icon-pause', function (e) {
+}).on('click', '.event .icon-pause', e => {
     let id = getDownloadItemId(e.target);
     chrome.downloads.search({
         id: id
     }, function (results) {
         if (results.length > 0) {
-            chrome.downloads.pause(id, function () {
+            chrome.downloads.pause(id, () => {
                 pauseDownloadItem(id);
             });
         }
     });
-}).on('click', '.event .icon-refresh', function (e) {
+}).on('click', '.event .icon-refresh', e => {
     let id = getDownloadItemId(e.target);
     chrome.downloads.search({
         id: id
     }, function (results) {
         if (results.length > 0) {
             let url = results[0].url;
-            chrome.downloads.download({url: url}, function () {
+            chrome.downloads.download({url: url}, () => {
                 chrome.downloads.erase({
                     id: id
                 }, function () {
@@ -330,36 +228,36 @@ $(document).on('dblclick', '.item > .type, .item > .info', function (e) {
             });
         }
     });
-}).on('click', '.event .icon-open', function (e) {
+}).on('click', '.event .icon-open', e => {
     chrome.downloads.open(getDownloadItemId(e.target));
 }).on('click', '.event .accept', function (e) {
     chrome.downloads.acceptDanger(getDownloadItemId(e.target));
-}).on('click', '.open-download-folder', function (e) {
+}).on('click', '.open-download-folder', e => {
     chrome.downloads.showDefaultFolder();
-}).on('click', '.clear-download-item', function (e) {
-    chrome.downloads.search({}, function (results) {
-        results.forEach(function (result) {
-            chrome.downloads.erase({id: result.id}, function (erasedIds) {
+}).on('click', '.clear-download-item', e => {
+    chrome.downloads.search({}, results => {
+        results.forEach(result => {
+            chrome.downloads.erase({id: result.id}, erasedIds => {
                 eraseDownloadItem(erasedIds[0]);
             });
         });
     });
-}).on('input', '.search-text', function () {
+}).on('input', '.search-text', e => {
     let name = this.value;
     if (Util.emptyString(name)) {
-        Util.getElementAll('.item').forEach(function (node) {
+        Util.getElementAll('.item').forEach(node => {
             node.classList.remove('hide');
         });
         return;
     }
-    chrome.downloads.search({}, function (results) {
+    chrome.downloads.search({}, results => {
         let ids = [];
-        results.forEach(function (result) {
+        results.forEach(result => {
             if (Util.filename(result.filename.toUpperCase()).indexOf(name.toUpperCase()) !== -1) {
                 ids.push('item_' + result.id);
             }
         });
-        Util.getElementAll('.item').forEach(function (node) {
+        Util.getElementAll('.item').forEach(node => {
             let id = node.id;
             if (ids.indexOf(id) === -1) {
                 node.classList.add('hide');
@@ -370,15 +268,15 @@ $(document).on('dblclick', '.item > .type, .item > .info', function (e) {
     });
 });
 
-// 鼠标右键事件
-$(document).on('contextmenu', '#body .item', function (e) {
+//右键菜单事件
+$(document).on('contextmenu', '#body .item', e => {
     //显示蒙版层
     $('.modal').show();
     //获取下载文件id
-    let downloadId = getDownloadItemId(this);
+    clickedItemId = getDownloadItemId(e.target);
     let $contextmenu = $(".contextmenu");
 
-    let item = Item.of(downloadId);
+    let item = Item.of(clickedItemId);
     if (item != null)
         if (item.data.state !== State.complete) {
             $contextmenu.find('.open-file').hide();
@@ -427,61 +325,56 @@ $(document).on('contextmenu', '#body .item', function (e) {
         "left": menuLeft,
         "top": menuTop
     }).show();
-
-    $contextmenu.on('click', '.open-file', function () {
-        chrome.downloads.open(downloadId);
-    }).on('click', '.open-file-folder', function () {
-        chrome.downloads.show(downloadId);
-    }).on('click', '.copy-filename', function () {
-        chrome.downloads.search({id: downloadId}, function (results) {
-            if (results.length > 0) {
-                let result = results[0];
-                let filename = Util.filename(result.filename);
-                copyToClipboard(filename);
-            }
-        });
-    }).on('click', '.copy-download-url', function () {
-        chrome.downloads.search({id: downloadId}, function (results) {
-            if (results.length > 0) {
-                let result = results[0];
-                copyToClipboard(result.finalUrl || result.url);
-            }
-        });
-    }).on('click', '.re-download', function () {
-        chrome.downloads.search({
-            id: downloadId
-        }, function (results) {
-            if (results.length > 0) {
-                let url = results[0].url;
-                chrome.downloads.download({url: url}, function () {
-                    chrome.downloads.erase({
-                        id: id
-                    }, function () {
-                    });
-                });
-            }
-        });
-    }).on('click', '.delete-file', function () {
-        chrome.downloads.search({
-            id: downloadId
-        }, function (results) {
-            if (results.length > 0) {
-                if (results[0].state !== State.complete.code) {
-                    chrome.downloads.erase({
-                        id: downloadId
-                    });
-                } else {
-                    chrome.downloads.removeFile(downloadId);
-                }
-            }
-        });
-    });
     // 阻止浏览器默认的右键菜单事件
     return false;
-});
-
-// 点击之后，右键菜单隐藏
-$(document).on('click', function () {
+}).on('click', '.contextmenu .open-file', e => {
+    chrome.downloads.open(clickedItemId);
+}).on('click', '.contextmenu .open-file-folder', e => {
+    chrome.downloads.show(clickedItemId);
+}).on('click', '.contextmenu .copy-filename', e => {
+    chrome.downloads.search({id: clickedItemId}, results => {
+        if (results.length > 0) {
+            let result = results[0];
+            let filename = Util.filename(result.filename);
+            copyToClipboard(filename);
+        }
+    });
+}).on('click', '.contextmenu .copy-download-url', e => {
+    chrome.downloads.search({id: clickedItemId}, results => {
+        if (results.length > 0) {
+            let result = results[0];
+            copyToClipboard(result.finalUrl || result.url);
+        }
+    });
+}).on('click', '.contextmenu .re-download', e => {
+    chrome.downloads.search({
+        id: clickedItemId
+    }, results => {
+        if (results.length > 0) {
+            let url = results[0].url;
+            chrome.downloads.erase({
+                id: clickedItemId
+            }, erasedIds => {
+                chrome.downloads.download({url: url});
+            });
+        }
+    });
+}).on('click', '.contextmenu .delete-file', e => {
+    chrome.downloads.search({
+        id: clickedItemId
+    }, results => {
+        if (results.length > 0) {
+            if (results[0].state !== State.complete.code) {
+                chrome.downloads.erase({
+                    id: clickedItemId
+                });
+            } else {
+                chrome.downloads.removeFile(clickedItemId);
+            }
+        }
+    });
+}).on('click', e => {
+    // 点击之后，右键菜单隐藏
     $(".contextmenu").hide();
     $('.modal').hide();
 });

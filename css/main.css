@@ -10,7 +10,7 @@ html, body {
 }
 
 body {
-    font-family: PingFang SC, Verdana, Helvetica Neue, Microsoft Yahei, Hiragino Sans GB, Microsoft Sans Serif, WenQuanYi Micro Hei, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, Helvetica Neue, PingFang SC, Microsoft YaHei, Source Han Sans SC, Noto Sans CJK SC, WenQuanYi Micro Hei, sans-serif;
 }
 
 .hide {
@@ -170,8 +170,10 @@ body {
     display: flex;
     flex-direction: column;
     padding: 0 5px;
-    overflow: hidden;
     position: relative;
+
+    /*若使用了hidden，状态条中时间就显示不完整*/
+    /*overflow: hidden;*/
 }
 
 .body .name {
@@ -209,6 +211,17 @@ body {
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
+
+    /*为了显示时间，使用绝对位置，通过left和right决定显示内容的容器宽度，设置层级10*/
+    position: absolute;
+    left: 5px;
+    bottom: 0;
+    right: -110px;
+    z-index: 10;
+    pointer-events: none;
+    /*如果需要把字体设为小于12的字，需要在此修改缩放倍数（字号/12）*/
+    transform: scale(1);
+    transform-origin: left;
 }
 
 .body .operation {
@@ -218,6 +231,10 @@ body {
     padding: 0 15px;
     box-sizing: border-box;
     text-align: center;
+
+    /*为了显示时间，使用相对位置，设置层级为100，以覆盖状态条*/
+    position: relative;
+    z-index: 100;
 }
 
 .body .event {

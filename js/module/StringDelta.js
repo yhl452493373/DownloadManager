@@ -1,12 +1,18 @@
-class StringDelta {
+import {Delta} from "./Delta.js";
+
+class StringDelta extends Delta {
     /**
      *
-     * @param previous {string}
-     * @param current {string}
+     * @param object {{
+     *     previous: string,
+     *     current: string
+     * }}
+     * @return {StringDelta}
      */
-    constructor(previous, current) {
-        this.previous = previous;
-        this.current = current;
+    static toDelta(object) {
+        if (object === undefined)
+            return new StringDelta();
+        return new StringDelta(object.previous, object.current);
     }
 }
 

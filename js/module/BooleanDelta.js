@@ -1,12 +1,18 @@
-class BooleanDelta {
+import {Delta} from "./Delta.js";
+
+class BooleanDelta extends Delta {
     /**
      *
-     * @param previous {boolean}
-     * @param current {boolean}
+     * @param object {{
+     *     previous: boolean,
+     *     current: boolean
+     * }}
+     * @return {BooleanDelta}
      */
-    constructor(previous, current) {
-        this.previous = previous;
-        this.current = current;
+    static toDelta(object) {
+        if (object === undefined)
+            return new BooleanDelta();
+        return new BooleanDelta(object.previous, object.current);
     }
 }
 

@@ -1,12 +1,18 @@
-class DoubleDelta {
+import {Delta} from "./Delta.js";
+
+class DoubleDelta extends Delta{
     /**
      *
-     * @param previous {number}
-     * @param current {number}
+     * @param object {{
+     *     previous: number,
+     *     current: number
+     * }}
+     * @return {DoubleDelta}
      */
-    constructor(previous, current) {
-        this.previous = previous;
-        this.current = current;
+    static toDelta(object) {
+        if (object === undefined)
+            return new DoubleDelta();
+        return new DoubleDelta(object.previous, object.current);
     }
 }
 

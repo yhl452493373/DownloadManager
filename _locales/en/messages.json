@@ -218,5 +218,21 @@
   "dangerNotice": {
     "message": "Danger",
     "description": "send a notification to user when download file is danger"
+  },
+  "remaining": {
+    "message": "Remaining Time",
+    "description": "the text before remaining time"
+  },
+  "unknown": {
+    "message": "Unknown",
+    "description": "the text when browser can not get remaining time"
+  },
+  "obtaining": {
+    "message": "Obtaining",
+    "description": "the text when the remaining time is obtaining"
+  },
+  "remainingTimeUnit": {
+    "message": "sec,min,hr,d",
+    "description": "the unit of remaining time"
   }
 }
