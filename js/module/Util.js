@@ -187,7 +187,7 @@ class Util {
             if (downloadItem.estimatedEndTime) {
                 let remainingTime = (new Date(downloadItem.estimatedEndTime) - new Date()) / 1000;
                 if (!isNaN(remainingTime)) {
-                    return chrome.i18n.getMessage('remaining') + this.formatRemainingTime(remainingTime / 1000)
+                    return chrome.i18n.getMessage('remaining') + this.formatRemainingTime(remainingTime)
                 }
                 return chrome.i18n.getMessage('remaining') + chrome.i18n.getMessage('unknown');
             } else {
