@@ -192,7 +192,7 @@ chrome.downloads.onChanged.addListener(downloadDeltaInfo => {
             }
             if (Array.isArray(notice) && notice.indexOf('start') !== -1) {
                 let downloadItem = downloadingItems.find(item => item.id === downloadDelta.id);
-                if(downloadItem){
+                if (downloadItem) {
                     chrome.notifications.create('start-' + downloadItem.id, {
                         type: 'basic',
                         title: chrome.i18n.getMessage('downloadStart'),
@@ -239,9 +239,12 @@ chrome.runtime.onMessage.addListener(request => {
         delete itemIcons[request.data];
     } else if (request.method === 'changeActionIcon') {
         //main,options页面请求
-        normalIcon = request.data
+        if (typeof request.data === "string") {
+            normalIcon = request.data
+        } else if (typeof request.data === 'number') {
+            removeNotDownloadingItem(request.data);
+        }
         changeActionIcon();
-        removeNotDownloadingItem(request.data);
     } else if (request.method === 'changeNotice') {
         //options页面请求
         notice = request.data;
