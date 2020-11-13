@@ -1,223 +1,223 @@
 {
   "extName": {
-    "message": "Download Manager",
-    "description": "the name of extension"
+    "message": "Download Management",
+    "description": "Extension name"
   },
   "extTitle": {
-    "message": "Download Manager",
-    "description": "the name of extension with browser_action"
+    "message": "Download Management",
+    "description": "Expand the title in the browser address bar"
   },
   "extShortName": {
-    "message": "Download Manager",
-    "description": "the short name of extension"
+    "message": "Download Management",
+    "description": "Extended short name"
   },
   "extDescription": {
-    "message": "This is use to replace the download function of browser.",
-    "description": "the description of extension"
+    "message": "Used to take over the download function that comes with the browser, eliminating the trouble of opening the download page to view the downloaded file.",
+    "description": "Extended description"
   },
   "openFile": {
     "message": "Open File",
-    "description": "open file in contextmenu"
+    "description": "Open file in the right-click menu"
   },
   "openFileFolder": {
-    "message": "Open File Folder",
-    "description": "open file folder in contextmenu"
+    "message": "Open file directory",
+    "description": "The directory where the file is opened in the right-click menu"
   },
   "copyFilename": {
-    "message": "Copy Filename",
-    "description": "copy filename in contextmenu"
+    "message": "Copy file name",
+    "description": "Copy file name in the right-click menu"
   },
   "copyDownloadUrl": {
-    "message": "Copy Url",
-    "description": "copy download url in contextmenu"
+    "message": "Copy download address",
+    "description": "Copy download address in the right-click menu"
   },
   "reDownload": {
-    "message": "Re-Download",
-    "description": "re-download in contextmenu"
+    "message": "Re-download",
+    "description": "Re-download in the right-click menu"
   },
   "deleteFile": {
-    "message": "Delete File",
-    "description": "delete file in contextmenu"
+    "message": "Delete file",
+    "description": "Delete file in the right-click menu"
   },
   "search": {
     "message": "Search",
-    "description": "the placeholder of search box"
+    "description": "The prompt text of the search box"
   },
   "openDownloadFolder": {
-    "message": "Open Download Folder",
-    "description": "the tips of open download folder button"
+    "message": "Open download directory",
+    "description": "Prompt text to open the download directory"
   },
   "downloadFolder": {
-    "message": "Folder",
-    "description": "the text of open download folder button"
+    "message": "Download Directory",
+    "description": "The text of the button to open the download directory"
   },
   "clearAllHistory": {
-    "message": "Clear All History",
-    "description": "the tips of clear all history button"
+    "message": "Clear all download history",
+    "description": "Clear the prompt text of the download history"
   },
   "clear": {
-    "message": "Clear",
-    "description": "the text of clear all history button"
+    "message": "Empty",
+    "description": "Clear download history button text"
   },
   "empty": {
-    "message": "Empty",
-    "description": "the text with an empty history"
+    "message": "No download record",
+    "description": "Prompt text when there is no download record"
   },
   "cancelDownload": {
-    "message": "Cancel Download",
-    "description": "the tips of cancel download button"
+    "message": "Cancel download",
+    "description": "Prompt text for cancel download button"
   },
   "cancel": {
     "message": "Cancel",
-    "description": "the text of cancel download button"
+    "description": "Cancel the download button text"
   },
   "safetyWaring": {
-    "message": "Safety Warning",
-    "description": "the warning of danger file"
+    "message": "Security Warning",
+    "description": "Warning title of file security prompt"
   },
   "downloadStart": {
-    "message": "Start Downloading",
-    "description": "the tips of staring downloading"
+    "message": "Start downloading",
+    "description": "The prompt content when the download starts"
   },
   "downloadComplete": {
-    "message": "Download Complete",
-    "description": "the tips of download complete"
+    "message": "Download complete",
+    "description": "The prompt content when the download is complete"
   },
   "open": {
     "message": "Open",
-    "description": "the text of open button in notice"
+    "description": "Open button in the download completion prompt"
   },
   "openFolder": {
-    "message": "Open Folder",
-    "description": "the text of open folder button in notice"
+    "message": "Open Directory",
+    "description": "Open catalog button in the download completion prompt"
   },
   "fileDanger": {
-    "message": "The download's filename is suspicious.",
+    "message": "The downloaded file may harm your computer",
     "description": "file Danger"
   },
   "urlDanger": {
-    "message": "The download's URL is known to be malicious.",
+    "message": "The file downloaded from this URL may harm your computer",
     "description": "url Danger"
   },
   "contentDanger": {
-    "message": "The downloaded file is known to be malicious.",
+    "message": "The downloaded file is a malicious file",
     "description": "content"
   },
   "uncommonDanger": {
-    "message": "The download's URL is not commonly downloaded and could be dangerous.",
+    "message": "The file at this URL is not recommended to download, it may be dangerous",
     "description": "uncommon Danger"
   },
   "hostDanger": {
-    "message": "The download came from a host known to distribute malicious binaries and is likely dangerous.",
+    "message": "The download comes from a host that is known to publish malware, which may be risky",
     "description": "host Danger"
   },
   "unwantedDanger": {
-    "message": "The download is potentially unwanted or unsafe. E.g. it could make changes to browser or computer settings.",
+    "message": "The download item may not be required or safe, for example it may change the browser or computer settings",
     "description": "unwanted Danger"
   },
   "safeDanger": {
-    "message": "The download presents no known danger to the user's computer.",
+    "message": "The download has no risk to the user's computer",
     "description": "safe Danger"
   },
   "acceptedDanger": {
-    "message": "The user has accepted the dangerous download.",
+    "message": "User accepted a risky download",
     "description": "accepted Danger"
   },
   "total": {
     "message": "Total",
-    "description": "the tips of file total size"
+    "description": "The prompt text of the total size of the downloaded file"
   },
   "deleteHistory": {
-    "message": "Delete History",
-    "description": "the tips of delete history in downloading"
+    "message": "Delete Record",
+    "description": "Prompt text for deleting the record button during file download"
   },
   "inProgress": {
     "message": "Downloading",
     "description": "in_progress"
   },
   "interrupted": {
-    "message": "Interrupted",
+    "message": "Cancelled",
     "description": "interrupted"
   },
   "complete": {
-    "message": "Complete",
+    "message": "Completed",
     "description": "complete"
   },
   "pause": {
-    "message": "Pause",
+    "message": "Paused",
     "description": "pause"
   },
   "pending": {
-    "message": "Pending",
+    "message": "Processing",
     "description": "pending"
   },
   "continueDownload": {
-    "message": "Continue",
-    "description": "the tips of continue download"
+    "message": "Continue to download",
+    "description": "Resume download button prompt text"
   },
   "pauseDownload": {
-    "message": "Pause",
-    "description": "the tips of pause download"
+    "message": "Pause downloading",
+    "description": "Prompt text for pause download button"
   },
   "accept": {
-    "message": "Accept",
-    "description": "the text of accept danger download button"
+    "message": "Reserved",
+    "description": "Keep file button in danger notification"
   },
   "saveFile": {
-    "message": "Save File",
-    "description": "the tips of accept danger download"
+    "message": "Keep files",
+    "description": "Reserved file reminder in danger reminder"
   },
   "options": {
-    "message": "Options",
-    "description": "the title of DownloadManager config page"
+    "message": "Download management configuration",
+    "description": "Download the title of the management configuration page"
   },
   "iconType": {
-    "message": "Extension Icon",
-    "description": "set the icon of extension"
+    "message": "Icon Color",
+    "description": "Set plugin icon"
   },
   "iconAuto": {
-    "message": "Auto",
-    "description": "auto set icon by browser's theme type"
+    "message": "Automatic",
+    "description": "Select the icon according to the browser color mode"
   },
   "iconDark": {
-    "message": "Dark",
-    "description": "a icon for light mode"
+    "message": "Dark color",
+    "description": "Icons suitable for light mode"
   },
   "iconLight": {
-    "message": "Light",
-    "description": "a icon for dark mode"
+    "message": "Light color",
+    "description": "Icons suitable for dark mode"
   },
   "downloadSound": {
-    "message": "Download Sound",
-    "description": "play sound when download complete"
+    "message": "Download notification tone",
+    "description": "A tone will sound after the download is complete"
   },
   "soundOn": {
-    "message": "Enable",
-    "description": "play sound when download complete"
+    "message": "Open",
+    "description": "Turn on and make a sound after downloading is complete"
   },
   "soundOff": {
-    "message": "Disable",
-    "description": "does not play sound when download complete"
+    "message": "Close",
+    "description": "Turn off a beep when the download is complete"
   },
   "downloadNotice": {
     "message": "Download Notification",
-    "description": "send a notification to user when you are downloading"
+    "description": "Send a notification to remind users when downloading"
   },
   "noticeOff": {
-    "message": "Disable",
-    "description": "disable download notification"
+    "message": "Close",
+    "description": "Turn off download notification"
   },
   "startNotice": {
-    "message": "Start",
-    "description": "send a notification to user when you start downloading"
+    "message": "Download Start",
+    "description": "Send a notification to remind users when downloading"
   },
   "completeNotice": {
-    "message": "Complete",
-    "description": "send a notification to user when download complete"
+    "message": "Download complete",
+    "description": "Send a notification to remind users when downloading"
   },
   "dangerNotice": {
-    "message": "Danger",
-    "description": "send a notification to user when download file is danger"
+    "message": "Download Warning",
+    "description": "Send a notification to remind users when downloading"
   },
   "remaining": {
     "message": "Remaining Time",

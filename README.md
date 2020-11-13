@@ -1,9 +1,18 @@
 #### 用于替换Chrome浏览器下载管理功能，最新版可通过图标上右键菜单进入设置，配置是否启用浅色图标、通知
 ---
-#### 由于采用了ES6的模块写法,因此需要 ***Chrome版本51*** 以上才能运行
+
+## Edge用户注意：如果出现卡在处理中，请尝试 [edge://settings/downloads](edge://settings/downloads) -> 每次下载都询问我该做些什么 -> 关闭
+
+---
+
++ 感谢[Harshil783](https://github.com/Harshil783)的英文翻译修正
++ 感谢[gitqwerty777](https://github.com/gitqwerty777)的繁体中文翻译
+
+---
+#### 由于采用了ES6的模块写法,因此需要 ***Chrome版本54*** 以上才能运行
 #### 主要用于chrome,chromium,微软的新版edge浏览器
 #### chrome商店地址：[下载管理](https://chrome.google.com/webstore/detail/%E4%B8%8B%E8%BD%BD%E7%AE%A1%E7%90%86/nfmgapnodlagabglffakjglkalonidld)
-### edge商店地址:[下载管理](https://microsoftedge.microsoft.com/addons/detail/bmcfcnlpljkgdddadjjkibniidihfeno)
+<!-- ### edge商店地址:[下载管理](https://microsoftedge.microsoft.com/addons/detail/bmcfcnlpljkgdddadjjkibniidihfeno) -->
 ---
 #### 实现的功能(基于chrome的API实现):
 - 接管系统下载
@@ -20,5 +29,6 @@
 - 删除单个下载历史
 - 提示隐患文件
 - 删除文件和记录
+- 显示下载时间
 ---
-#### 由于本人英语水平不咋地,英文翻译不准确,有大佬帮忙翻译最好了
+#### 如果有什么问题，请在[issues](https://github.com/yhl452493373/DownloadManager/issues)提出，同时最好带上操作系统，浏览器以及版本，下载地址和复现步骤，便于查找问题
