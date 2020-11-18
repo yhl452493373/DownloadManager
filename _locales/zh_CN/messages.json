@@ -234,5 +234,49 @@
   "remainingTimeUnit": {
     "message": "秒,分,时,天",
     "description": "剩余时间的单位，必须用英文逗号分割"
+  },
+  "downloadFailed": {
+    "message": "下载失败",
+    "description": "状态为下载失败的的文字描述"
+  },
+  "networkFailed": {
+    "message": "网络问题",
+    "description": "错误信息 NETWORK_FAILED 的中文描述"
+  },
+  "networkTimeout": {
+    "message": "网络超时",
+    "description": "错误信息 NETWORK_TIMEOUT 的中文描述"
+  },
+  "networkDisconnected": {
+    "message": "网络断开",
+    "description": "错误信息 NETWORK_DISCONNECTED 的中文描述"
+  },
+  "networkServerDown": {
+    "message": "主机故障",
+    "description": "错误信息 NETWORK_SERVER_DOWN 的中文描述"
+  },
+  "networkInvalidRequest": {
+    "message": "无效请求",
+    "description": "错误信息 NETWORK_INVALID_REQUEST 的中文描述"
+  },
+  "userCanceled": {
+    "message": "用户终止",
+    "description": "错误信息 USER_CANCELED 的中文描述"
+  },
+  "deleted": {
+    "message": "已删除",
+    "description": "已删除文件的状态"
+  },
+  "alsoRemoveFile": {
+    "message": "清空时删除文件",
+    "description": "清空时删除文件的设置项名称"
+  },
+  "removeFileOn": {
+    "message": "开启",
+    "description": "清空时同时删除文件的开关文字"
+  },
+  "removeFileOff": {
+    "message": "关闭",
+    "description": "清空时不删除文件的开关文字"
   }
 }

@@ -11,6 +11,9 @@ class State extends Enum {
     static pause = new State('pause', chrome.i18n.getMessage('pause'));
 
     static pending = new State('pending', chrome.i18n.getMessage('pending'));
+
+    //此状态为自行添加的，chrome.downloads中没有
+    static deleted = new State('deleted', chrome.i18n.getMessage('deleted'));
 }
 
 export {State}

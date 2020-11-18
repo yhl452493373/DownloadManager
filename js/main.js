@@ -6,8 +6,8 @@ import {DownloadDelta} from "./module/DownloadDelta.js";
 import $ from "./module/jquery.min.js";
 
 /**
- * 右键菜单中点击的下载项id
- * @type {number}
+ * 右键菜单中点击的下载项id,点击后赋值，使用后置为null
+ * @type {number|null}
  */
 let clickedItemId;
 
@@ -61,14 +61,17 @@ function downloadComplete(downloadDelta) {
  * @param downloadItem {DownloadItem}
  */
 function createDownloadItem(downloadItem) {
-    let item = new Item(downloadItem).render();
-    let body = Util.getElement('#body');
-    Util.getElement('#empty').style.display = 'none';
-    Util.getElement('.operation .icon-delete', item).parentNode.title = chrome.i18n.getMessage('cancelDownload');
-    if (body.childNodes.length === 0) {
-        body.appendChild(item);
-    } else {
-        body.insertBefore(item, body.childNodes[0]);
+    let item = Item.of(downloadItem.id);
+    if (item == null) {
+        item = new Item(downloadItem).render();
+        let body = Util.getElement('#body');
+        Util.getElement('#empty').style.display = 'none';
+        Util.getElement('.operation .icon-delete', item).parentNode.title = chrome.i18n.getMessage('cancelDownload');
+        if (body.childNodes.length === 0) {
+            body.appendChild(item);
+        } else {
+            body.insertBefore(item, body.childNodes[0]);
+        }
     }
     updateIcon(downloadItem);
 }
@@ -87,10 +90,14 @@ function eraseDownloadItem(id) {
     });
 }
 
-function cancelDownloadItem(id) {
-    let item = Item.of(id);
+/**
+ *
+ * @param downloadDelta {DownloadDelta}
+ */
+function cancelDownloadItem(downloadDelta) {
+    let item = Item.of(downloadDelta.id);
     if (item != null)
-        item.cancelDownloadItem();
+        item.cancelDownloadItem(downloadDelta);
 }
 
 function pauseDownloadItem(id) {
@@ -101,12 +108,15 @@ function pauseDownloadItem(id) {
 
 chrome.runtime.onMessage.addListener(request => {
     if (request.method === 'updateProgress') {
-        request.data.forEach(file => {
-            updateProgress(new DownloadItem(file));
+        request.data.forEach(downloadItem => {
+            //此处的downloadItem为background传递过来的downloadItem，为一个json格式数据，需要转为DownloadItem对象
+            updateProgress(new DownloadItem(downloadItem, downloadItem.lastBytesReceived));
         });
     } else if (request.method === 'downloadComplete') {
+        //此处的request.data为background传递过来的downloadDelta，为一个json格式数据，需要转为DownloadDelta对象
         downloadComplete(new DownloadDelta(request.data));
     } else if (request.method === 'createDownloadItem') {
+        //此处的request.data为background传递过来的downloadItem，为一个json格式数据，需要转为DownloadItem对象
         createDownloadItem(new DownloadItem(request.data));
     } else if (request.method === 'updateIcon') {
         updateIcon(request.data);
@@ -115,16 +125,15 @@ chrome.runtime.onMessage.addListener(request => {
     } else if (request.method === 'pauseDownloadItem') {
         pauseDownloadItem(request.data);
     } else if (request.method === 'cancelDownloadItem') {
-        cancelDownloadItem(request.data);
+        //此处的request.data为background传递过来的downloadDelta，为一个json格式数据，需要转为DownloadDelta对象
+        cancelDownloadItem(new DownloadDelta(request.data));
     }
 });
 
 /**
  * 打开主页面时,将所有项都列出来,并按顺序倒序排列
  */
-chrome.downloads.search({
-    orderBy: ["-startTime"]
-}, results => {
+chrome.downloads.search({orderBy: ["-startTime"]}, results => {
     if (results.length > 0)
         Util.getElement('#empty').style.display = 'none';
     results.forEach(result => {
@@ -168,14 +177,9 @@ $(document).on('dblclick', '.item > .type, .item > .info', e => {
     chrome.downloads.open(getDownloadItemId(e.target));
 }).on('click', '.event .icon-delete, .event .reject', e => {
     let id = getDownloadItemId(e.target);
-    chrome.downloads.search({
-        id: id,
-        state: State.in_progress.code
-    }, results => {
+    chrome.downloads.search({id: id, state: State.in_progress.code}, results => {
         if (results.length > 0) {
-            chrome.downloads.cancel(id, () => {
-                cancelDownloadItem(id);
-            });
+            chrome.downloads.cancel(id);
         } else {
             chrome.downloads.erase({
                 id: id
@@ -188,43 +192,28 @@ $(document).on('dblclick', '.item > .type, .item > .info', e => {
     });
 }).on('click', '.event .icon-resume', e => {
     let id = getDownloadItemId(e.target);
-    chrome.downloads.search({
-        id: id
-    }, results => {
-        if (results.length > 0) {
+    chrome.downloads.search({id: id}, results => {
+        if (results.length === 1) {
             if (results[0].paused) {
-                chrome.downloads.resume(id, () => {
-                    let item = Item.of(id);
-                    if (item != null) {
-                        item.resumeDownloadItem();
-                    }
-                });
+                chrome.downloads.resume(id);
             }
         }
     });
 }).on('click', '.event .icon-pause', e => {
     let id = getDownloadItemId(e.target);
-    chrome.downloads.search({
-        id: id
-    }, function (results) {
-        if (results.length > 0) {
-            chrome.downloads.pause(id, () => {
-                pauseDownloadItem(id);
-            });
+    chrome.downloads.search({id: id}, function (results) {
+        if (results.length === 1) {
+            chrome.downloads.pause(id);
         }
     });
 }).on('click', '.event .icon-refresh', e => {
     let id = getDownloadItemId(e.target);
-    chrome.downloads.search({
-        id: id
-    }, function (results) {
+    chrome.downloads.search({id: id}, results => {
         if (results.length > 0) {
-            let url = results[0].url;
-            chrome.downloads.download({url: url}, () => {
-                chrome.downloads.erase({
-                    id: id
-                }, function () {
-                });
+            chrome.downloads.erase({
+                id: id
+            }, () => {
+                chrome.downloads.download({url: results[0].url});
             });
         }
     });
@@ -235,18 +224,32 @@ $(document).on('dblclick', '.item > .type, .item > .info', e => {
 }).on('click', '.open-download-folder', e => {
     chrome.downloads.showDefaultFolder();
 }).on('click', '.clear-download-item', e => {
-    chrome.downloads.search({}, results => {
-        results.forEach(result => {
-            chrome.downloads.erase({id: result.id}, erasedIds => {
-                eraseDownloadItem(erasedIds[0]);
+    chrome.runtime.sendMessage({
+        method: 'alsoDeleteFileState'
+    }, response => {
+        if (response === 'on') {
+            chrome.downloads.search({}, results => {
+                results.forEach(result => {
+                    chrome.downloads.removeFile(result.id, function () {
+                        //防止删除的文件未完成，扩展程序管理中报chrome.runtime.lastError
+                        if (chrome.runtime.lastError) {
+                        }
+                    });
+                });
             });
-        });
+        } else {
+            chrome.downloads.search({}, results => {
+                results.forEach(result => {
+                    chrome.downloads.erase({id: result.id});
+                });
+            });
+        }
     });
 }).on('input', '.search-text', e => {
-    let name = this.value;
+    let name = e.target.value;
     if (Util.emptyString(name)) {
-        Util.getElementAll('.item').forEach(node => {
-            node.classList.remove('hide');
+        Util.getElementAll('.item').forEach(item => {
+            item.classList.remove('hide');
         });
         return;
     }
@@ -257,12 +260,12 @@ $(document).on('dblclick', '.item > .type, .item > .info', e => {
                 ids.push('item_' + result.id);
             }
         });
-        Util.getElementAll('.item').forEach(node => {
-            let id = node.id;
+        Util.getElementAll('.item').forEach(item => {
+            let id = item.id;
             if (ids.indexOf(id) === -1) {
-                node.classList.add('hide');
+                item.classList.add('hide');
             } else {
-                node.classList.remove('hide');
+                item.classList.remove('hide');
             }
         });
     });
@@ -329,50 +332,51 @@ $(document).on('contextmenu', '#body .item', e => {
     return false;
 }).on('click', '.contextmenu .open-file', e => {
     chrome.downloads.open(clickedItemId);
+    clickedItemId = null;
 }).on('click', '.contextmenu .open-file-folder', e => {
     chrome.downloads.show(clickedItemId);
+    clickedItemId = null;
 }).on('click', '.contextmenu .copy-filename', e => {
     chrome.downloads.search({id: clickedItemId}, results => {
         if (results.length > 0) {
-            let result = results[0];
-            let filename = Util.filename(result.filename);
+            let filename = Util.filename(results[0].filename);
             copyToClipboard(filename);
         }
     });
+    clickedItemId = null;
 }).on('click', '.contextmenu .copy-download-url', e => {
     chrome.downloads.search({id: clickedItemId}, results => {
         if (results.length > 0) {
-            let result = results[0];
-            copyToClipboard(result.finalUrl || result.url);
+            copyToClipboard(results[0].finalUrl || results[0].url);
         }
     });
+    clickedItemId = null;
 }).on('click', '.contextmenu .re-download', e => {
-    chrome.downloads.search({
-        id: clickedItemId
-    }, results => {
+    chrome.downloads.search({id: clickedItemId}, results => {
         if (results.length > 0) {
-            let url = results[0].url;
+            let data = results[0];
             chrome.downloads.erase({
-                id: clickedItemId
-            }, erasedIds => {
-                chrome.downloads.download({url: url});
+                id: data.id
+            }, () => {
+                chrome.downloads.download({url: data.url});
             });
         }
     });
+    clickedItemId = null;
 }).on('click', '.contextmenu .delete-file', e => {
-    chrome.downloads.search({
-        id: clickedItemId
-    }, results => {
+    chrome.downloads.search({id: clickedItemId}, results => {
         if (results.length > 0) {
-            if (results[0].state !== State.complete.code) {
+            let data = results[0];
+            if (data.state !== State.complete.code) {
                 chrome.downloads.erase({
-                    id: clickedItemId
+                    id: data.id
                 });
             } else {
-                chrome.downloads.removeFile(clickedItemId);
+                chrome.downloads.removeFile(data.id);
             }
         }
     });
+    clickedItemId = null;
 }).on('click', e => {
     // 点击之后，右键菜单隐藏
     $(".contextmenu").hide();

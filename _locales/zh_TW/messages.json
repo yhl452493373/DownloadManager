@@ -234,5 +234,49 @@
     "remainingTimeUnit": {
         "message": "秒,分,時,天",
         "description": "剩餘時間的類型，必須用英文逗號分割"
+    },
+    "downloadFailed": {
+        "message": "下載失敗",
+        "description": "狀態為下載失敗的的文字描述"
+    },
+    "networkFailed": {
+        "message": "網路故障",
+        "description": "錯誤資訊 NETWORK_FAILED 中文描述"
+    },
+    "networkTimeout": {
+        "message": "網路超時",
+        "description": "錯誤資訊 NETWORK_TIMEOUT 中文描述"
+    },
+    "networkDisconnected": {
+        "message": "網路斷開",
+        "description": "錯誤資訊 NETWORK_DISCONNECTED 中文描述"
+    },
+    "networkServerDown": {
+        "message": "主機故障",
+        "description": "錯誤資訊 NETWORK_SERVER_DOWN 中文描述"
+    },
+    "networkInvalidRequest": {
+        "message": "無效請求",
+        "description": "錯誤資訊 NETWORK_INVALID_REQUEST 中文描述"
+    },
+    "userCanceled": {
+        "message": "用戶終止",
+        "description": "錯誤資訊 USER_CANCELED 的中文描述"
+    },
+    "deleted": {
+        "message": "已删除",
+        "description": "已刪除檔的狀態"
+    },
+    "alsoRemoveFile": {
+        "message": "清空時刪除檔",
+        "description": "清空時刪除檔的設定項名稱"
+    },
+    "removeFileOn": {
+        "message": "開啟",
+        "description": "清空時同時刪除檔的開關文字"
+    },
+    "removeFileOff": {
+        "message": "關閉",
+        "description": "清空時不刪除檔的開關文字"
     }
 }

@@ -1,6 +1,6 @@
 import {Delta} from "./Delta.js";
 
-class DoubleDelta extends Delta{
+class DoubleDelta extends Delta {
     /**
      *
      * @param object {{

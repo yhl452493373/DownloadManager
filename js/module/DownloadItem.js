@@ -128,7 +128,12 @@ class DownloadItem {
      */
     icon;
 
-    constructor(file, lastBytesReceived = 0) {
+    /**
+     * @type number
+     */
+    lastBytesReceived;
+
+    constructor(file, lastBytesReceived) {
         this.init(file, lastBytesReceived);
     }
 
@@ -153,11 +158,12 @@ class DownloadItem {
      *    bytesReceived:number,
      *    totalBytes:number,
      *    fileSize:number,
-     *    exists:boolean
+     *    exists:boolean,
+     *    lastBytesReceived:number
      * }}
-     * @param [lastBytesReceived] number 上次计算下载速度时的接收字节数，默认为0
+     * @param [lastBytesReceived] number 上次计算下载速度时的接收字节数
      */
-    init(file, lastBytesReceived = 0) {
+    init(file, lastBytesReceived) {
         this.id = file.id;
         this.url = file.url;
         this.referrer = file.referrer;
@@ -176,12 +182,13 @@ class DownloadItem {
         this.totalBytes = file.totalBytes;
         this.fileSize = file.fileSize
         this.exists = file.exists;
+        this.lastBytesReceived = file.lastBytesReceived || lastBytesReceived;
 
-        this.speed = Util.speed(this, lastBytesReceived);
+        this.speed = Util.speed(this);
         this.progress = Util.progress(this.bytesReceived, this.totalBytes);
         this.simpleFilename = Util.filename(this.filename);
         this.received = Util.received(this);
-        this.size = Util.formatBytes(file.totalBytes === -1 ? file.bytesReceived : file.totalBytes);
+        this.size = Util.formatBytes(file.totalBytes <= 0 ? file.bytesReceived : file.totalBytes);
     }
 
     getSimpleFilename() {

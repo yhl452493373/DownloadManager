@@ -24,11 +24,11 @@ body {
 }
 
 .ul_box > li > div:nth-child(1) {
-    width: 100px;
+    width: 130px;
 }
 
 .ul_box > li > div:nth-child(2) {
-    width: 480px;
+    width: 450px;
     overflow: hidden;
 }
 

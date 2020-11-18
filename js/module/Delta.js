@@ -1,11 +1,11 @@
 class Delta {
     /**
-     * @type string|boolean|number
+     * @type string|boolean|number|null
      */
     previous;
 
     /**
-     * @type string|boolean|number
+     * @type string|boolean|number|null
      */
     current;
 

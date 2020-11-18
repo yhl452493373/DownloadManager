@@ -234,5 +234,49 @@
   "remainingTimeUnit": {
     "message": "sec,min,hr,d",
     "description": "the unit of remaining time"
+  },
+  "downloadFailed": {
+    "message": "Failed",
+    "description": "description of download failed"
+  },
+  "networkFailed": {
+    "message": "network error",
+    "description": "description of download failed with NETWORK_FAILED"
+  },
+  "networkTimeout": {
+    "message": "network timeout",
+    "description": "description of download failed with NETWORK_TIMEOUT"
+  },
+  "networkDisconnected": {
+    "message": "network disconnected",
+    "description": "description of download failed with NETWORK_DISCONNECTED"
+  },
+  "networkServerDown": {
+    "message": "network server down",
+    "description": "description of download failed with NETWORK_SERVER_DOWN"
+  },
+  "networkInvalidRequest": {
+    "message": "network invalid request",
+    "description": "description of download failed with NETWORK_INVALID_REQUEST"
+  },
+  "userCanceled": {
+    "message": "User Canceled",
+    "description": "description of download failed with USER_CANCELED"
+  },
+  "deleted": {
+    "message": "Deleted",
+    "description": "state description of deleted file"
+  },
+  "alsoRemoveFile": {
+    "message": "Remove files",
+    "description": "Remove files options description"
+  },
+  "removeFileOn": {
+    "message": "Open",
+    "description": "Do not remove files when cleaning all download files"
+  },
+  "removeFileOff": {
+    "message": "Close",
+    "description": "Remove files when cleaning all download files"
   }
 }

@@ -6,10 +6,10 @@ class Util {
     /**
      *
      * @param selector {string}
-     * @param dom {HTMLElement}
+     * @param dom {HTMLElement|Node?}
      * @returns {HTMLElement|Node}
      */
-    static getElement(selector, dom = null) {
+    static getElement(selector, dom) {
         return !dom ? document.querySelector(selector) : dom.querySelector(selector);
     }
 
@@ -94,6 +94,8 @@ class Util {
      * @returns {string} 如 2分钟
      */
     static formatRemainingTime(remainingTime) {
+        if (remainingTime < 0)
+            remainingTime = 0;
         remainingTime = Math.ceil(remainingTime);
         let formatTime = [];
         for (let i = 0; i < Util.remainingTimeUnit.length; i++) {
@@ -131,7 +133,7 @@ class Util {
      */
     static received(file) {
         let received = file.bytesReceived, finalReceived = Util.formatBytes(received), progress = file.progress;
-        if (progress === '100%' && file.totalBytes !== -1) {
+        if (progress === '100%' && file.totalBytes > 0) {
             finalReceived = null;
         }
         return finalReceived;
@@ -158,22 +160,22 @@ class Util {
     /**
      * 计算下载速度
      * @param downloadItem {DownloadItem} 当前接收字节数
-     * @param lastBytes 上一次接收字节数
      * @return {string} 下载速度，如 1MB/S
      */
-    static speed(downloadItem, lastBytes) {
+    static speed(downloadItem) {
         let speedBytes = 0;
         // 确定文件的总大小
-        if (downloadItem.totalBytes !== 0) {
+        if (downloadItem.totalBytes > 0) {
             if (downloadItem.estimatedEndTime) {
                 let remainingTime = (new Date(downloadItem.estimatedEndTime) - new Date().getTime()) / 1000;
-                if (!isNaN(remainingTime)) {
+                if (!isNaN(remainingTime) && remainingTime > 0) {
                     speedBytes = ((downloadItem.totalBytes - downloadItem.bytesReceived) / remainingTime).toFixed(0);
                 }
             }
         } else {
-            // 文件大小不确定
-            speedBytes = downloadItem.bytesReceived - lastBytes;
+            // 文件大小不确定,且上次接受数据大小不为null
+            if (downloadItem.lastBytesReceived != null)
+                speedBytes = downloadItem.bytesReceived - downloadItem.lastBytesReceived;
         }
         return this.formatBytes(speedBytes) + '/s';
     }
@@ -183,19 +185,19 @@ class Util {
      * @param downloadItem {DownloadItem}
      */
     static remainingTime(downloadItem) {
-        if (downloadItem.totalBytes !== 0) {
+        if (downloadItem.totalBytes > 0) {
             if (downloadItem.estimatedEndTime) {
                 let remainingTime = (new Date(downloadItem.estimatedEndTime) - new Date()) / 1000;
                 if (!isNaN(remainingTime)) {
-                    return chrome.i18n.getMessage('remaining') + this.formatRemainingTime(remainingTime)
+                    return chrome.i18n.getMessage('remaining') + ' ' + this.formatRemainingTime(remainingTime)
                 }
-                return chrome.i18n.getMessage('remaining') + chrome.i18n.getMessage('unknown');
+                return chrome.i18n.getMessage('remaining') + ' ' + chrome.i18n.getMessage('unknown');
             } else {
-                return chrome.i18n.getMessage('remaining') + chrome.i18n.getMessage('obtaining');
+                return chrome.i18n.getMessage('remaining') + ' ' + chrome.i18n.getMessage('obtaining');
             }
         } else {
             // 文件大小不确定
-            return chrome.i18n.getMessage('remaining') + chrome.i18n.getMessage('unknown');
+            return chrome.i18n.getMessage('remaining') + ' ' + chrome.i18n.getMessage('unknown');
         }
     }
 
@@ -206,6 +208,8 @@ class Util {
      * @return {string} 下载进度，如16.66%
      */
     static progress(currentBytes, totalBytes) {
+        if (totalBytes <= 0)
+            totalBytes = currentBytes;
         return (currentBytes / totalBytes).toFixed(4) * 100 + '%'
     }
 }

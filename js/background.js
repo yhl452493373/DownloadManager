@@ -7,6 +7,12 @@ import {Util} from "./module/Util.js";
 chrome.downloads.setShelfEnabled(false);
 
 /**
+ * 定时获取下载进度
+ * @type {number}
+ */
+let timer;
+
+/**
  * 下载完成的声音文件路径
  * @type {string}
  */
@@ -61,6 +67,12 @@ let notice = 'off';
 let sound = 'off';
 
 /**
+ * 清空时是否删除文件
+ * @type {string}
+ */
+let deleteFile = 'off';
+
+/**
  * 触发创建下载事件，将其信息存入下载中的项目列表
  */
 chrome.downloads.onCreated.addListener(downloadItemInfo => {
@@ -83,10 +95,10 @@ chrome.downloads.onChanged.addListener(downloadDeltaInfo => {
     let downloadDelta = new DownloadDelta(downloadDeltaInfo);
     cacheIcon(downloadDelta.id);
     changeActionIcon();
+    createDownloadItem(downloadDelta);
+    startPolling();
     //检测到文件名变化(由无->有)说明开始下载
     if (downloadDelta.filename.isNotEmpty() && Util.emptyString(downloadDelta.filename.previous) && downloadDelta.filename.current) {
-        startPolling();
-        createDownloadItem(downloadDelta);
         if (Array.isArray(notice) && notice.indexOf('start') !== -1) {
             chrome.notifications.create('start-' + downloadDelta.id, {
                 type: 'basic',
@@ -102,12 +114,12 @@ chrome.downloads.onChanged.addListener(downloadDeltaInfo => {
         if (Array.isArray(notice) && notice.indexOf('danger') !== -1) {
             chrome.notifications.getPermissionLevel(level => {
                 if (level === 'granted') {
-                    chrome.downloads.search({id: downloadDelta.id}, arr => {
-                        if (Array.isArray(arr) && arr.length > 0) {
+                    chrome.downloads.search({id: downloadDelta.id}, results => {
+                        if (Array.isArray(results) && results.length > 0) {
                             chrome.notifications.create('danger-' + downloadDelta.id, {
                                 type: 'basic',
                                 title: chrome.i18n.getMessage('safetyWaring'),
-                                message: Util.filename(arr[0].filename),
+                                message: Util.filename(results[0].filename),
                                 contextMessage: DangerType.valueOf(downloadDelta.danger.current).name,
                                 iconUrl: itemIcons[downloadDelta.id].icon || '/img/icon_green.png',
                                 isClickable: true
@@ -117,7 +129,6 @@ chrome.downloads.onChanged.addListener(downloadDeltaInfo => {
                 }
             });
         }
-        createDownloadItem(downloadDelta);
     }
     //检测到状态变化
     if (downloadDelta.state.isNotEmpty()) {
@@ -153,10 +164,11 @@ chrome.downloads.onChanged.addListener(downloadDeltaInfo => {
                 });
             }
         } else if (downloadDelta.state.current === State.interrupted.code) {
+            removeNotDownloadingItem(downloadDelta.id);
             //下载项取消，通知页面渲染为取消下载状态
             chrome.runtime.sendMessage({
                 method: 'cancelDownloadItem',
-                data: downloadDelta.id
+                data: downloadDelta
             });
         }
     }
@@ -175,7 +187,7 @@ chrome.downloads.onChanged.addListener(downloadDeltaInfo => {
                 //从下载变为暂停,并且不可恢复
                 chrome.runtime.sendMessage({
                     method: 'cancelDownloadItem',
-                    data: downloadDelta.id
+                    data: downloadDelta
                 });
             }
         } else {
@@ -187,7 +199,7 @@ chrome.downloads.onChanged.addListener(downloadDeltaInfo => {
                 //从暂停变为下载,并且之前状态指明不可恢复,则取消下载
                 chrome.runtime.sendMessage({
                     method: 'cancelDownloadItem',
-                    data: downloadDelta.id
+                    data: downloadDelta
                 });
             }
             if (Array.isArray(notice) && notice.indexOf('start') !== -1) {
@@ -224,12 +236,12 @@ chrome.downloads.onErased.addListener(id => {
 });
 
 chrome.downloads.search({}, results => {
-    results.forEach(result => {
+    results.filter(item => !Util.emptyString(item.filename)).forEach(result => {
         cacheIcon(result.id);
     });
 });
 
-chrome.runtime.onMessage.addListener(request => {
+chrome.runtime.onMessage.addListener((request, sender, response) => {
     if (request.method === 'pollProgress') {
         startPolling();
     } else if (request.method === 'cacheIcon') {
@@ -251,6 +263,12 @@ chrome.runtime.onMessage.addListener(request => {
     } else if (request.method === 'changeSound') {
         //options页面请求
         sound = request.data;
+    } else if (request.method === 'alsoDeleteFile') {
+        //options页面请求
+        deleteFile = request.data;
+    } else if (request.method === 'alsoDeleteFileState') {
+        //main页面获取deleteFile状态
+        response(deleteFile);
     }
 });
 
@@ -289,8 +307,9 @@ function restoreOption() {
     chrome.storage.sync.get(
         {
             iconType: 'auto',
-            downloadNotice: false,
-            downloadSound: false
+            downloadNotice: 'off',
+            downloadSound: 'off',
+            alsoDeleteFile: 'off'
         }, function (obj) {
             let iconType = obj.iconType;
             let icon = '';
@@ -308,6 +327,7 @@ function restoreOption() {
             normalIcon = icon;
             notice = obj.downloadNotice;
             sound = obj.downloadSound;
+            deleteFile = obj.alsoDeleteFile;
             chrome.browserAction.setIcon({path: normalIcon});
         }
     );
@@ -318,21 +338,19 @@ function restoreOption() {
  */
 function pollProgress() {
     pollProgressRunning = true;
+    let startTime = new Date().getTime();
     /**
      * 查找正在下载的项
      */
-    chrome.downloads.search({
-        state: State.in_progress.code,
-        paused: false
-    }, results => {
+    chrome.downloads.search({state: State.in_progress.code, paused: false}, results => {
         setActionIcon(results);
         if (results.length === 0) {
             pollProgressRunning = false;
+            startTime = null;
         } else {
             /**
              * 计算下载速度和下载进度
              */
-            let startTime = new Date().getTime();
             results.forEach(file => {
                 /**
                  * file的字段大致与DownloadItem相同，但是需要进行转换。具体字段参考 {@link https://crxdoc-zh.appspot.com/extensions/downloads#type-DownloadItem}
@@ -351,7 +369,7 @@ function pollProgress() {
                 method: 'updateProgress',
                 data: downloadingItems
             });
-            let timer = setTimeout(() => {
+            timer = setTimeout(() => {
                 clearTimeout(timer);
                 pollProgress();
             }, 1000 - (new Date().getTime() - startTime));
@@ -365,9 +383,7 @@ function pollProgress() {
  */
 function removeNotDownloadingItem(id) {
     if (id == null) {
-        chrome.downloads.search({
-            paused: false
-        }, function (results) {
+        chrome.downloads.search({paused: false}, function (results) {
             results.forEach(result => {
                 downloadingItems.splice(downloadingItems.findIndex(item => item.id === result.id), 1);
             });
@@ -388,7 +404,8 @@ function cacheIcon(id, callback) {
     chrome.downloads.getFileIcon(id, {
         size: 32
     }, icon => {
-        if (icon) {
+        //删除时会触发chrome.downloads.onChange，若文件已经删除，再去获取其图标会报错：downloadId错误，加入chrome.runtime.lastError进行容错处理
+        if (!chrome.runtime.lastError && icon) {
             if (itemIcons.hasOwnProperty(id)) {
                 //若已有缓存记录
                 if (itemIcons[id] !== icon) {
@@ -415,10 +432,8 @@ function cacheIcon(id, callback) {
  * 根据搜索结果改变浏览器中插件的图标
  */
 function changeActionIcon() {
-    chrome.downloads.search({
-        state: State.in_progress.code,
-        paused: false
-    }, results => {
+    chrome.downloads.search({state: State.in_progress.code, paused: false}, results => {
+        results = results.filter(item => !Util.emptyString(item.filename));
         setActionIcon(results);
     });
 }
@@ -428,6 +443,7 @@ function changeActionIcon() {
  */
 function setActionIcon(results) {
     if (results) {
+        results = results.filter(item => !Util.emptyString(item.filename));
         if (results.length === 0) {
             chrome.browserAction.setIcon({
                 path: normalIcon
@@ -462,8 +478,10 @@ function createDownloadItem(downloadDelta) {
     let existItem = downloadingItems.find(item => item.id === downloadDelta.id);
     if (existItem == null)
         return;
-    existItem.filename = downloadDelta.filename.current;
-    existItem.getSimpleFilename();
+    if (!Util.emptyString(downloadDelta.filename.current)) {
+        existItem.filename = downloadDelta.filename.current;
+        existItem.getSimpleFilename();
+    }
     chrome.runtime.sendMessage({
         method: 'createDownloadItem',
         data: existItem
@@ -480,4 +498,4 @@ function playSound() {
 
 changeIcon();
 restoreOption();
-pollProgress();
+startPolling();
