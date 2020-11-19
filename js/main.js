@@ -233,6 +233,10 @@ $(document).on('dblclick', '.item > .type, .item > .info', e => {
                     chrome.downloads.removeFile(result.id, function () {
                         //防止删除的文件未完成，扩展程序管理中报chrome.runtime.lastError
                         if (chrome.runtime.lastError) {
+                            //报错为文件已被删除时，直接清除下载项
+                            if (chrome.runtime.lastError.message === 'Download file already deleted') {
+                                eraseDownloadItem(result.id);
+                            }
                         }
                     });
                 });
