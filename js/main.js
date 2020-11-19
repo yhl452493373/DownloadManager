@@ -237,6 +237,9 @@ $(document).on('dblclick', '.item > .type, .item > .info', e => {
                             if (chrome.runtime.lastError.message === 'Download file already deleted') {
                                 eraseDownloadItem(result.id);
                             }
+                            chrome.downloads.erase({
+                                id: result.id
+                            });
                         }
                     });
                 });
