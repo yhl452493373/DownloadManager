@@ -1,4 +1,4 @@
-import {Delta} from "./Delta.js";
+import Delta from "./Delta.js";
 
 class DoubleDelta extends Delta {
     /**
@@ -16,4 +16,4 @@ class DoubleDelta extends Delta {
     }
 }
 
-export {DoubleDelta}
+export default DoubleDelta

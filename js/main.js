@@ -1,8 +1,8 @@
-import {Util} from "./module/Util.js";
-import {Item} from "./module/Item.js";
-import {State} from "./module/State.js";
-import {DownloadItem} from "./module/DownloadItem.js";
-import {DownloadDelta} from "./module/DownloadDelta.js";
+import Util from "./module/Util.js";
+import Item from "./module/Item.js";
+import State from "./module/State.js";
+import DownloadItem from "./module/DownloadItem.js";
+import DownloadDelta from "./module/DownloadDelta.js";
 import $ from "./module/jquery.min.js";
 
 /**

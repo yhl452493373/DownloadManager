@@ -1,4 +1,4 @@
-import {DownloadItem} from "./DownloadItem.js";
+import DownloadItem from "./DownloadItem.js";
 
 class Util {
     static remainingTimeUnit = chrome.i18n.getMessage('remainingTimeUnit').split(",");
@@ -212,6 +212,14 @@ class Util {
             totalBytes = currentBytes;
         return (currentBytes / totalBytes).toFixed(4) * 100 + '%'
     }
+
+    /**
+     * 是否深色模式
+     * @returns {boolean} true - 深色模式，false - 浅色模式
+     */
+    static isDark() {
+        return window.matchMedia("(prefers-color-scheme: dark)").matches;
+    }
 }
 
-export {Util}
+export default Util

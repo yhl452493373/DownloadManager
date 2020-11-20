@@ -1,4 +1,4 @@
-import {Delta} from "./Delta.js";
+import Delta from "./Delta.js";
 
 class BooleanDelta extends Delta {
     /**
@@ -16,4 +16,4 @@ class BooleanDelta extends Delta {
     }
 }
 
-export {BooleanDelta}
+export default BooleanDelta

@@ -1,4 +1,4 @@
-import {Enum} from "./Enum.js";
+import Enum from "./Enum.js";
 
 class DangerType extends Enum {
 
@@ -19,4 +19,4 @@ class DangerType extends Enum {
     static accepted = new DangerType('accepted', chrome.i18n.getMessage('acceptedDanger'));
 }
 
-export {DangerType}
+export default DangerType

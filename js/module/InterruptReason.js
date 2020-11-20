@@ -1,4 +1,4 @@
-import {Enum} from "./Enum.js";
+import Enum from "./Enum.js";
 
 class InterruptReason extends Enum {
     static FILE_FAILED = new InterruptReason("FILE_FAILED");
@@ -60,4 +60,4 @@ class InterruptReason extends Enum {
     static CRASH = new InterruptReason("CRASH");
 }
 
-export {InterruptReason}
+export default InterruptReason

@@ -1,8 +1,8 @@
-import {Util} from './Util.js'
-import {State} from './State.js'
-import {DangerType} from "./DangerType.js";
-import {InterruptReason} from "./InterruptReason.js";
-import {DownloadItem} from "./DownloadItem.js";
+import Util from './Util.js'
+import State from './State.js'
+import DangerType from "./DangerType.js";
+import InterruptReason from "./InterruptReason.js";
+import DownloadItem from "./DownloadItem.js";
 
 // noinspection DuplicatedCode,JSUnresolvedVariable,JSUnresolvedFunction
 class Item {
@@ -427,4 +427,4 @@ class Item {
     }
 }
 
-export {Item}
+export default Item

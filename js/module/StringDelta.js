@@ -1,4 +1,4 @@
-import {Delta} from "./Delta.js";
+import Delta from "./Delta.js";
 
 class StringDelta extends Delta {
     /**
@@ -16,4 +16,4 @@ class StringDelta extends Delta {
     }
 }
 
-export {StringDelta}
+export default StringDelta

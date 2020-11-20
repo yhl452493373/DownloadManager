@@ -1,4 +1,4 @@
-import {Enum} from "./Enum.js";
+import Enum from "./Enum.js";
 
 class State extends Enum {
 
@@ -16,4 +16,4 @@ class State extends Enum {
     static deleted = new State('deleted', chrome.i18n.getMessage('deleted'));
 }
 
-export {State}
+export default State

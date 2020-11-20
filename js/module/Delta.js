@@ -40,4 +40,4 @@ class Delta {
     }
 }
 
-export {Delta}
+export default Delta

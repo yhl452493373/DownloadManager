@@ -1,3 +1,5 @@
+import Util from "./module/Util.js";
+
 document.querySelector('title').innerText = chrome.i18n.getMessage('options');
 document.querySelector('#iconType').innerText = chrome.i18n.getMessage('iconType') + ':';
 document.querySelector('#iconAuto').innerText = chrome.i18n.getMessage('iconAuto');
@@ -44,7 +46,7 @@ document.querySelectorAll("input[name=iconType]").forEach(input => {
         } else if (iconType === 'light') {
             icon = '/img/icon_light.png';
         } else {
-            if (isDark()) {
+            if (Util.isDark()) {
                 icon = '/img/icon_light.png';
             } else {
                 icon = '/img/icon_gray.png';
@@ -120,8 +122,3 @@ document.querySelectorAll("input[name=alsoDeleteFile]").forEach(input => {
         });
     };
 });
-
-//是否深色模式
-function isDark() {
-    return window.matchMedia("(prefers-color-scheme: dark)").matches;
-}

@@ -2,10 +2,10 @@
  * @class 下载项数据结构
  */
 
-import {Util} from './Util.js'
-import {State} from './State.js'
-import {DangerType} from "./DangerType.js";
-import {InterruptReason} from "./InterruptReason.js";
+import Util from './Util.js'
+import State from './State.js'
+import DangerType from "./DangerType.js";
+import InterruptReason from "./InterruptReason.js";
 
 class DownloadItem {
     /**
@@ -196,4 +196,4 @@ class DownloadItem {
     }
 }
 
-export {DownloadItem}
+export default DownloadItem

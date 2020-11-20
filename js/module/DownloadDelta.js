@@ -2,9 +2,9 @@
  * @class 下载项改变时的数据结构
  */
 
-import {StringDelta} from "./StringDelta.js";
-import {BooleanDelta} from "./BooleanDelta.js";
-import {DoubleDelta} from "./DoubleDelta.js";
+import StringDelta from "./StringDelta.js";
+import BooleanDelta from "./BooleanDelta.js";
+import DoubleDelta from "./DoubleDelta.js";
 
 class DownloadDelta {
     /**
@@ -122,4 +122,4 @@ class DownloadDelta {
     }
 }
 
-export {DownloadDelta}
+export default DownloadDelta

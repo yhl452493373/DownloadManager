@@ -32,4 +32,4 @@ class Enum {
     }
 }
 
-export {Enum}
+export default Enum

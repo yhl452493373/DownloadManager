@@ -1,8 +1,8 @@
-import {DangerType} from "./module/DangerType.js";
-import {State} from "./module/State.js";
-import {DownloadItem} from "./module/DownloadItem.js";
-import {DownloadDelta} from "./module/DownloadDelta.js";
-import {Util} from "./module/Util.js";
+import DangerType from "./module/DangerType.js";
+import State from "./module/State.js";
+import DownloadItem from "./module/DownloadItem.js";
+import DownloadDelta from "./module/DownloadDelta.js";
+import Util from "./module/Util.js";
 
 chrome.downloads.setShelfEnabled(false);
 
@@ -272,14 +272,6 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
     }
 });
 
-/**
- * 是否深色模式
- * @return {boolean}
- */
-function isDark() {
-    return window.matchMedia("(prefers-color-scheme: dark)").matches;
-}
-
 function watchDarkModeChange() {
     //每秒检测深色模式情况
     setInterval(changeIcon, 1000);
@@ -291,7 +283,7 @@ watchDarkModeChange();
  * 改变插件在浏览器工具栏中的图标
  */
 function changeIcon() {
-    if (isDark()) {
+    if (Util.isDark()) {
         normalIcon = '/img/icon_light.png';
     } else {
         normalIcon = '/img/icon_gray.png';
@@ -318,7 +310,7 @@ function restoreOption() {
             } else if (iconType === 'light') {
                 icon = '/img/icon_light.png';
             } else {
-                if (isDark()) {
+                if (Util.isDark()) {
                     icon = '/img/icon_light.png';
                 } else {
                     icon = '/img/icon_gray.png';
