@@ -11,7 +11,7 @@
 ---
 #### 由于采用了ES6的模块写法,因此需要 ***Chrome版本54*** 以上才能运行
 #### 主要用于chrome,chromium,微软的新版edge浏览器
-<!-- #### chrome商店地址：[下载管理](https://chrome.google.com/webstore/detail/%E4%B8%8B%E8%BD%BD%E7%AE%A1%E7%90%86/nfmgapnodlagabglffakjglkalonidld) -->
+#### chrome商店地址：[下载管理](https://chrome.google.com/webstore/detail/%E4%B8%8B%E8%BD%BD%E7%AE%A1%E7%90%86/dgoaeahpciglgomkbmfblkcfanpfckhb) 
 ### edge商店地址:[下载管理](https://microsoftedge.microsoft.com/addons/detail/%E4%B8%8B%E8%BD%BD%E7%AE%A1%E7%90%86/oljecelfndgchlbkmodifnpodpialkjo)
 
 那啥，chrome商店一直不给我通过。。。说我描述里面download出现太多。。。我擦
