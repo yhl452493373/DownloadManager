@@ -6,7 +6,7 @@ body {
     margin: 0 auto;
     padding: 0;
     list-style: none;
-    width: 600px;
+    width: 620px;
 }
 
 .ul_box > li {
@@ -24,7 +24,10 @@ body {
 }
 
 .ul_box > li > div:nth-child(1) {
-    width: 130px;
+    width: 150px;
+    text-align: right;
+    padding-right: 10px;
+    box-sizing: border-box;
 }
 
 .ul_box > li > div:nth-child(2) {
@@ -32,7 +35,7 @@ body {
     overflow: hidden;
 }
 
-.label{
+.label {
     height: 40px;
     line-height: 40px;
 }
@@ -66,7 +69,7 @@ body {
 
 .label_box > label > input:checked + span {
     border: #d51917 solid 1px;
-    color: #d51917;
+    color: #d51917!important;
 }
 
 .label_box > label > input:checked + span:after {
@@ -94,4 +97,15 @@ body {
     bottom: 2px;
     right: 4px;
     z-index: 2;
+}
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background: rgb(38, 38, 38) !important;
+        color: #fff;
+    }
+
+    .label_box > label > span{
+        color: rgb(247, 247, 247) !important;
+    }
 }

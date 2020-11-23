@@ -3,8 +3,15 @@ import State from "./module/State.js";
 import DownloadItem from "./module/DownloadItem.js";
 import DownloadDelta from "./module/DownloadDelta.js";
 import Util from "./module/Util.js";
+import Icon from "./module/Icon.js";
 
 chrome.downloads.setShelfEnabled(false);
+
+/**
+ * browserAction的图标
+ * @type {Icon}
+ */
+let icon = new Icon();
 
 /**
  * 定时获取下载进度
@@ -46,13 +53,7 @@ let pollProgressRunning = false;
  * 常规情况下，浏览器中的图标
  * @type {string}
  */
-let normalIcon = '/img/icon_gray.png';
-
-/**
- * 有文件正在下载时，浏览器中的图标
- * @type {string}
- */
-let downloadingIcon = '/img/icon_green.png';
+let iconType = 'auto';
 
 /**
  * 是否开启通知
@@ -71,6 +72,18 @@ let sound = 'off';
  * @type {string}
  */
 let deleteFile = 'off';
+
+/**
+ * 在下载图标上显示下载进度
+ * @type {string}
+ */
+let iconProgress = 'off';
+
+/**
+ * 是否在下载文件。是，则不会改变图标，因为图标会跟随进度改变
+ * @type {boolean}
+ */
+let downloading = false;
 
 /**
  * 触发创建下载事件，将其信息存入下载中的项目列表
@@ -252,7 +265,7 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
     } else if (request.method === 'changeActionIcon') {
         //main,options页面请求
         if (typeof request.data === "string") {
-            normalIcon = request.data
+            iconType = request.data
         } else if (typeof request.data === 'number') {
             removeNotDownloadingItem(request.data);
         }
@@ -269,27 +282,21 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
     } else if (request.method === 'alsoDeleteFileState') {
         //main页面获取deleteFile状态
         response(deleteFile);
+    } else if (request.method === 'iconProgress') {
+        //options页面请求
+        iconProgress = request.data;
     }
 });
-
-function watchDarkModeChange() {
-    //每秒检测深色模式情况
-    setInterval(changeIcon, 1000);
-}
-
-watchDarkModeChange();
 
 /**
  * 改变插件在浏览器工具栏中的图标
  */
 function changeIcon() {
-    if (Util.isDark()) {
-        normalIcon = '/img/icon_light.png';
-    } else {
-        normalIcon = '/img/icon_gray.png';
+    if (downloadingItems.length === 0) {
+        if (downloading)
+            return;
+        icon.drawProcessIcon(0, iconProgress, iconType);
     }
-    if (downloadingItems.length === 0)
-        chrome.browserAction.setIcon({path: normalIcon});
 }
 
 /**
@@ -301,26 +308,15 @@ function restoreOption() {
             iconType: 'auto',
             downloadNotice: 'off',
             downloadSound: 'off',
-            alsoDeleteFile: 'off'
+            alsoDeleteFile: 'off',
+            iconProgress: 'off'
         }, function (obj) {
-            let iconType = obj.iconType;
-            let icon = '';
-            if (iconType === 'dark') {
-                icon = '/img/icon_gray.png';
-            } else if (iconType === 'light') {
-                icon = '/img/icon_light.png';
-            } else {
-                if (Util.isDark()) {
-                    icon = '/img/icon_light.png';
-                } else {
-                    icon = '/img/icon_gray.png';
-                }
-            }
-            normalIcon = icon;
+            iconType = obj.iconType;
             notice = obj.downloadNotice;
             sound = obj.downloadSound;
             deleteFile = obj.alsoDeleteFile;
-            chrome.browserAction.setIcon({path: normalIcon});
+            iconProgress = obj.iconProgress;
+            icon.drawProcessIcon(0,iconProgress, iconType);
         }
     );
 }
@@ -337,9 +333,11 @@ function pollProgress() {
     chrome.downloads.search({state: State.in_progress.code, paused: false}, results => {
         setActionIcon(results);
         if (results.length === 0) {
+            downloading = false;
             pollProgressRunning = false;
             startTime = null;
         } else {
+            downloading = true;
             /**
              * 计算下载速度和下载进度
              */
@@ -349,8 +347,9 @@ function pollProgress() {
                  */
                 let downloadingItem = downloadingItems.find(item => item.id === file.id);
                 if (downloadingItem === undefined) {
+                    downloadingItem = new DownloadItem(file);
                     //若没有id相同的，则视为新增下载
-                    downloadingItems.push(new DownloadItem(file));
+                    downloadingItems.push(downloadingItem);
                 } else {
                     //若有id相同的，则视为已有下载
                     downloadingItem.init(file, downloadingItem.bytesReceived);
@@ -434,22 +433,34 @@ function changeActionIcon() {
  * 根据下载项数量改变浏览器中插件的图标
  */
 function setActionIcon(results) {
+    /**
+     * 总文件大小，若总大小为负数，则表示有文件的大小无法获取，进度图标须一直为100%，否则为receivedSize/totalSize
+     * @type {number}
+     */
+    let totalSize = 0;
+
+    /**
+     * 已下载文件大小
+     * @type {number}
+     */
+    let receivedSize = 0;
+
     if (results) {
+        results.forEach(file => {
+            let downloadItem = new DownloadItem(file);
+            totalSize += downloadItem.totalBytes;
+            if (downloadItem.totalBytes === 0)
+                totalSize = Math.abs(totalSize) * -1 + -1;
+            receivedSize += downloadItem.bytesReceived;
+        });
         results = results.filter(item => !Util.emptyString(item.filename));
+        chrome.browserAction.setBadgeText({
+            text: results.length === 0 ? '' : (results.length + '')
+        });
         if (results.length === 0) {
-            chrome.browserAction.setIcon({
-                path: normalIcon
-            });
-            chrome.browserAction.setBadgeText({
-                text: ''
-            });
+            icon.drawProcessIcon(0,iconProgress, iconType);
         } else {
-            chrome.browserAction.setIcon({
-                path: downloadingIcon
-            });
-            chrome.browserAction.setBadgeText({
-                text: results.length + ''
-            });
+            icon.drawProcessIcon(totalSize === 0 ? 0 : totalSize < 0 ? 1 : (receivedSize / totalSize),iconProgress, iconType);
         }
     }
 }
@@ -488,6 +499,13 @@ function playSound() {
         audio.play();
 }
 
-changeIcon();
+function watchDarkModeChange() {
+    //每秒检测深色模式情况
+    setInterval(changeIcon, 1000);
+}
+
+watchDarkModeChange();
 restoreOption();
 startPolling();
+
+

@@ -1,5 +1,3 @@
-import Util from "./module/Util.js";
-
 document.querySelector('title').innerText = chrome.i18n.getMessage('options');
 document.querySelector('#iconType').innerText = chrome.i18n.getMessage('iconType') + ':';
 document.querySelector('#iconAuto').innerText = chrome.i18n.getMessage('iconAuto');
@@ -16,16 +14,21 @@ document.querySelector('#downloadDanger').innerText = chrome.i18n.getMessage('da
 document.querySelector('#alsoRemoveFile').innerText = chrome.i18n.getMessage('alsoRemoveFile') + ':';
 document.querySelector('#removeFileOff').innerText = chrome.i18n.getMessage('removeFileOff');
 document.querySelector('#removeFileOn').innerText = chrome.i18n.getMessage('removeFileOn');
+document.querySelector('#iconProgress').innerText = chrome.i18n.getMessage('showProgressOnIcon') + ':';
+document.querySelector('#iconProgressOff').innerText = chrome.i18n.getMessage('showProgressOnIconOff');
+document.querySelector('#iconProgressOn').innerText = chrome.i18n.getMessage('showProgressOnIconOn');
 
 chrome.storage.sync.get({
         iconType: 'auto',
         downloadSound: 'off',
         downloadNotice: 'off',
-        alsoDeleteFile: 'off'
+        alsoDeleteFile: 'off',
+        iconProgress: 'off'
     }, obj => {
         document.querySelector("input[name=iconType][value=" + obj.iconType + "]").click();
         document.querySelector("input[name=downloadSound][value=" + obj.downloadSound + "]").click();
         document.querySelector("input[name=alsoDeleteFile][value=" + obj.alsoDeleteFile + "]").click();
+        document.querySelector("input[name=iconProgress][value=" + obj.iconProgress + "]").click();
         if (typeof obj.downloadNotice === "string" || obj.downloadNotice.length === 0)
             document.querySelector("input[name=downloadNotice][value=off]").click();
         else if (Array.isArray(obj.downloadNotice)) {
@@ -40,24 +43,12 @@ chrome.storage.sync.get({
 document.querySelectorAll("input[name=iconType]").forEach(input => {
     input.onchange = function () {
         let iconType = this.value;
-        let icon;
-        if (iconType === 'dark') {
-            icon = '/img/icon_gray.png';
-        } else if (iconType === 'light') {
-            icon = '/img/icon_light.png';
-        } else {
-            if (Util.isDark()) {
-                icon = '/img/icon_light.png';
-            } else {
-                icon = '/img/icon_gray.png';
-            }
-        }
         chrome.storage.sync.set({
             iconType: iconType
         });
         chrome.runtime.sendMessage({
             method: 'changeActionIcon',
-            data: icon
+            data: iconType
         });
     };
 });
@@ -119,6 +110,19 @@ document.querySelectorAll("input[name=alsoDeleteFile]").forEach(input => {
         chrome.runtime.sendMessage({
             method: 'alsoDeleteFile',
             data: alsoDeleteFile
+        });
+    };
+});
+
+document.querySelectorAll("input[name=iconProgress]").forEach(input => {
+    input.onchange = function () {
+        let iconProgress = this.value;
+        chrome.storage.sync.set({
+            iconProgress: iconProgress
+        });
+        chrome.runtime.sendMessage({
+            method: 'iconProgress',
+            data: iconProgress
         });
     };
 });

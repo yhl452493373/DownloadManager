@@ -278,5 +278,17 @@
   "removeFileOff": {
     "message": "Close",
     "description": "Remove files when cleaning all download files"
+  },
+  "showProgressOnIcon": {
+    "message": "Show progress on icon",
+    "description": "The icon shows the download progress"
+  },
+  "showProgressOnIconOn": {
+    "message": "Open",
+    "description": "The icon shows the download progress"
+  },
+  "showProgressOnIconOff": {
+    "message": "Close",
+    "description": "The icon will not shows the download progress"
   }
 }

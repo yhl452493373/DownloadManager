@@ -278,5 +278,17 @@
   "removeFileOff": {
     "message": "关闭",
     "description": "清空时不删除文件的开关文字"
+  },
+  "showProgressOnIcon": {
+    "message": "图标显示下载进度",
+    "description": "在插件图标上显示下载进度"
+  },
+  "showProgressOnIconOn": {
+    "message": "开启",
+    "description": "在插件图标上显示下载进度"
+  },
+  "showProgressOnIconOff": {
+    "message": "关闭",
+    "description": "在插件图标上不显示下载进度"
   }
 }
