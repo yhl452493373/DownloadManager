@@ -2,6 +2,7 @@
 ---
 
 ## Edge用户注意：如果出现卡在处理中，请尝试 [edge://settings/downloads](edge://settings/downloads) -> 每次下载都询问我该做些什么 -> 关闭
+## 目前所有此类插件都会出现这个问题。如果你有解决方法，可以留言或者pull
 
 ---
 
@@ -12,9 +13,9 @@
 #### 由于采用了ES6的模块写法,因此需要 ***Chrome版本54*** 以上才能运行
 #### 主要用于chrome,chromium,微软的新版edge浏览器
 #### chrome商店地址：[下载管理](https://chrome.google.com/webstore/detail/%E4%B8%8B%E8%BD%BD%E7%AE%A1%E7%90%86/dgoaeahpciglgomkbmfblkcfanpfckhb) 
-### edge商店地址:[下载管理](https://microsoftedge.microsoft.com/addons/detail/%E4%B8%8B%E8%BD%BD%E7%AE%A1%E7%90%86/oljecelfndgchlbkmodifnpodpialkjo)
+#### edge商店地址:[下载管理](https://microsoftedge.microsoft.com/addons/detail/%E4%B8%8B%E8%BD%BD%E7%AE%A1%E7%90%86/oljecelfndgchlbkmodifnpodpialkjo)
 
-那啥，chrome商店一直不给我通过。。。说我描述里面download出现太多。。。我擦
+chrome商店和edge商店，因为审核的原因，版本不一定一致。
  
 ---
 #### 实现的功能(基于chrome的API实现):
