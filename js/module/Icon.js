@@ -1,6 +1,10 @@
 import Util from './Util.js'
 
 class Icon {
+    static normalGrayIconImage = '/img/icon_gray.png';
+    static normalLightIconImage = '/img/icon_light.png';
+    static downloadingIconImage = '/img/icon_green.png';
+
     /**
      * 图标宽
      * @type {number}
@@ -80,9 +84,9 @@ class Icon {
     #iconProgress = 'off';
 
     constructor() {
-        this.normalGrayIconImage.src = '/img/icon_gray.png';
-        this.normalLightIconImage.src = '/img/icon_light.png';
-        this.downloadingIconImage.src = '/img/icon_green.png';
+        this.normalGrayIconImage.src = Icon.normalGrayIconImage;
+        this.normalLightIconImage.src = Icon.normalLightIconImage;
+        this.downloadingIconImage.src = Icon.downloadingIconImage;
         this.canvas.width = this.iconWith;
         this.canvas.height = this.iconHeight;
 

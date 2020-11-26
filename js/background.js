@@ -4,6 +4,7 @@ import DownloadItem from "./module/DownloadItem.js";
 import DownloadDelta from "./module/DownloadDelta.js";
 import Util from "./module/Util.js";
 import Icon from "./module/Icon.js";
+import AudioPlayer from "./module/AudioPlayer.js";
 
 chrome.downloads.setShelfEnabled(false);
 
@@ -14,22 +15,16 @@ chrome.downloads.setShelfEnabled(false);
 let icon = new Icon();
 
 /**
+ * 播放下载完成的声音
+ * @type {AudioPlayer}
+ */
+let audio = new AudioPlayer();
+
+/**
  * 定时获取下载进度
  * @type {number}
  */
 let timer;
-
-/**
- * 下载完成的声音文件路径
- * @type {string}
- */
-let wav = "audio/download-complete.wav";
-
-/**
- * 创建下载完成的声音对象
- * @type {HTMLAudioElement}
- */
-let audio = new Audio(wav);
 
 /**
  * 正在下载的项.其他状态(暂停,取消,删除)会从里面删除
@@ -117,7 +112,7 @@ chrome.downloads.onChanged.addListener(downloadDeltaInfo => {
                 type: 'basic',
                 title: chrome.i18n.getMessage('downloadStart'),
                 message: chrome.i18n.getMessage('downloadStart') + '：' + Util.filename(downloadDelta.filename.current),
-                iconUrl: itemIcons[downloadDelta.id] && itemIcons[downloadDelta.id].icon || '/img/icon_green.png',
+                iconUrl: itemIcons[downloadDelta.id] && itemIcons[downloadDelta.id].icon || Icon.downloadingIconImage,
                 isClickable: true
             });
         }
@@ -134,7 +129,7 @@ chrome.downloads.onChanged.addListener(downloadDeltaInfo => {
                                 title: chrome.i18n.getMessage('safetyWaring'),
                                 message: Util.filename(results[0].filename),
                                 contextMessage: DangerType.valueOf(downloadDelta.danger.current).name,
-                                iconUrl: itemIcons[downloadDelta.id].icon || '/img/icon_green.png',
+                                iconUrl: itemIcons[downloadDelta.id].icon || Icon.downloadingIconImage,
                                 isClickable: true
                             });
                         }
@@ -163,7 +158,7 @@ chrome.downloads.onChanged.addListener(downloadDeltaInfo => {
                                     type: 'basic',
                                     title: chrome.i18n.getMessage('downloadComplete'),
                                     message: results[0].filename,
-                                    iconUrl: itemIcons[downloadDelta.id].icon || '/img/icon_green.png',
+                                    iconUrl: itemIcons[downloadDelta.id].icon || Icon.downloadingIconImage,
                                     buttons: [{
                                         title: chrome.i18n.getMessage('open'),
                                     }, {
@@ -222,7 +217,7 @@ chrome.downloads.onChanged.addListener(downloadDeltaInfo => {
                         type: 'basic',
                         title: chrome.i18n.getMessage('downloadStart'),
                         message: chrome.i18n.getMessage('downloadStart') + '：' + downloadItem.simpleFilename,
-                        iconUrl: itemIcons[downloadDelta.id] && itemIcons[downloadDelta.id].icon || '/img/icon_green.png',
+                        iconUrl: itemIcons[downloadDelta.id].icon || Icon.downloadingIconImage,
                         isClickable: true
                     });
                 }
@@ -288,6 +283,24 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
     }
 });
 
+chrome.notifications.onClicked.addListener(id => {
+    if (id.indexOf('danger') !== -1) {
+        //todo something
+    }
+    chrome.notifications.clear(notificationId);
+});
+
+chrome.notifications.onButtonClicked.addListener((id, index) => {
+    chrome.notifications.clear(id);
+    if (id.indexOf("complete") > -1) {
+        if (index === 0) {
+            chrome.downloads.open(parseInt(id.substring(id.indexOf("-") + 1)));
+        } else if (index === 1) {
+            chrome.downloads.show(parseInt(id.substring(id.indexOf("-") + 1)));
+        }
+    }
+});
+
 /**
  * 改变插件在浏览器工具栏中的图标
  */
@@ -316,7 +329,7 @@ function restoreOption() {
             sound = obj.downloadSound;
             deleteFile = obj.alsoDeleteFile;
             iconProgress = obj.iconProgress;
-            icon.drawProcessIcon(0,iconProgress, iconType);
+            icon.drawProcessIcon(0, iconProgress, iconType);
         }
     );
 }
@@ -458,9 +471,9 @@ function setActionIcon(results) {
             text: results.length === 0 ? '' : (results.length + '')
         });
         if (results.length === 0) {
-            icon.drawProcessIcon(0,iconProgress, iconType);
+            icon.drawProcessIcon(0, iconProgress, iconType);
         } else {
-            icon.drawProcessIcon(totalSize === 0 ? 0 : totalSize < 0 ? 1 : (receivedSize / totalSize),iconProgress, iconType);
+            icon.drawProcessIcon(totalSize === 0 ? 0 : totalSize < 0 ? 1 : (receivedSize / totalSize), iconProgress, iconType);
         }
     }
 }
