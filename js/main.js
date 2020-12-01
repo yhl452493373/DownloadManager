@@ -276,6 +276,12 @@ $(document).on('dblclick', '.item > .type, .item > .info', e => {
             }
         });
     });
+}).on('click','.new-download',function (){
+  $('.popup-modal').addClass('show');
+}).on('click','#startNewDownload',function (){
+
+}).on('click','#cancelNewDownload',function (){
+    $('.popup-modal').removeClass('show');
 });
 
 //右键菜单事件

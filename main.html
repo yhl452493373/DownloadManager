@@ -1,55 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>下载管理</title>
-        <link rel="stylesheet" href="font/iconfont.css">
-        <link rel="stylesheet" href="css/main.css">
-    </head>
-    <body>
-        <div class="modal">
-            <ul class="contextmenu">
-                <li class="open-file">
-                    <span id="openFile">打开文件</span>
-                </li>
-                <li class="open-file-folder">
-                    <span id="openFileFolder">打开文件目录</span>
-                </li>
-                <li class="copy-filename">
-                    <span id="copyFilename">复制文件名</span>
-                </li>
-                <li class="copy-download-url">
-                    <span id="copyDownloadUrl">复制下载地址</span>
-                </li>
-                <li class="re-download">
-                    <span id="reDownload">重新下载</span>
-                </li>
-                <li class="delete-file">
-                    <span id="deleteFile">删除文件</span>
-                </li>
-            </ul>
+<head>
+    <meta charset="UTF-8">
+    <title>下载管理</title>
+    <link rel="stylesheet" href="font/iconfont.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="plugin/layer/theme/default/layer.css">
+</head>
+<body>
+<div class="modal">
+    <ul class="contextmenu">
+        <li class="open-file">
+            <span id="openFile">打开文件</span>
+        </li>
+        <li class="open-file-folder">
+            <span id="openFileFolder">打开文件目录</span>
+        </li>
+        <li class="copy-filename">
+            <span id="copyFilename">复制文件名</span>
+        </li>
+        <li class="copy-download-url">
+            <span id="copyDownloadUrl">复制下载地址</span>
+        </li>
+        <li class="re-download">
+            <span id="reDownload">重新下载</span>
+        </li>
+        <li class="delete-file">
+            <span id="deleteFile">删除文件</span>
+        </li>
+    </ul>
+</div>
+<div class="container">
+    <div class="header">
+        <div class="search">
+            <i class="iconfont icon-search"></i>
+            <input class="search-text" type="search" placeholder="搜索" id="search">
         </div>
-        <div class="container">
-            <div class="header">
-                <div class="search">
-                    <i class="iconfont icon-search"></i>
-                    <input class="search-text" type="search" placeholder="搜索" id="search">
-                </div>
-                <div class="operation">
-                    <div class="event open-download-folder" title="打开下载目录" id="openDownloadFolder">
-                        <i class="iconfont icon-folder"></i>
-                        <span class="icontext" id="downloadFolder">下载目录</span>
-                    </div>
-                    <div class="event clear-download-item" title="清空所有下载记录" id="clearAllHistory">
-                        <i class="iconfont icon-clean"></i>
-                        <span class="icontext" id="clear">清空</span>
-                    </div>
-                </div>
+        <div class="operation">
+            <div class="event new-download" title="新建下载项" id="newDownload">
+                <i class="iconfont icon-new"></i>
+                <span class="icontext" id="new">新建</span>
             </div>
-            <div class="body" id="body">
-                <div id="empty">没有下载记录</div>
+            <div class="event open-download-folder" title="打开下载目录" id="openDownloadFolder">
+                <i class="iconfont icon-folder"></i>
+                <span class="icontext" id="downloadFolder">下载目录</span>
+            </div>
+            <div class="event clear-download-item" title="清空所有下载记录" id="clearAllHistory">
+                <i class="iconfont icon-clean"></i>
+                <span class="icontext" id="clear">清空</span>
             </div>
         </div>
-        <script type="module" src="js/main.js"></script>
-    </body>
+    </div>
+    <div class="body" id="body">
+        <div id="empty">没有下载记录</div>
+    </div>
+</div>
+<div class="popup-modal">
+    <div class="popup-box">
+        <div class="popup-title">新建下载</div>
+        <div class="popup-content">
+            <textarea id="newDownloadUrl" placeholder="请输入新建下载地址，一行一个"></textarea>
+        </div>
+        <div class="popup-buttons">
+            <button id="startNewDownload">开始下载</button>
+            <button id="cancelNewDownload">取消</button>
+        </div>
+    </div>
+</div>
+<script type="module" src="js/main.js"></script>
+</body>
 </html>
