@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-cn">
 <head>
     <meta charset="UTF-8">
     <title>下载管理</title>
     <link rel="stylesheet" href="font/iconfont.css">
     <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="plugin/layer/theme/default/layer.css">
+    <link rel="stylesheet" href="plugin/toastify/toastify.css">
 </head>
 <body>
 <div class="modal">
@@ -41,13 +41,13 @@
                 <i class="iconfont icon-new"></i>
                 <span class="icontext" id="new">新建</span>
             </div>
-            <div class="event open-download-folder" title="打开下载目录" id="openDownloadFolder">
-                <i class="iconfont icon-folder"></i>
-                <span class="icontext" id="downloadFolder">下载目录</span>
-            </div>
             <div class="event clear-download-item" title="清空所有下载记录" id="clearAllHistory">
                 <i class="iconfont icon-clean"></i>
                 <span class="icontext" id="clear">清空</span>
+            </div>
+            <div class="event open-download-folder" title="打开下载目录" id="openDownloadFolder">
+                <i class="iconfont icon-folder"></i>
+                <span class="icontext" id="downloadFolder">下载目录</span>
             </div>
         </div>
     </div>
@@ -57,16 +57,17 @@
 </div>
 <div class="popup-modal">
     <div class="popup-box">
-        <div class="popup-title">新建下载</div>
+        <div class="popup-title" id="popupTitle">新建下载</div>
         <div class="popup-content">
-            <textarea id="newDownloadUrl" placeholder="请输入新建下载地址，一行一个"></textarea>
+            <textarea id="newDownloadUrl" placeholder="请输入新建下载项地址。一行一项，只支持HTTP、HTTPS协议地址"></textarea>
         </div>
         <div class="popup-buttons">
-            <button id="startNewDownload">开始下载</button>
+            <button id="startNewDownload">下载</button>
             <button id="cancelNewDownload">取消</button>
         </div>
     </div>
 </div>
+
 <script type="module" src="js/main.js"></script>
 </body>
 </html>

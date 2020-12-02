@@ -4,12 +4,12 @@
 
 html, body {
     margin: 0;
-    width: 450px;
+    width: 500px;
     height: 355px;
     overflow: auto;
 }
 
-body {
+* {
     font-family: -apple-system, BlinkMacSystemFont, Helvetica Neue, PingFang SC, Microsoft YaHei, Source Han Sans SC, Noto Sans CJK SC, WenQuanYi Micro Hei, sans-serif;
 }
 
@@ -55,7 +55,7 @@ body {
 }
 
 .header .search {
-    flex: 1;
+    flex: 0;
     position: relative;
 }
 
@@ -74,14 +74,15 @@ body {
 }
 
 .header input {
-    width: 200px;
-    height: 26px;
+    width: 240px;
+    height: 30px;
     border: 1px solid #ccc;
     border-radius: 0;
     position: relative;
     padding-left: 20px;
     padding-right: 5px;
     outline: none;
+    margin-right: 10px;
 }
 
 .header input:hover {
@@ -90,21 +91,36 @@ body {
 
 .header .operation {
     flex: 1;
-    display: flex;
     text-align: center;
 }
 
-.header .event.new-download,
-.header .event.clear-download-item {
-    flex: none;
+
+header .event.open-download-folder{
+    text-align: left;
+}
+
+.header .event{
+    text-align: left;
+    display: inline-block;
+    vertical-align: top;
 }
 
 .header .event i {
     font-size: 16px;
+    vertical-align: middle;
 }
 
 .header .event span {
     font-size: 14px;
+    vertical-align: middle;
+    display: inline-block;
+}
+
+/*英文模式下打开下载目录的按钮文字*/
+.header .event span.en-download-folder{
+    line-height: 15px;
+    font-size: 12px;
+    width: 60px;
 }
 
 .body {
@@ -124,12 +140,12 @@ body {
     font-size: 16px;
     text-align: center;
     height: 30px;
-    width: 100px;
+    width: 200px;
     line-height: 30px;
     position: relative;
     top: 50%;
     left: 50%;
-    margin-left: -50px;
+    margin-left: -100px;
     margin-top: -35px;
 }
 
@@ -138,7 +154,7 @@ body {
     box-sizing: border-box;
     position: relative;
     padding: 0 5px;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid rgba(224, 224, 224);
 }
 
 .body .item:hover {
@@ -175,9 +191,6 @@ body {
     flex-direction: column;
     padding: 0 5px;
     position: relative;
-
-    /*若使用了hidden，状态条中时间就显示不完整*/
-    /*overflow: hidden;*/
 }
 
 .body .name {
@@ -325,7 +338,7 @@ body {
 .contextmenu {
     display: none;
     position: absolute;
-    width: 110px;
+    width: 160px;
     background: #FFFFFF;
     border-radius: 0;
     overflow: hidden;
@@ -361,29 +374,32 @@ body {
 }
 
 .popup-modal {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.1);
     z-index: 100;
-    transition: 0.3s;
-    transform: translate3d(0, 143%, 0);
+    transform: translate3d(0, -100%, 0);
+    transition-duration: 0.3s;
     transition-property: all;
     transition-timing-function: ease-in-out;
-    position: fixed;
-    top: 15%;
-    bottom: 15%;
-    left: 10%;
-    right: 10%;
-    display: flex;
-    background: #fff;
-    box-shadow: 0 0 5px 1px #ccc;
 }
 
 .popup-modal.show {
     transform: translate3d(0, 0, 0);
 }
-
 .popup-modal .popup-box {
     flex: 1;
     display: flex;
     flex-direction: column;
+    z-index: 100;
+    position: fixed;
+    top: 15%;
+    bottom: 15%;
+    left: 10%;
+    right: 10%;
+    background: #fff;
+    box-shadow: 0 0 5px 1px #ccc;
 }
 
 .popup-box .popup-title {
@@ -405,6 +421,7 @@ body {
     outline: none;
     resize: none;
     border: 1px solid #eee;
+    cursor: text;
 }
 
 .popup-box .popup-buttons {
@@ -416,29 +433,36 @@ body {
     display: inline-block;
     height: 34px;
     line-height: 34px;
-    padding: 0 16px;
-    background-color: #009688;
+    padding: 0 20px;
+    background-color: rgb(26,115,232);
     color: #fff;
     white-space: nowrap;
     text-align: center;
     font-size: 14px;
     border: none;
-    border-radius: 2px;
+    border-radius: 4px;
     cursor: pointer;
     outline: none;
     vertical-align: middle;
 }
 
 .popup-buttons button:nth-of-type(2) {
-    border: 1px solid #C9C9C9;
+    border: 1px solid rgb(218,220,224);
     background-color: #fff;
-    color: #555;
+    color: rgb(26, 115, 232);
+}
+
+.customize-toastify{
+    display: inline-block!important;
+    box-shadow: 0 3px 6px -1px rgba(0, 0, 0, 0.12), 0 10px 36px -4px rgba(77, 96, 232, 0.3)!important;
+    background: -webkit-linear-gradient(315deg, #73a5ff, #5477f5)!important;
+    background: linear-gradient(135deg, #73a5ff, #5477f5)!important;
 }
 
 @media (prefers-color-scheme: dark) {
     .header {
-        background: rgb(70, 70, 70) !important;
-        border-bottom-color: rgb(62, 64, 66) !important;
+        background: #292a2d !important;
+        border-bottom-color: #3f4042 !important;
         color: rgb(247, 247, 247) !important;
     }
 
@@ -447,8 +471,8 @@ body {
     }
 
     .header input {
-        background: rgb(38, 38, 38) !important;
-        border-color: rgb(38, 38, 38) !important;
+        background: #202123 !important;
+        border-color: transparent !important;
         color: rgb(247, 247, 247) !important;
     }
 
@@ -457,7 +481,7 @@ body {
     }
 
     .body {
-        background: rgb(51, 51, 51);
+        background: #202124;
         color: rgb(247, 247, 247) !important;
     }
 
@@ -465,9 +489,13 @@ body {
         background: rgb(60, 60, 60) !important;
     }
 
+    .body .item{
+        border-bottom-color: rgba(255, 255, 255, 0.1)!important;
+    }
+
     .contextmenu {
         background: rgb(45, 45, 45) !important;
-        box-shadow: 5px 5px 5px rgb(55, 55, 55) !important;
+        box-shadow: none !important;
         border-color: rgb(55, 55, 55) !important;
     }
 
@@ -481,27 +509,39 @@ body {
     }
 
     .popup-modal{
-        background: rgb(51, 51, 51) !important;
-        box-shadow: 0 0 5px  rgb(90, 90, 90) !important;
+        background-color: rgba(0,0,0,0.5)!important;
+    }
+
+    .popup-box{
+        background-color: #202124 !important;
+        box-shadow: rgba(0, 0, 0, 0.3) 0 1px 2px 0, rgba(0, 0, 0, 0.15) 0 1px 3px 1px !important;
     }
 
     .popup-modal textarea{
         font-size: 14px;
-        color: #fff;
+        color: rgb(232,234,237);
+        border-color: #3f4042;
     }
 
     .popup-modal .popup-title{
-        color: #fff;
-        background-color: #626262;
+        color: rgb(232,234,237);
+        background-color: #292a2d;
     }
 
     .popup-buttons button:nth-of-type(1){
-        background-color: #215448;
+        background-color: rgb(138,180,248);
     }
 
     .popup-buttons button:nth-of-type(2){
-        background-color: #666;
-        color:#fff;
-        border-color: #555;
+        background-color: #292a2d;
+        color: rgb(138, 180, 248);
+        border-color: #5f6368;
+    }
+
+    .customize-toastify{
+        color: #aaa!important;
+        box-shadow: 0 3px 6px -1px rgba(103, 103, 103, 0.12), 0 10px 36px -4px rgba(83, 94, 172, 0.3) !important;
+        background: -webkit-linear-gradient(315deg, #344669, #213172)!important;
+        background: linear-gradient(135deg, #344669, #213172)!important;
     }
 }

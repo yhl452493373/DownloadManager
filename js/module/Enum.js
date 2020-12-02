@@ -14,18 +14,30 @@ class Enum {
         return this.name;
     }
 
-    static valueOf(code) {
+    static valueOfCode(code) {
         let keys = Object.keys(this);
-        if (keys.indexOf(code) === -1)
+        let that = this;
+        let findEnum = null;
+        keys.forEach(key => {
+            if (that[key].code === code) {
+                findEnum = that[key];
+            }
+        });
+        return findEnum;
+    }
+
+    static valueOf(key) {
+        let keys = Object.keys(this);
+        if (keys.indexOf(key) === -1)
             return null;
-        return this[code];
+        return this[key];
     }
 
     static toEnum(object) {
         if (object == null)
             return null;
         if (typeof object === 'string') {
-            return this.valueOf(object);
+            return this.valueOf(object) || this.valueOfCode(object);
         } else if (typeof object === 'object' && object.hasOwnProperty('code') && object.hasOwnProperty('name')) {
             return this.valueOf(object.code);
         }

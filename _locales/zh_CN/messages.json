@@ -290,5 +290,49 @@
   "showProgressOnIconOff": {
     "message": "关闭",
     "description": "在插件图标上不显示下载进度"
+  },
+  "newDownload": {
+    "message": "新建下载",
+    "description": "新建下载项"
+  },
+  "newDownloadTitle": {
+    "message": "新建下载",
+    "description": "新建下载项标题"
+  },
+  "newDownloadUrl": {
+    "message": "请输入下载项地址。一行一项，只支持HTTP、HTTPS协议地址",
+    "description": "新建下载项的地址说明"
+  },
+  "startNewDownload": {
+    "message": "下载",
+    "description": "开始下载的按钮"
+  },
+  "cancelNewDownload": {
+    "message": "取消",
+    "description": "取消新建下载项"
+  },
+  "new": {
+    "message": "新建",
+    "description": "新建下载按钮"
+  },
+  "createDownloadSuccess": {
+    "message": "下载项创建成功",
+    "description": "下载项创建成功时的提示文字"
+  },
+  "urlInCorrect": {
+    "message": "下载地址不正确",
+    "description": "下载地址不正确的提示文字"
+  },
+  "onlyProtocol": {
+    "message": "只支持HTTP或HTTPS协议",
+    "description": "只支持HTTP或HTTPS协议的提示文字"
+  },
+  "startDownloading": {
+    "message": "开始下载",
+    "description": "开始下载的提示文字"
+  },
+  "invalidUrl": {
+    "message": "下载地址不正确",
+    "description": "下载地址不正确的异常描述文字"
   }
 }

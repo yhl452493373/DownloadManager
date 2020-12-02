@@ -220,7 +220,7 @@
     "description": "Send a notification to remind users when downloading"
   },
   "remaining": {
-    "message": "Remaining Time",
+    "message": "Remaining",
     "description": "the text before remaining time"
   },
   "unknown": {
@@ -290,5 +290,49 @@
   "showProgressOnIconOff": {
     "message": "Close",
     "description": "The icon will not shows the download progress"
+  },
+  "newDownload": {
+    "message": "New Download",
+    "description": "Create a new download item"
+  },
+  "newDownloadTitle": {
+    "message": "New Download",
+    "description": "The title of Creating new download item popup"
+  },
+  "newDownloadUrl": {
+    "message": "Please input download url,each line is a download item.Only support HTTP or HTTPS",
+    "description": "The tip text for url input textarea"
+  },
+  "startNewDownload": {
+    "message": "Download",
+    "description": "The text of start download button"
+  },
+  "cancelNewDownload": {
+    "message": "Cancel",
+    "description": "The text of cancel download button"
+  },
+  "new": {
+    "message": "New",
+    "description": "The text of new download button"
+  },
+  "createDownloadSuccess": {
+    "message": "Create download item success",
+    "description": "The tips of creating download item success toast"
+  },
+  "urlInCorrect": {
+    "message": "Download url is incorrect",
+    "description": "The text of download url incorrect toast"
+  },
+  "onlyProtocol": {
+    "message": "Only support HTTP or HTTPS",
+    "description": "The text of only support protocol toast"
+  },
+  "startDownloading": {
+    "message": "Start Downloading",
+    "description": "The text of start downloading toast"
+  },
+  "invalidUrl": {
+    "message": "Invalid Url",
+    "description": "The text of invalid url error"
   }
 }

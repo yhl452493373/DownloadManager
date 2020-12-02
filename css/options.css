@@ -6,7 +6,7 @@ body {
     margin: 0 auto;
     padding: 0;
     list-style: none;
-    width: 620px;
+    width: 700px;
 }
 
 .ul_box > li {
@@ -24,7 +24,7 @@ body {
 }
 
 .ul_box > li > div:nth-child(1) {
-    width: 150px;
+    width: 230px;
     text-align: right;
     padding-right: 10px;
     box-sizing: border-box;

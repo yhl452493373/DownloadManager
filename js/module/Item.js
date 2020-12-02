@@ -396,10 +396,12 @@ class Item {
 
                 div.classList.add('not-exists');
                 let error = InterruptReason.toEnum(downloadDelta.error.current);
-                if (downloadDelta.error.current != null && Item.showDetailStatus.indexOf(error) !== -1)
+                if (Item.showDetailStatus.indexOf(error) !== -1) {
+                    Util.getElement('.status .time', div).classList.add('hide');
                     Util.getElement('.status .state', div).innerText = chrome.i18n.getMessage('downloadFailed') + ': ' + error;
-                else
+                } else {
                     Util.getElement('.status .state', div).innerText = State.interrupted;
+                }
                 Util.getElement('.name', div).style.marginTop = '4px';
                 Util.getElement('.progress', div).style.display = 'none';
                 Util.getElement('.status', div).style.marginTop = '-12px';

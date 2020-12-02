@@ -13,7 +13,7 @@
 #### 由于采用了ES6的模块写法,因此需要 ***Chrome版本54*** 以上才能运行
 #### 主要用于chrome,chromium,微软的新版edge浏览器
 #### chrome商店地址：[下载管理](https://chrome.google.com/webstore/detail/%E4%B8%8B%E8%BD%BD%E7%AE%A1%E7%90%86/dgoaeahpciglgomkbmfblkcfanpfckhb) 
-#### edge商店地址:[下载管理](https://microsoftedge.microsoft.com/addons/detail/%E4%B8%8B%E8%BD%BD%E7%AE%A1%E7%90%86/oljecelfndgchlbkmodifnpodpialkjo)
+#### edge商店地址：[下载管理](https://microsoftedge.microsoft.com/addons/detail/%E4%B8%8B%E8%BD%BD%E7%AE%A1%E7%90%86/oljecelfndgchlbkmodifnpodpialkjo)
 
 chrome商店和edge商店，因为审核的原因，版本不一定一致。
  
@@ -35,7 +35,9 @@ chrome商店和edge商店，因为审核的原因，版本不一定一致。
 - 删除文件和记录
 - 显示下载时间
 - 显示剩余时间
+- 新建下载项(支持一次下载多个链接)
 ---
+![预览图](/preview/1280%20800%204.png)
 ![预览图](/preview/1280%20800%202.png)
 ---
 #### 如果有什么问题，请在[issues](https://github.com/yhl452493373/DownloadManager/issues)提出，同时最好带上操作系统，浏览器以及版本，下载地址和复现步骤，便于查找问题

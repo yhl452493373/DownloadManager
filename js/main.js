@@ -3,6 +3,9 @@ import Item from "./module/Item.js";
 import State from "./module/State.js";
 import DownloadItem from "./module/DownloadItem.js";
 import DownloadDelta from "./module/DownloadDelta.js";
+import RuntimeError from "./module/RuntimeError.js";
+// noinspection SpellCheckingInspection
+import Toastify from "../plugin/toastify/toastify.js";
 import $ from "./module/jquery.min.js";
 
 /**
@@ -100,10 +103,110 @@ function cancelDownloadItem(downloadDelta) {
         item.cancelDownloadItem(downloadDelta);
 }
 
+/**
+ *
+ * @param id
+ */
 function pauseDownloadItem(id) {
     let item = Item.of(id);
     if (item != null)
         item.pauseDownloadItem();
+}
+
+function downloadItem(urls) {
+    let allPass = true;
+    let firstDuration = 2000;
+    if (urls.trim() === '') {
+        Toastify({
+            text: chrome.i18n.getMessage('urlInCorrect'),
+            duration: firstDuration,
+            gravity: "top", // `top` or `bottom`
+            position: "right", // `left`, `center` or `right`
+            className: "customize-toastify",
+            stopOnFocus: false, // Prevents dismissing of toast on hover
+            onClick: function () {
+            } // Callback after click
+        }).showToast();
+        return;
+    }
+    urls = urls.split("\n");
+    let maxToastDuration = firstDuration + (urls.length - 1) * 500;
+    urls.forEach((url, index) => {
+        if (url.indexOf('http://') !== 0 && url.indexOf('https://') !== 0) {
+            Toastify({
+                text: url + '<br>' + chrome.i18n.getMessage('urlInCorrect') + ',' + chrome.i18n.getMessage('onlyProtocol'),
+                duration: maxToastDuration - index * 500,
+                gravity: "top", // `top` or `bottom`
+                position: "right", // `left`, `center` or `right`
+                className: "customize-toastify",
+                stopOnFocus: false // Prevents dismissing of toast on hover
+            }).showToast();
+            allPass = false;
+            return false;
+        }
+    });
+    if (allPass) {
+        $('#cancelNewDownload').click();
+        $('#newDownloadUrl').val('');
+        Toastify({
+            text: chrome.i18n.getMessage('startDownloading'),
+            duration: maxToastDuration + 500,
+            gravity: "top", // `top` or `bottom`
+            position: "right", // `left`, `center` or `right`
+            className: "customize-toastify",
+            stopOnFocus: false, // Prevents dismissing of toast on hover
+            onClick: function () {
+            } // Callback after click
+        }).showToast();
+        let timer = setTimeout(() => {
+            clearTimeout(timer);
+            downloadStart(urls, 0, maxToastDuration);
+        }, 500);
+    }
+}
+
+/**
+ * 开始下载
+ * @param urls 下载地址列表
+ * @param index 下载索引
+ * @param  maxToastDuration toast最大时常
+ */
+function downloadStart(urls, index = 0, maxToastDuration) {
+    if (index === urls.length)
+        return;
+    let url = urls[index];
+    chrome.downloads.download({
+        url: url,
+        // filename:'',
+        // conflictAction:()=>{},
+        // saveAs:true,
+    }, downloadId => {
+        if (chrome.runtime.lastError) {
+            let runtimeError = RuntimeError.valueOfCode(chrome.runtime.lastError.message);
+            Toastify({
+                text: url + '<br>' + runtimeError || chrome.runtime.lastError.message,
+                duration: maxToastDuration - index * 500,
+                gravity: "top", // `top` or `bottom`
+                position: "right", // `left`, `center` or `right`
+                className: "customize-toastify",
+                stopOnFocus: false, // Prevents dismissing of toast on hover
+                onClick: function () {
+                } // Callback after click
+            }).showToast();
+        } else {
+            Toastify({
+                text: chrome.i18n.getMessage('createDownloadSuccess'),
+                duration: maxToastDuration - index * 500,
+                gravity: "top", // `top` or `bottom`
+                position: "right", // `left`, `center` or `right`
+                className: "customize-toastify",
+                stopOnFocus: false, // Prevents dismissing of toast on hover
+                onClick: function () {
+                } // Callback after click
+            }).showToast();
+        }
+        downloadStart(urls, ++index, maxToastDuration);
+    });
 }
 
 chrome.runtime.onMessage.addListener(request => {
@@ -276,11 +379,12 @@ $(document).on('dblclick', '.item > .type, .item > .info', e => {
             }
         });
     });
-}).on('click','.new-download',function (){
-  $('.popup-modal').addClass('show');
-}).on('click','#startNewDownload',function (){
-
-}).on('click','#cancelNewDownload',function (){
+}).on('click', '.new-download', function () {
+    $('.popup-modal').addClass('show');
+    $('#newDownloadUrl').focus();
+}).on('click', '#startNewDownload', function () {
+    downloadItem($('#newDownloadUrl').val().trim());
+}).on('click', '#cancelNewDownload', function () {
     $('.popup-modal').removeClass('show');
 });
 
@@ -405,7 +509,22 @@ $('#reDownload').text(chrome.i18n.getMessage('reDownload'));
 $('#deleteFile').text(chrome.i18n.getMessage('deleteFile'));
 $('#search').attr('placeholder', chrome.i18n.getMessage('search'));
 $('#openDownloadFolder').attr('title', chrome.i18n.getMessage('openDownloadFolder'));
+// noinspection JSJQueryEfficiency
 $('#downloadFolder').text(chrome.i18n.getMessage('downloadFolder'));
 $('#clearAllHistory').attr('title', chrome.i18n.getMessage('clearAllHistory'));
 $('#clear').text(chrome.i18n.getMessage('clear'));
 $('#empty').text(chrome.i18n.getMessage('empty'));
+$('#newDownload').attr('title', chrome.i18n.getMessage('newDownload'));
+$('#new').text(chrome.i18n.getMessage('new'));
+// noinspection JSJQueryEfficiency
+$('#popupTitle').text(chrome.i18n.getMessage('newDownloadTitle'));
+// noinspection JSJQueryEfficiency
+$('#newDownloadUrl').attr('placeholder', chrome.i18n.getMessage('newDownloadUrl'));
+$('#startNewDownload').text(chrome.i18n.getMessage('startNewDownload'));
+// noinspection JSJQueryEfficiency
+$('#cancelNewDownload').text(chrome.i18n.getMessage('cancelNewDownload'));
+
+if(chrome.i18n.getUILanguage().indexOf('en')===0){
+    // noinspection JSStringConcatenationToES6Template
+    $('#downloadFolder').addClass('en-download-folder');
+}

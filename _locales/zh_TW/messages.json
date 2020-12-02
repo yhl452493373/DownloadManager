@@ -1,294 +1,338 @@
 {
-    "extName": {
-        "message": "下載管理",
-        "description": "應用程式名字"
-    },
-    "extTitle": {
-        "message": "下載管理",
-        "description": "應用程式在瀏覽器網址欄中的標題"
-    },
-    "extShortName": {
-        "message": "下載管理",
-        "description": "應用程式簡稱"
-    },
-    "extDescription": {
-        "message": "用於接管瀏覽器自帶的下載功能,免去打開下載頁面來查看下載文件的麻煩.",
-        "description": "應用程式描述"
-    },
-    "openFile": {
-        "message": "打開文件",
-        "description": "右鍵菜單中的打開文件"
-    },
-    "openFileFolder": {
-        "message": "打開文件目錄",
-        "description": "右鍵菜單中的打開文件所在目錄"
-    },
-    "copyFilename": {
-        "message": "複製文件名",
-        "description": "右鍵菜單中的複製文件名"
-    },
-    "copyDownloadUrl": {
-        "message": "複製下載網址",
-        "description": "右鍵菜單中的複製下載網址"
-    },
-    "reDownload": {
-        "message": "重新下載",
-        "description": "右鍵菜單中的重新下載"
-    },
-    "deleteFile": {
-        "message": "刪除文件",
-        "description": "右鍵菜單中的刪除文件"
-    },
-    "search": {
-        "message": "搜尋",
-        "description": "搜尋框的提示文字"
-    },
-    "openDownloadFolder": {
-        "message": "打開下載目錄",
-        "description": "打開下載目錄的提示文字"
-    },
-    "downloadFolder": {
-        "message": "下載目錄",
-        "description": "打開下載目錄的按鈕文字"
-    },
-    "clearAllHistory": {
-        "message": "清空所有下載歷史",
-        "description": "清空下載歷史的提示文字"
-    },
-    "clear": {
-        "message": "清空",
-        "description": "清空下載歷史的按鈕文字"
-    },
-    "empty": {
-        "message": "沒有下載記錄",
-        "description": "沒有下載記錄時的提示文字"
-    },
-    "cancelDownload": {
-        "message": "取消下載",
-        "description": "取消下載按鈕的提示文字"
-    },
-    "cancel": {
-        "message": "取消",
-        "description": "取消下載按鈕的文字"
-    },
-    "safetyWaring": {
-        "message": "安全警告",
-        "description": "文件安全提示的警告標題"
-    },
-    "downloadStart": {
-        "message": "開始下載",
-        "description": "下載開始時的提示內容"
-    },
-    "downloadComplete": {
-        "message": "下載完成",
-        "description": "下載完成時的提示內容"
-    },
-    "open": {
-        "message": "打開",
-        "description": "下載完成提示中的打開按鈕"
-    },
-    "openFolder": {
-        "message": "打開目錄",
-        "description": "下載完成提示中的打開目錄按鈕"
-    },
-    "fileDanger": {
-        "message": "下載的文件可能損害您的電腦",
-        "description": "file Danger"
-    },
-    "urlDanger": {
-        "message": "該URL下載的文件可能損害您的電腦",
-        "description": "url Danger"
-    },
-    "contentDanger": {
-        "message": "下載的文件是惡意文件",
-        "description": "content"
-    },
-    "uncommonDanger": {
-        "message": "該URL的文件不建議下載，可能很危險",
-        "description": "uncommon Danger"
-    },
-    "hostDanger": {
-        "message": "下載項來自已知發佈惡意軟體的主機，可能有風險",
-        "description": "host Danger"
-    },
-    "unwantedDanger": {
-        "message": "下載項可能不是所需要的或者不安全，例如它可能會更改瀏覽器或電腦設定",
-        "description": "unwanted Danger"
-    },
-    "safeDanger": {
-        "message": "下載項對用戶的電腦沒有風險",
-        "description": "safe Danger"
-    },
-    "acceptedDanger": {
-        "message": "用戶接受了有風險的下載",
-        "description": "accepted Danger"
-    },
-    "total": {
-        "message": "共",
-        "description": "下載文件總大小的提示文字"
-    },
-    "deleteHistory": {
-        "message": "刪除記錄",
-        "description": "下載文件過程中刪除記錄按鈕的提示文字"
-    },
-    "inProgress": {
-        "message": "下載中",
-        "description": "in_progress"
-    },
-    "interrupted": {
-        "message": "已取消",
-        "description": "interrupted"
-    },
-    "complete": {
-        "message": "已完成",
-        "description": "complete"
-    },
-    "pause": {
-        "message": "已暫停",
-        "description": "pause"
-    },
-    "pending": {
-        "message": "處理中",
-        "description": "pending"
-    },
-    "continueDownload": {
-        "message": "繼續下載",
-        "description": "繼續下載按鈕提示文字"
-    },
-    "pauseDownload": {
-        "message": "暫停下載",
-        "description": "暫停下載按鈕提示文字"
-    },
-    "accept": {
-        "message": "保留",
-        "description": "危險提示中的保留文件按鈕"
-    },
-    "saveFile": {
-        "message": "保留文件",
-        "description": "危險提示中的保留文件提示"
-    },
-    "options": {
-        "message": "下載管理設定",
-        "description": "下載管理設定頁面標題"
-    },
-    "iconType": {
-        "message": "圖標顏色",
-        "description": "設置外掛程式圖標"
-    },
-    "iconAuto": {
-        "message": "自動",
-        "description": "根據瀏覽器顏色模式選擇圖標"
-    },
-    "iconDark": {
-        "message": "深色",
-        "description": "適用於淺色模式的圖標"
-    },
-    "iconLight": {
-        "message": "淺色",
-        "description": "適用於深色模式的圖標"
-    },
-    "downloadSound": {
-        "message": "下載提示音",
-        "description": "下載完成後發出提示音"
-    },
-    "soundOn": {
-        "message": "開啟",
-        "description": "開啟下載完成後發出提示音"
-    },
-    "soundOff": {
-        "message": "關閉",
-        "description": "關閉下載完成後發出提示音"
-    },
-    "downloadNotice": {
-        "message": "下載通知",
-        "description": "下載時發送一個通知以提醒用戶"
-    },
-    "noticeOff": {
-        "message": "關閉",
-        "description": "關閉下載通知"
-    },
-    "startNotice": {
-        "message": "下載開始",
-        "description": "下載時發送一個通知以提醒用戶"
-    },
-    "completeNotice": {
-        "message": "下載完成",
-        "description": "下載時發送一個通知以提醒用戶"
-    },
-    "dangerNotice": {
-        "message": "下載警告",
-        "description": "下載時發送一個通知以提醒用戶"
-    },
-    "remaining": {
-        "message": "剩餘",
-        "description": "剩餘時間前的提示文字"
-    },
-    "unknown": {
-        "message": "未知",
-        "description": "剩餘時間未知時的文字"
-    },
-    "obtaining": {
-        "message": "獲取中",
-        "description": "剩餘時間正在獲取時的文字"
-    },
-    "remainingTimeUnit": {
-        "message": "秒,分,時,天",
-        "description": "剩餘時間的類型，必須用英文逗號分割"
-    },
-    "downloadFailed": {
-        "message": "下載失敗",
-        "description": "狀態為下載失敗的的文字描述"
-    },
-    "networkFailed": {
-        "message": "網路故障",
-        "description": "錯誤資訊 NETWORK_FAILED 中文描述"
-    },
-    "networkTimeout": {
-        "message": "網路超時",
-        "description": "錯誤資訊 NETWORK_TIMEOUT 中文描述"
-    },
-    "networkDisconnected": {
-        "message": "網路斷開",
-        "description": "錯誤資訊 NETWORK_DISCONNECTED 中文描述"
-    },
-    "networkServerDown": {
-        "message": "主機故障",
-        "description": "錯誤資訊 NETWORK_SERVER_DOWN 中文描述"
-    },
-    "networkInvalidRequest": {
-        "message": "無效請求",
-        "description": "錯誤資訊 NETWORK_INVALID_REQUEST 中文描述"
-    },
-    "userCanceled": {
-        "message": "用戶終止",
-        "description": "錯誤資訊 USER_CANCELED 的中文描述"
-    },
-    "deleted": {
-        "message": "已删除",
-        "description": "已刪除檔的狀態"
-    },
-    "alsoRemoveFile": {
-        "message": "清空時刪除檔",
-        "description": "清空時刪除檔的設定項名稱"
-    },
-    "removeFileOn": {
-        "message": "開啟",
-        "description": "清空時同時刪除檔的開關文字"
-    },
-    "removeFileOff": {
-        "message": "關閉",
-        "description": "清空時不刪除檔的開關文字"
-    },
-    "showProgressOnIcon": {
-        "message": "圖標顯示下載進度",
-        "description": "在挿件圖標上顯示下載進度"
-    },
-    "showProgressOnIconOn": {
-        "message": "開啟",
-        "description": "在挿件圖標上顯示下載進度"
-    },
-    "showProgressOnIconOff": {
-        "message": "關閉",
-        "description": "在挿件圖標上不顯示下載進度"
-    }
+  "extName": {
+    "message": "下載管理",
+    "description": "應用程式名字"
+  },
+  "extTitle": {
+    "message": "下載管理",
+    "description": "應用程式在瀏覽器網址欄中的標題"
+  },
+  "extShortName": {
+    "message": "下載管理",
+    "description": "應用程式簡稱"
+  },
+  "extDescription": {
+    "message": "用於接管瀏覽器自帶的下載功能,免去打開下載頁面來查看下載文件的麻煩.",
+    "description": "應用程式描述"
+  },
+  "openFile": {
+    "message": "打開文件",
+    "description": "右鍵菜單中的打開文件"
+  },
+  "openFileFolder": {
+    "message": "打開文件目錄",
+    "description": "右鍵菜單中的打開文件所在目錄"
+  },
+  "copyFilename": {
+    "message": "複製文件名",
+    "description": "右鍵菜單中的複製文件名"
+  },
+  "copyDownloadUrl": {
+    "message": "複製下載網址",
+    "description": "右鍵菜單中的複製下載網址"
+  },
+  "reDownload": {
+    "message": "重新下載",
+    "description": "右鍵菜單中的重新下載"
+  },
+  "deleteFile": {
+    "message": "刪除文件",
+    "description": "右鍵菜單中的刪除文件"
+  },
+  "search": {
+    "message": "搜尋",
+    "description": "搜尋框的提示文字"
+  },
+  "openDownloadFolder": {
+    "message": "打開下載目錄",
+    "description": "打開下載目錄的提示文字"
+  },
+  "downloadFolder": {
+    "message": "下載目錄",
+    "description": "打開下載目錄的按鈕文字"
+  },
+  "clearAllHistory": {
+    "message": "清空所有下載歷史",
+    "description": "清空下載歷史的提示文字"
+  },
+  "clear": {
+    "message": "清空",
+    "description": "清空下載歷史的按鈕文字"
+  },
+  "empty": {
+    "message": "沒有下載記錄",
+    "description": "沒有下載記錄時的提示文字"
+  },
+  "cancelDownload": {
+    "message": "取消下載",
+    "description": "取消下載按鈕的提示文字"
+  },
+  "cancel": {
+    "message": "取消",
+    "description": "取消下載按鈕的文字"
+  },
+  "safetyWaring": {
+    "message": "安全警告",
+    "description": "文件安全提示的警告標題"
+  },
+  "downloadStart": {
+    "message": "開始下載",
+    "description": "下載開始時的提示內容"
+  },
+  "downloadComplete": {
+    "message": "下載完成",
+    "description": "下載完成時的提示內容"
+  },
+  "open": {
+    "message": "打開",
+    "description": "下載完成提示中的打開按鈕"
+  },
+  "openFolder": {
+    "message": "打開目錄",
+    "description": "下載完成提示中的打開目錄按鈕"
+  },
+  "fileDanger": {
+    "message": "下載的文件可能損害您的電腦",
+    "description": "file Danger"
+  },
+  "urlDanger": {
+    "message": "該URL下載的文件可能損害您的電腦",
+    "description": "url Danger"
+  },
+  "contentDanger": {
+    "message": "下載的文件是惡意文件",
+    "description": "content"
+  },
+  "uncommonDanger": {
+    "message": "該URL的文件不建議下載，可能很危險",
+    "description": "uncommon Danger"
+  },
+  "hostDanger": {
+    "message": "下載項來自已知發佈惡意軟體的主機，可能有風險",
+    "description": "host Danger"
+  },
+  "unwantedDanger": {
+    "message": "下載項可能不是所需要的或者不安全，例如它可能會更改瀏覽器或電腦設定",
+    "description": "unwanted Danger"
+  },
+  "safeDanger": {
+    "message": "下載項對用戶的電腦沒有風險",
+    "description": "safe Danger"
+  },
+  "acceptedDanger": {
+    "message": "用戶接受了有風險的下載",
+    "description": "accepted Danger"
+  },
+  "total": {
+    "message": "共",
+    "description": "下載文件總大小的提示文字"
+  },
+  "deleteHistory": {
+    "message": "刪除記錄",
+    "description": "下載文件過程中刪除記錄按鈕的提示文字"
+  },
+  "inProgress": {
+    "message": "下載中",
+    "description": "in_progress"
+  },
+  "interrupted": {
+    "message": "已取消",
+    "description": "interrupted"
+  },
+  "complete": {
+    "message": "已完成",
+    "description": "complete"
+  },
+  "pause": {
+    "message": "已暫停",
+    "description": "pause"
+  },
+  "pending": {
+    "message": "處理中",
+    "description": "pending"
+  },
+  "continueDownload": {
+    "message": "繼續下載",
+    "description": "繼續下載按鈕提示文字"
+  },
+  "pauseDownload": {
+    "message": "暫停下載",
+    "description": "暫停下載按鈕提示文字"
+  },
+  "accept": {
+    "message": "保留",
+    "description": "危險提示中的保留文件按鈕"
+  },
+  "saveFile": {
+    "message": "保留文件",
+    "description": "危險提示中的保留文件提示"
+  },
+  "options": {
+    "message": "下載管理設定",
+    "description": "下載管理設定頁面標題"
+  },
+  "iconType": {
+    "message": "圖標顏色",
+    "description": "設置外掛程式圖標"
+  },
+  "iconAuto": {
+    "message": "自動",
+    "description": "根據瀏覽器顏色模式選擇圖標"
+  },
+  "iconDark": {
+    "message": "深色",
+    "description": "適用於淺色模式的圖標"
+  },
+  "iconLight": {
+    "message": "淺色",
+    "description": "適用於深色模式的圖標"
+  },
+  "downloadSound": {
+    "message": "下載提示音",
+    "description": "下載完成後發出提示音"
+  },
+  "soundOn": {
+    "message": "開啟",
+    "description": "開啟下載完成後發出提示音"
+  },
+  "soundOff": {
+    "message": "關閉",
+    "description": "關閉下載完成後發出提示音"
+  },
+  "downloadNotice": {
+    "message": "下載通知",
+    "description": "下載時發送一個通知以提醒用戶"
+  },
+  "noticeOff": {
+    "message": "關閉",
+    "description": "關閉下載通知"
+  },
+  "startNotice": {
+    "message": "下載開始",
+    "description": "下載時發送一個通知以提醒用戶"
+  },
+  "completeNotice": {
+    "message": "下載完成",
+    "description": "下載時發送一個通知以提醒用戶"
+  },
+  "dangerNotice": {
+    "message": "下載警告",
+    "description": "下載時發送一個通知以提醒用戶"
+  },
+  "remaining": {
+    "message": "剩餘",
+    "description": "剩餘時間前的提示文字"
+  },
+  "unknown": {
+    "message": "未知",
+    "description": "剩餘時間未知時的文字"
+  },
+  "obtaining": {
+    "message": "獲取中",
+    "description": "剩餘時間正在獲取時的文字"
+  },
+  "remainingTimeUnit": {
+    "message": "秒,分,時,天",
+    "description": "剩餘時間的類型，必須用英文逗號分割"
+  },
+  "downloadFailed": {
+    "message": "下載失敗",
+    "description": "狀態為下載失敗的的文字描述"
+  },
+  "networkFailed": {
+    "message": "網路故障",
+    "description": "錯誤資訊 NETWORK_FAILED 中文描述"
+  },
+  "networkTimeout": {
+    "message": "網路超時",
+    "description": "錯誤資訊 NETWORK_TIMEOUT 中文描述"
+  },
+  "networkDisconnected": {
+    "message": "網路斷開",
+    "description": "錯誤資訊 NETWORK_DISCONNECTED 中文描述"
+  },
+  "networkServerDown": {
+    "message": "主機故障",
+    "description": "錯誤資訊 NETWORK_SERVER_DOWN 中文描述"
+  },
+  "networkInvalidRequest": {
+    "message": "無效請求",
+    "description": "錯誤資訊 NETWORK_INVALID_REQUEST 中文描述"
+  },
+  "userCanceled": {
+    "message": "用戶終止",
+    "description": "錯誤資訊 USER_CANCELED 的中文描述"
+  },
+  "deleted": {
+    "message": "已删除",
+    "description": "已刪除檔的狀態"
+  },
+  "alsoRemoveFile": {
+    "message": "清空時刪除檔",
+    "description": "清空時刪除檔的設定項名稱"
+  },
+  "removeFileOn": {
+    "message": "開啟",
+    "description": "清空時同時刪除檔的開關文字"
+  },
+  "removeFileOff": {
+    "message": "關閉",
+    "description": "清空時不刪除檔的開關文字"
+  },
+  "showProgressOnIcon": {
+    "message": "圖標顯示下載進度",
+    "description": "在挿件圖標上顯示下載進度"
+  },
+  "showProgressOnIconOn": {
+    "message": "開啟",
+    "description": "在挿件圖標上顯示下載進度"
+  },
+  "showProgressOnIconOff": {
+    "message": "關閉",
+    "description": "在挿件圖標上不顯示下載進度"
+  },
+  "newDownload": {
+    "message": "新建下載",
+    "description": "新建下載項"
+  },
+  "newDownloadTitle": {
+    "message": "新建下載",
+    "description": "新建下載項標題"
+  },
+  "newDownloadUrl": {
+    "message": "請輸入下載項地址。一行一項，只支持HTTP、HTTPS協定地址",
+    "description": "新建下載項的地址說明"
+  },
+  "startNewDownload": {
+    "message": "下載",
+    "description": "開始下載的按鈕"
+  },
+  "cancelNewDownload": {
+    "message": "取消",
+    "description": "取消新建下載項"
+  },
+  "new": {
+    "message": "新建",
+    "description": "新建下載按鈕"
+  },
+  "createDownloadSuccess": {
+    "message": "下載項創建成功",
+    "description": "下載項創建成功時的提示文字"
+  },
+  "urlInCorrect": {
+    "message": "下載地址不正確",
+    "description": "下載地址不正確的提示文字"
+  },
+  "onlyProtocol": {
+    "message": "只支持HTTP或HTTPS協定",
+    "description": "只支持HTTP或HTTPS協定的提示文字"
+  },
+  "startDownloading": {
+    "message": "開始下載",
+    "description": "開始下載的提示文字"
+  },
+  "invalidUrl": {
+    "message": "下載地址不正確",
+    "description": "下載地址不正確的异常描述文字"
+  }
 }
