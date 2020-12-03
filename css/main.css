@@ -77,12 +77,17 @@ html, body {
     width: 240px;
     height: 30px;
     border: 1px solid #ccc;
-    border-radius: 0;
     position: relative;
     padding-left: 20px;
     padding-right: 5px;
     outline: none;
     margin-right: 10px;
+    transition: all 0.3s ease;
+    border-radius: 2px;
+}
+
+.header.edge input {
+    border-color: #979797;
 }
 
 .header input:hover {
@@ -95,11 +100,11 @@ html, body {
 }
 
 
-header .event.open-download-folder{
+header .event.open-download-folder {
     text-align: left;
 }
 
-.header .event{
+.header .event {
     text-align: left;
     display: inline-block;
     vertical-align: top;
@@ -117,7 +122,7 @@ header .event.open-download-folder{
 }
 
 /*英文模式下打开下载目录的按钮文字*/
-.header .event span.en-download-folder{
+.header .event span.en-download-folder {
     line-height: 15px;
     font-size: 12px;
     width: 60px;
@@ -340,13 +345,13 @@ header .event.open-download-folder{
     position: absolute;
     width: 160px;
     background: #FFFFFF;
-    border-radius: 0;
     overflow: hidden;
     z-index: 99;
     border: 1px solid #ccc;
-    box-shadow: 5px 5px 5px #ccc;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.13), 0 0 3px rgba(0, 0, 0, 0.11);
     margin: 0;
     padding: 0;
+    border-radius: 4px;
 }
 
 .contextmenu li {
@@ -354,11 +359,17 @@ header .event.open-download-folder{
     transition: ease 0.3s;
     margin: 0;
     padding: 0;
+    cursor: pointer !important;
 }
 
 .contextmenu li:hover {
-    background: #eee;
-    border-left: 3px solid #ccc;
+    background: transparent;
+    border-left: 3px solid transparent;
+}
+
+.contextmenu.edge li:hover {
+    background: #e5e5e5;
+    border-left-color: #0072c9;
 }
 
 .contextmenu li span {
@@ -367,17 +378,24 @@ header .event.open-download-folder{
     color: #757575;
     text-decoration: none;
     transition: ease 0.3s;
+    cursor: pointer !important;
+}
+
+.contextmenu.edge li:hover span {
+    color: #262626;
+    font-weight: normal;
 }
 
 .contextmenu li:hover span {
-    color: #FF0000;
+    color: #3367d6;
+    font-weight: 700;
 }
 
 .popup-modal {
     position: fixed;
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,0.1);
+    background-color: rgba(0, 0, 0, 0.1);
     z-index: 100;
     transform: translate3d(0, -100%, 0);
     transition-duration: 0.3s;
@@ -388,6 +406,7 @@ header .event.open-download-folder{
 .popup-modal.show {
     transform: translate3d(0, 0, 0);
 }
+
 .popup-modal .popup-box {
     flex: 1;
     display: flex;
@@ -422,6 +441,7 @@ header .event.open-download-folder{
     resize: none;
     border: 1px solid #eee;
     cursor: text;
+    border-radius: 2px;
 }
 
 .popup-box .popup-buttons {
@@ -434,7 +454,7 @@ header .event.open-download-folder{
     height: 34px;
     line-height: 34px;
     padding: 0 20px;
-    background-color: rgb(26,115,232);
+    background-color: rgb(26, 115, 232);
     color: #fff;
     white-space: nowrap;
     text-align: center;
@@ -447,16 +467,27 @@ header .event.open-download-folder{
 }
 
 .popup-buttons button:nth-of-type(2) {
-    border: 1px solid rgb(218,220,224);
+    border: 1px solid rgb(218, 220, 224);
     background-color: #fff;
     color: rgb(26, 115, 232);
 }
 
-.customize-toastify{
-    display: inline-block!important;
-    box-shadow: 0 3px 6px -1px rgba(0, 0, 0, 0.12), 0 10px 36px -4px rgba(77, 96, 232, 0.3)!important;
-    background: -webkit-linear-gradient(315deg, #73a5ff, #5477f5)!important;
-    background: linear-gradient(135deg, #73a5ff, #5477f5)!important;
+.popup-modal.edge .popup-buttons button {
+    border-radius: 2px;
+    background-color: rgb(0, 120, 212);
+}
+
+.popup-modal.edge .popup-buttons button:nth-of-type(2) {
+    background-color: #fff;
+    color: rgb(43, 43, 43);
+    border-color: rgb(190, 190, 190);
+}
+
+.customize-toastify {
+    display: inline-block !important;
+    box-shadow: 0 3px 6px -1px rgba(0, 0, 0, 0.12), 0 10px 36px -4px rgba(77, 96, 232, 0.3) !important;
+    background: -webkit-linear-gradient(315deg, #73a5ff, #5477f5) !important;
+    background: linear-gradient(135deg, #73a5ff, #5477f5) !important;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -464,6 +495,10 @@ header .event.open-download-folder{
         background: #292a2d !important;
         border-bottom-color: #3f4042 !important;
         color: rgb(247, 247, 247) !important;
+    }
+
+    .header.edge {
+        background-color: #333 !important;
     }
 
     .header .search i {
@@ -476,6 +511,15 @@ header .event.open-download-folder{
         color: rgb(247, 247, 247) !important;
     }
 
+    .header.edge input {
+        background: #2b2b2b !important;
+        border-color: rgb(107, 107, 107) !important;
+    }
+
+    .header.edge input:focus {
+        border-color: rgb(146, 146, 146) !important;
+    }
+
     .header input::-webkit-input-placeholder {
         color: rgb(247, 247, 247) !important;
     }
@@ -485,18 +529,28 @@ header .event.open-download-folder{
         color: rgb(247, 247, 247) !important;
     }
 
+    .body.edge {
+        background: #333;
+    }
+
     .body .item:hover {
         background: rgb(60, 60, 60) !important;
     }
 
-    .body .item{
-        border-bottom-color: rgba(255, 255, 255, 0.1)!important;
+    .body .item {
+        border-bottom-color: rgba(255, 255, 255, 0.1) !important;
     }
 
     .contextmenu {
-        background: rgb(45, 45, 45) !important;
-        box-shadow: none !important;
+        background: #292a2d !important;
+        box-shadow: 0 0 4px 2px #181a1c !important;
         border-color: rgb(55, 55, 55) !important;
+    }
+
+    .contextmenu.edge {
+        background: #333333 !important;
+        border-color: #2b2b2b !important;
+        box-shadow: 0 0 4px 2px #2b2b2b !important;
     }
 
     .contextmenu li span {
@@ -504,44 +558,77 @@ header .event.open-download-folder{
     }
 
     .contextmenu li:hover {
-        background: rgb(75, 75, 75) !important;
-        border-left-color: rgb(90, 90, 90);
+        background: transparent !important;
+        border-left-color: transparent;
     }
 
-    .popup-modal{
-        background-color: rgba(0,0,0,0.5)!important;
+    .contextmenu.edge li:hover {
+        border-left-color: #4ea1e1 !important;
+        background: #4a4a4a !important;
     }
 
-    .popup-box{
+    .contextmenu li:hover span {
+        color: #8ab4f8 !important;
+    }
+
+    .contextmenu.edge li:hover span {
+        color: #fff !important;
+        font-weight: normal;
+    }
+
+    .popup-modal {
+        background-color: rgba(0, 0, 0, 0.5) !important;
+    }
+
+    .popup-box {
         background-color: #202124 !important;
         box-shadow: rgba(0, 0, 0, 0.3) 0 1px 2px 0, rgba(0, 0, 0, 0.15) 0 1px 3px 1px !important;
     }
 
-    .popup-modal textarea{
+    .popup-modal.edge .popup-box{
+        background-color: #333333!important;
+    }
+
+    .popup-modal textarea {
         font-size: 14px;
-        color: rgb(232,234,237);
+        color: rgb(232, 234, 237);
         border-color: #3f4042;
     }
 
-    .popup-modal .popup-title{
-        color: rgb(232,234,237);
+    .popup-modal .popup-title {
+        color: rgb(232, 234, 237);
         background-color: #292a2d;
     }
 
-    .popup-buttons button:nth-of-type(1){
-        background-color: rgb(138,180,248);
+    .popup-modal.edge .popup-title{
+        background-color: #333333;
     }
 
-    .popup-buttons button:nth-of-type(2){
+    .popup-buttons button:nth-of-type(1) {
+        background-color: rgb(138, 180, 248);
+    }
+
+    .popup-buttons button:nth-of-type(2) {
         background-color: #292a2d;
         color: rgb(138, 180, 248);
         border-color: #5f6368;
     }
 
-    .customize-toastify{
-        color: #aaa!important;
+    .popup-modal.edge .popup-buttons button {
+        color: #fff;
+        background-color: #006CBE;
+    }
+
+    .popup-modal.edge .popup-buttons button:nth-of-type(2) {
+        background-color: rgb(59, 59, 59);
+        color: rgb(255, 255, 255);
+        border-color: rgb(123, 123, 123);
+    }
+
+    .customize-toastify {
+        color: #aaa !important;
         box-shadow: 0 3px 6px -1px rgba(103, 103, 103, 0.12), 0 10px 36px -4px rgba(83, 94, 172, 0.3) !important;
-        background: -webkit-linear-gradient(315deg, #344669, #213172)!important;
-        background: linear-gradient(135deg, #344669, #213172)!important;
+        background: -webkit-linear-gradient(315deg, #344669, #213172) !important;
+        background: linear-gradient(135deg, #344669, #213172) !important;
     }
 }

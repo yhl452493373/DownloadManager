@@ -524,7 +524,11 @@ $('#startNewDownload').text(chrome.i18n.getMessage('startNewDownload'));
 // noinspection JSJQueryEfficiency
 $('#cancelNewDownload').text(chrome.i18n.getMessage('cancelNewDownload'));
 
-if(chrome.i18n.getUILanguage().indexOf('en')===0){
+if (chrome.i18n.getUILanguage().indexOf('en') === 0) {
     // noinspection JSStringConcatenationToES6Template
     $('#downloadFolder').addClass('en-download-folder');
 }
+
+
+if (navigator.userAgent.indexOf('Edg/') !== -1)
+    $('.header,.body,.contextmenu,.popup-modal').addClass('edge');
