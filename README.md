@@ -6,6 +6,11 @@
 
 ---
 
+使用了[Toastify](https://github.com/apvarun/toastify-js)进行toast展示
+使用了[iconfont](https://www.iconfont.cn/)的图标字体
+
+---
+
 + 感谢[Harshil783](https://github.com/Harshil783)的英文翻译修正
 + 感谢[gitqwerty777](https://github.com/gitqwerty777)的繁体中文翻译
 
