@@ -333,6 +333,9 @@ $(document).on('dblclick', '.item > .type, .item > .info', e => {
         if (response === 'on') {
             chrome.downloads.search({}, results => {
                 results.forEach(result => {
+                    //不在下载中，则清空
+                    if (State.valueOf(result.state) === State.in_progress)
+                        return;
                     chrome.downloads.removeFile(result.id, function () {
                         //防止删除的文件未完成，扩展程序管理中报chrome.runtime.lastError
                         if (chrome.runtime.lastError) {

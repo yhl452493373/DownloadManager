@@ -14,6 +14,18 @@ class DownloadItem {
     id;
 
     /**
+     * The identifier for the extension that initiated this download if this download was initiated by an extension. Does not change once it is set.
+     * @type string optional
+     */
+    byExtensionId;
+
+    /**
+     * The localized name of the extension that initiated this download if this download was initiated by an extension. May change if the extension changes its name or if the user changes their locale.
+     * @type string optional
+     */
+    byExtensionName;
+
+    /**
      * @type string
      */
     url;
@@ -29,6 +41,13 @@ class DownloadItem {
     filename;
 
     /**
+     * The absolute URL that this download is being made from, after all redirects.
+     * type string
+     */
+    finalUrl;
+
+    /**
+     * False if this download is recorded in the history, true if it is not recorded.
      * @type boolean
      */
     incognito;
@@ -142,6 +161,8 @@ class DownloadItem {
      *
      * @param file {{
      *    id:number,
+     *    byExtensionId:string,
+     *    byExtensionName:string,
      *    url:string,
      *    referrer:string,
      *    filename:string,
@@ -165,6 +186,8 @@ class DownloadItem {
      */
     init(file, lastBytesReceived) {
         this.id = file.id;
+        this.byExtensionId = file.byExtensionId;
+        this.byExtensionName = file.byExtensionName;
         this.url = file.url;
         this.referrer = file.referrer;
         this.filename = file.filename;
