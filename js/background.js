@@ -86,7 +86,7 @@ let downloading = false;
 chrome.downloads.onCreated.addListener(downloadItemInfo => {
     let existItem = downloadingItems.find(item => item.id === downloadItemInfo.id);
     let downloadItem = new DownloadItem(downloadItemInfo);
-    if (!existItem && downloadItemInfo.state !== 'complete' && downloadItemInfo.state !== 'interrupted') {
+    if (!existItem && downloadItemInfo.state !== State.complete && downloadItemInfo.state !== State.interrupted) {
         downloadingItems.push(downloadItem);
     }
     startPolling();
