@@ -4,12 +4,12 @@ import DownloadItem from "./module/DownloadItem.js";
 import DownloadDelta from "./module/DownloadDelta.js";
 import Util from "./module/Util.js";
 import Icon from "./module/Icon.js";
-import AudioPlayer from "./module/AudioPlayer.js";
+// import AudioPlayer from "./module/AudioPlayer.js";
 
 chrome.downloads.setShelfEnabled(false);
 
 /**
- * browserAction的图标
+ * action的图标
  * @type {Icon}
  */
 let icon = new Icon();
@@ -18,7 +18,7 @@ let icon = new Icon();
  * 播放下载完成的声音
  * @type {AudioPlayer}
  */
-let audio = new AudioPlayer();
+// let audio = new AudioPlayer();
 
 /**
  * 定时获取下载进度
@@ -467,7 +467,7 @@ function setActionIcon(results) {
             receivedSize += downloadItem.bytesReceived;
         });
         results = results.filter(item => !Util.emptyString(item.filename));
-        chrome.browserAction.setBadgeText({
+        chrome.action.setBadgeText({
             text: results.length === 0 ? '' : (results.length + '')
         });
         if (results.length === 0) {
@@ -508,8 +508,8 @@ function createDownloadItem(downloadDelta) {
  * 播放下载完成声音
  */
 function playSound() {
-    if (sound === 'on')
-        audio.play();
+    // if (sound === 'on')
+    //     audio.play();
 }
 
 function watchDarkModeChange() {

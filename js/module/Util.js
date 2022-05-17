@@ -218,7 +218,8 @@ class Util {
      * @returns {boolean} true - 深色模式，false - 浅色模式
      */
     static isDark() {
-        return window.matchMedia("(prefers-color-scheme: dark)").matches;
+        return false;
+        // return window.matchMedia("(prefers-color-scheme: dark)").matches;
     }
 }
 

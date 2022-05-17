@@ -1,69 +1,53 @@
 import Util from './Util.js'
 
 class Icon {
-    static normalGrayIconImage = '/img/icon_gray.png';
-    static normalLightIconImage = '/img/icon_light.png';
-    static downloadingIconImage = '/img/icon_green.png';
+    /**
+     * 下载中图标颜色
+     * @type {string}
+     */
+    #green = '#11c54b';
 
     /**
-     * 图标宽
+     * 浅色模式下图标颜色
+     * @type {string}
+     */
+    #gray = '#5b5b5b';
+
+    /**
+     * 深色模式下图标颜色
+     * @type {string}
+     */
+    #light = '#ebedef';
+
+    /**
+     * 图标宽，由于svg是按128x128生成，所以这个写死128
      * @type {number}
      */
-    iconWith = 128;
+    #iconWith = 128;
 
     /**
-     * 图标高
+     * 图标高，由于svg是按128x128生成，所以这个写死128
      * @type {number}
      */
-    iconHeight = 128;
+    #iconHeight = 128;
 
     /**
-     * 灰色图标（用于浏览器浅色模式）
-     * @type {HTMLImageElement}
+     * 图标svg路径，尺寸为128x128
+     * @type {Path2D}
      */
-    normalGrayIconImage = new Image();
-
-    /**
-     * 浅色图标（用于浏览器深色模式）
-     * @type {HTMLImageElement}
-     */
-    normalLightIconImage = new Image();
-
-    /**
-     * 下载时图标（用于绘制进度）
-     * @type {HTMLImageElement}
-     */
-    downloadingIconImage = new Image();
+    #path = new Path2D('M 59.583 99.118 L 16.168 55.626 C 13.784 53.244 13.784 49.326 16.168 46.942 C 18.55 44.561 22.468 44.561 24.851 46.942 L 57.815 79.907 L 57.815 8.676 C 57.815 5.295 60.581 2.528 63.963 2.528 C 67.343 2.528 70.111 5.295 70.111 8.676 L 70.111 79.907 L 103.149 47.017 C 105.533 44.636 109.453 44.636 111.834 47.017 C 114.215 49.402 114.215 53.321 111.834 55.702 L 68.342 99.193 C 68.113 99.503 67.726 99.732 67.421 99.962 L 66.959 100.193 C 66.729 100.27 66.574 100.422 66.344 100.501 C 66.115 100.578 65.961 100.578 65.729 100.653 C 65.576 100.731 65.345 100.807 65.192 100.807 C 64.73 100.885 64.422 100.961 63.963 100.961 C 63.5 100.961 63.115 100.885 62.734 100.807 C 62.501 100.807 62.35 100.731 62.194 100.653 C 61.965 100.578 61.812 100.501 61.581 100.422 C 61.349 100.347 61.196 100.193 60.967 100.116 L 60.505 99.887 C 60.198 99.654 59.889 99.424 59.583 99.118 Z M 106.993 113.179 C 110.375 113.179 113.14 115.946 113.14 119.325 C 113.14 122.706 110.375 125.473 106.993 125.473 L 20.93 125.473 C 17.55 125.473 14.784 122.706 14.784 119.325 C 14.784 115.946 17.55 113.179 20.93 113.179 L 106.993 113.179 Z');
 
     /**
      * canvas绘图画布，用于绘图
      * @type {HTMLCanvasElement}
      */
-    canvas = document.createElement("canvas");
+    canvas = new OffscreenCanvas(this.#iconWith, this.#iconHeight);
 
     /**
      * context绘图上下文，用于绘图
-     * @type {CanvasRenderingContext2D | null}
+     * @type {CanvasRenderingContext2D}
      */
     context = this.canvas.getContext('2d');
-
-    /**
-     * 浅色模式下的图标是否已加载
-     * @type {boolean}
-     */
-    #grayIconLoaded = false;
-
-    /**
-     * 深色模式下的图标是否已加载
-     * @type {boolean}
-     */
-    #lightIconLoaded = false;
-
-    /**
-     * 下载中图标是否已加载
-     * @type {boolean}
-     */
-    #downloadingIconLoaded = false;
 
     /**
      * 下载总进度
@@ -84,32 +68,8 @@ class Icon {
     #iconProgress = 'off';
 
     constructor() {
-        this.normalGrayIconImage.src = Icon.normalGrayIconImage;
-        this.normalLightIconImage.src = Icon.normalLightIconImage;
-        this.downloadingIconImage.src = Icon.downloadingIconImage;
-        this.canvas.width = this.iconWith;
-        this.canvas.height = this.iconHeight;
 
-        //以下用于防止在icon被创建后，图标未完全加载，却执行了drawProcessIcon，导致未给浏览器的browserAction正确的绘制icon
-        let that = this;
-        this.normalGrayIconImage.onload = function () {
-            that.#grayIconLoaded = true;
-            if (that.#lightIconLoaded && that.#downloadingIconLoaded) {
-                that.drawProcessIcon(that.#percent, that.#iconProgress, that.#iconType);
-            }
-        }
-        this.normalLightIconImage.onload = function () {
-            that.#lightIconLoaded = true;
-            if (that.#grayIconLoaded && that.#downloadingIconLoaded) {
-                that.drawProcessIcon(that.#percent, that.#iconProgress, that.#iconType);
-            }
-        }
-        this.downloadingIconImage.onload = function () {
-            that.#downloadingIconLoaded = true;
-            if (that.#grayIconLoaded && that.#lightIconLoaded) {
-                that.drawProcessIcon(that.#percent, that.#iconProgress, that.#iconType);
-            }
-        }
+
     }
 
     /**
@@ -117,21 +77,28 @@ class Icon {
      * @param percent 进度，0 - 1.0
      */
     #drawGreenIcon(percent) {
-        this.context.drawImage(this.downloadingIconImage, 0, 0, this.iconWith, this.iconHeight * percent, 0, 0, this.iconWith, this.iconHeight * percent);
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.context.fillStyle = this.#green;
+        this.context.fill(this.#path);
+        this.context.fillRect(this.downloadingIconImage, 0, 0, this.iconWith, this.iconHeight * percent, 0, 0, this.iconWith, this.iconHeight * percent);
     }
 
     /**
      * 浅色模式下进度图标的背景
      */
     #drawDarkIcon() {
-        this.context.drawImage(this.normalGrayIconImage, 0, 0, this.iconWith, this.iconHeight);
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.context.fillStyle = this.#gray;
+        this.context.fill(this.#path);
     }
 
     /**
      * 深色模式下进度图标的背景
      */
     #drawLightIcon() {
-        this.context.drawImage(this.normalLightIconImage, 0, 0, this.iconWith, this.iconHeight);
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.context.fillStyle = this.#light;
+        this.context.fill(this.#path);
     }
 
     /**
@@ -145,7 +112,6 @@ class Icon {
         this.#iconType = iconType;
         this.#iconProgress = iconProgress;
         iconType = Util.emptyString(iconType) ? 'light' : iconType;
-        this.context.clearRect(0, 0, this.iconWith, this.iconHeight);
         if (iconType === 'auto') {
             if (Util.isDark()) {
                 this.#drawLightIcon();
@@ -160,9 +126,8 @@ class Icon {
         if (percent > 0) {
             this.#drawGreenIcon(iconProgress === 'on' ? percent : 1);
         }
-
-        chrome.browserAction.setIcon({
-            imageData: this.context.getImageData(0, 0, this.iconWith, this.iconHeight)
+        chrome.action.setIcon({
+            imageData: this.context.getImageData(0, 0, this.canvas.width, this.canvas.height)
         });
     }
 }
