@@ -5,7 +5,6 @@ import DownloadDelta from "./module/DownloadDelta.js";
 import Util from "./module/Util.js";
 import Icon from "./module/Icon.js";
 import IconType from "./module/IconType.js";
-// import AudioPlayer from "./module/AudioPlayer.js";
 
 chrome.downloads.setShelfEnabled(false);
 
@@ -14,12 +13,6 @@ chrome.downloads.setShelfEnabled(false);
  * @type {Icon}
  */
 let icon = new Icon();
-
-/**
- * 播放下载完成的声音
- * @type {AudioPlayer}
- */
-// let audio = new AudioPlayer();
 
 /**
  * 定时获取下载进度
@@ -510,25 +503,19 @@ function createDownloadItem(downloadDelta) {
  */
 function playSound() {
     if (sound === 'on') {
-        // audio.play();
         let url = chrome.runtime.getURL('audio.html');
-
-        // set this string dynamically in your code, this is just an example
-        // this will play success.wav at half the volume and close the popup after a second
-
         chrome.windows.create({
             type: 'popup',
             focused: false,
             top: 0,
             left: 0,
-            height: 0,
-            width: 0,
+            height: 1,
+            width: 1,
             url,
         })
     }
 }
 
-playSound();
 
 function watchDarkModeChange() {
     //每秒检测深色模式情况

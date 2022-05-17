@@ -17,9 +17,6 @@
   "default_locale": "zh_CN",
   "manifest_version": 3,
   "name": "__MSG_extName__",
-  "optional_permissions": [
-    "management"
-  ],
   "short_name": "__MSG_extShortName__",
   "permissions": [
     "downloads",
@@ -27,7 +24,8 @@
     "downloads.shelf",
     "notifications",
     "background",
-    "storage"
+    "storage",
+    "management"
   ],
   "options_page": "options.html",
   "version": "1.11.14",
