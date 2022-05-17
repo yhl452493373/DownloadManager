@@ -89,8 +89,7 @@ document.querySelectorAll("input[name=downloadNotice]").forEach(input => {
             if (notices.length === 0)
                 document.querySelector("input[name=downloadNotice][value=off]").checked = true;
         }
-        chrome.storage.sync.set(
-            {
+        chrome.storage.sync.set({
                 downloadNotice: notices
             }, function () {
             }
@@ -108,7 +107,7 @@ document.querySelectorAll("input[name=alsoDeleteFile]").forEach(input => {
         chrome.storage.sync.set({
             alsoDeleteFile: alsoDeleteFile
         });
-            chrome.runtime.sendMessage({
+        chrome.runtime.sendMessage({
             method: 'alsoDeleteFile',
             data: alsoDeleteFile
         });

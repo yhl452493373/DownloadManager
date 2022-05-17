@@ -212,12 +212,16 @@ class Util {
     }
 
     /**
-     * 是否深色模式
-     * @returns {boolean} true - 深色模式，false - 浅色模式
+     * 响应消息给发送端。在消息接收端都要调用这个方法，否则会出现 The message port closed before a response was received 异常。
+     * 具体参考：https://blog.csdn.net/m0_37729058/article/details/89186257
+     * @param response 接收端的response
+     * @param data {*?}
      */
-    static isDark() {
-        // return window.matchMedia("(prefers-color-scheme: dark)").matches;
-        return false;
+    static responseMessage(response, data) {
+        if (data == null)
+            response({received: true});
+        else
+            response(data);
     }
 }
 

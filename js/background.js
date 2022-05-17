@@ -246,11 +246,14 @@ chrome.downloads.search({}, results => {
 chrome.runtime.onMessage.addListener((request, sender, response) => {
     if (request.method === 'pollProgress') {
         startPolling();
+        Util.responseMessage(response);
     } else if (request.method === 'cacheIcon') {
         cacheIcon(request.data);
+        Util.responseMessage(response);
     } else if (request.method === 'deleteIconCache') {
         //删除已缓存的图标
         delete itemIcons[request.data];
+        Util.responseMessage(response);
     } else if (request.method === 'changeActionIcon') {
         //main,options页面请求
         if (typeof request.data === "string") {
@@ -259,21 +262,28 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
             removeNotDownloadingItem(request.data);
         }
         changeActionIcon();
+        Util.responseMessage(response);
     } else if (request.method === 'changeNotice') {
         //options页面请求
         notice = request.data;
+        Util.responseMessage(response);
     } else if (request.method === 'changeSound') {
         //options页面请求
         sound = request.data;
+        Util.responseMessage(response);
     } else if (request.method === 'alsoDeleteFile') {
         //options页面请求
         deleteFile = request.data;
+        Util.responseMessage(response);
     } else if (request.method === 'alsoDeleteFileState') {
         //main页面获取deleteFile状态
-        response(deleteFile);
+        Util.responseMessage(response, deleteFile);
     } else if (request.method === 'iconProgress') {
         //options页面请求
         iconProgress = request.data;
+        Util.responseMessage(response);
+    } else {
+        Util.responseMessage(response);
     }
 });
 
@@ -323,7 +333,7 @@ function restoreOption() {
             sound = obj.downloadSound;
             deleteFile = obj.alsoDeleteFile;
             iconProgress = obj.iconProgress;
-            icon.drawProcessIcon(0, iconProgress, iconType);
+            updateIcon();
         }
     );
 }
@@ -512,18 +522,31 @@ function playSound() {
             height: 1,
             width: 1,
             url,
-        })
+        });
     }
 }
 
-
-function watchDarkModeChange() {
-    //每秒检测深色模式情况
-    setInterval(changeIcon, 1000);
+function updateIcon() {
+    if (iconType === IconType.auto) {
+        let url = chrome.runtime.getURL('darkmode.html');
+        chrome.windows.create({
+            type: 'popup',
+            focused: false,
+            top: 0,
+            left: 0,
+            height: 1,
+            width: 1,
+            url,
+        });
+    }
+    changeIcon();
 }
 
-watchDarkModeChange();
+// function watchDarkModeChange() {
+//     //每秒检测深色模式情况
+//     setInterval(changeIcon, 1000);
+// }
+//
+// watchDarkModeChange();
 restoreOption();
 startPolling();
-
-

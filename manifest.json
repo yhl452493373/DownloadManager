@@ -24,8 +24,7 @@
     "downloads.shelf",
     "notifications",
     "background",
-    "storage",
-    "management"
+    "storage"
   ],
   "options_page": "options.html",
   "version": "1.11.14",
