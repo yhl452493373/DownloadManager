@@ -1,5 +1,6 @@
-class Enum {
+import Util from "./Util.js";
 
+class Enum {
     /**
      *
      * @param code {string|boolean|number}
@@ -7,7 +8,10 @@ class Enum {
      */
     constructor(code, name) {
         this.code = code;
-        this.name = name;
+        if(Util.emptyString(name))
+            this.name = code;
+        else
+            this.name = name;
     }
 
     toString() {

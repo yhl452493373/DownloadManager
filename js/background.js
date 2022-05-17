@@ -4,6 +4,7 @@ import DownloadItem from "./module/DownloadItem.js";
 import DownloadDelta from "./module/DownloadDelta.js";
 import Util from "./module/Util.js";
 import Icon from "./module/Icon.js";
+import IconType from "./module/IconType.js";
 // import AudioPlayer from "./module/AudioPlayer.js";
 
 chrome.downloads.setShelfEnabled(false);
@@ -46,9 +47,9 @@ let pollProgressRunning = false;
 
 /**
  * 常规情况下，浏览器中的图标
- * @type {string}
+ * @type {IconType}
  */
-let iconType = 'auto';
+let iconType = IconType.auto;
 
 /**
  * 是否开启通知
@@ -260,7 +261,7 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
     } else if (request.method === 'changeActionIcon') {
         //main,options页面请求
         if (typeof request.data === "string") {
-            iconType = request.data
+            iconType = IconType.toEnum(request.data);
         } else if (typeof request.data === 'number') {
             removeNotDownloadingItem(request.data);
         }
@@ -318,13 +319,13 @@ function changeIcon() {
 function restoreOption() {
     chrome.storage.sync.get(
         {
-            iconType: 'auto',
+            iconType: IconType.auto.toString(),
             downloadNotice: 'off',
             downloadSound: 'off',
             alsoDeleteFile: 'off',
             iconProgress: 'off'
         }, function (obj) {
-            iconType = obj.iconType;
+            iconType = IconType.toEnum(obj.iconType);
             notice = obj.downloadNotice;
             sound = obj.downloadSound;
             deleteFile = obj.alsoDeleteFile;
@@ -508,9 +509,26 @@ function createDownloadItem(downloadDelta) {
  * 播放下载完成声音
  */
 function playSound() {
-    // if (sound === 'on')
-    //     audio.play();
+    if (sound === 'on') {
+        // audio.play();
+        let url = chrome.runtime.getURL('audio.html');
+
+        // set this string dynamically in your code, this is just an example
+        // this will play success.wav at half the volume and close the popup after a second
+
+        chrome.windows.create({
+            type: 'popup',
+            focused: false,
+            top: 0,
+            left: 0,
+            height: 0,
+            width: 0,
+            url,
+        })
+    }
 }
+
+playSound();
 
 function watchDarkModeChange() {
     //每秒检测深色模式情况

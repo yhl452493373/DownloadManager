@@ -209,7 +209,7 @@ function downloadStart(urls, index = 0, maxToastDuration) {
     });
 }
 
-chrome.runtime.onMessage.addListener(request => {
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.method === 'updateProgress') {
         request.data.forEach(downloadItem => {
             //此处的downloadItem为background传递过来的downloadItem，为一个json格式数据，需要转为DownloadItem对象
@@ -532,6 +532,6 @@ if (chrome.i18n.getUILanguage().indexOf('en') === 0) {
     $('#downloadFolder').addClass('en-download-folder');
 }
 
-
+//如果是edge，则配色尽量靠近edge
 if (navigator.userAgent.indexOf('Edg/') !== -1)
     $('.header,.body,.contextmenu,.popup-modal').addClass('edge');

@@ -1,3 +1,5 @@
+import IconType from "./module/IconType.js";
+
 document.querySelector('title').innerText = chrome.i18n.getMessage('options');
 document.querySelector('#iconType').innerText = chrome.i18n.getMessage('iconType') + ':';
 document.querySelector('#iconAuto').innerText = chrome.i18n.getMessage('iconAuto');
@@ -19,7 +21,7 @@ document.querySelector('#iconProgressOff').innerText = chrome.i18n.getMessage('s
 document.querySelector('#iconProgressOn').innerText = chrome.i18n.getMessage('showProgressOnIconOn');
 
 chrome.storage.sync.get({
-        iconType: 'auto',
+        iconType: IconType.auto.toString(),
         downloadSound: 'off',
         downloadNotice: 'off',
         alsoDeleteFile: 'off',
@@ -52,7 +54,6 @@ document.querySelectorAll("input[name=iconType]").forEach(input => {
         });
     };
 });
-
 
 document.querySelectorAll("input[name=downloadSound]").forEach(input => {
     input.onchange = function () {
@@ -107,7 +108,7 @@ document.querySelectorAll("input[name=alsoDeleteFile]").forEach(input => {
         chrome.storage.sync.set({
             alsoDeleteFile: alsoDeleteFile
         });
-        chrome.runtime.sendMessage({
+            chrome.runtime.sendMessage({
             method: 'alsoDeleteFile',
             data: alsoDeleteFile
         });

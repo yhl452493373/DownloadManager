@@ -1,4 +1,5 @@
 import Util from './Util.js'
+import IconType from './IconType.js'
 
 class Icon {
     /**
@@ -57,9 +58,9 @@ class Icon {
 
     /**
      * 图标类型
-     * @type {string}
+     * @type {IconType}
      */
-    #iconType = 'auto';
+    #iconType = IconType.auto;
 
     /**
      * 是否在图标上显示下载进度
@@ -75,12 +76,17 @@ class Icon {
     /**
      * 绘制进度图片
      * @param percent 进度，0 - 1.0
+     * @param iconType {IconType} 图标类型
      */
-    #drawGreenIcon(percent) {
+    #drawGreenIcon(percent, iconType) {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.context.fillStyle = this.#green;
+        let gradient = this.context.createLinearGradient(0, 0, 0, 128);
+        gradient.addColorStop(0, this.#green);
+        gradient.addColorStop(percent, this.#green);
+        gradient.addColorStop(percent, this.#gray);
+        gradient.addColorStop(1, this.#gray);
+        this.context.fillStyle = gradient;
         this.context.fill(this.#path);
-        this.context.fillRect(this.downloadingIconImage, 0, 0, this.iconWith, this.iconHeight * percent, 0, 0, this.iconWith, this.iconHeight * percent);
     }
 
     /**
@@ -105,26 +111,26 @@ class Icon {
      * 绘制进度图标
      * @param percent 进度 0 - 1.0
      * @param iconProgress {string} 是否在浏览器图标上显示下载进度。on-显示，off-不显示
-     * @param iconType {string} 图标类型，auto-自动（未下载时，深色模式为浅色图标，浅色模式为深色图标0，dark-深色图标，light-浅色图标，不传默认浅色
+     * @param iconType {IconType} 图标类型，auto-自动（未下载时，深色模式为浅色图标，浅色模式为深色图标0，dark-深色图标，light-浅色图标，不传默认浅色
      */
     drawProcessIcon(percent, iconProgress, iconType) {
         this.#percent = percent;
         this.#iconType = iconType;
         this.#iconProgress = iconProgress;
-        iconType = Util.emptyString(iconType) ? 'light' : iconType;
-        if (iconType === 'auto') {
+        iconType = Util.emptyString(iconType) ? IconType.light : iconType;
+        if (iconType === IconType.auto) {
             if (Util.isDark()) {
                 this.#drawLightIcon();
             } else {
                 this.#drawDarkIcon();
             }
-        } else if (iconType === 'light') {
+        } else if (iconType === IconType.light) {
             this.#drawLightIcon();
-        } else if (iconType === 'dark') {
+        } else if (iconType === IconType.dark) {
             this.#drawDarkIcon();
         }
         if (percent > 0) {
-            this.#drawGreenIcon(iconProgress === 'on' ? percent : 1);
+            this.#drawGreenIcon(iconProgress === 'on' ? percent : 1, iconType);
         }
         chrome.action.setIcon({
             imageData: this.context.getImageData(0, 0, this.canvas.width, this.canvas.height)
