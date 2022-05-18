@@ -15,6 +15,12 @@ chrome.downloads.setShelfEnabled(false);
 let icon = new Icon();
 
 /**
+ * 设置的图标类型
+ * @type {IconType}
+ */
+let iconType = IconType.auto;
+
+/**
  * 定时获取下载进度
  * @type {number}
  */
@@ -237,48 +243,38 @@ chrome.downloads.search({}, results => {
     });
 });
 
-chrome.runtime.onMessage.addListener((request, sender, response) => {
-    if (request.method === 'pollProgress') {
+chrome.runtime.onMessage.addListener((message, sender, response) => {
+    if (message.method === 'pollProgress') {
         startPolling();
-        Util.responseMessage(response);
-    } else if (request.method === 'cacheIcon') {
-        cacheIcon(request.data);
-        Util.responseMessage(response);
-    } else if (request.method === 'deleteIconCache') {
+    } else if (message.method === 'cacheIcon') {
+        cacheIcon(message.data);
+    } else if (message.method === 'deleteIconCache') {
         //删除已缓存的图标
-        delete itemIcons[request.data];
-        Util.responseMessage(response);
-    } else if (request.method === 'changeActionIcon') {
+        delete itemIcons[message.data];
+    } else if (message.method === 'changeActionIcon') {
         //main,options页面请求
-        if (typeof request.data === "string") {
-            icon.setIconType(IconType.toEnum(request.data))
-        } else if (typeof request.data === 'number') {
-            removeNotDownloadingItem(request.data);
+        if (typeof message.data === "string") {
+            icon.setIconType(IconType.toEnum(message.data));
+        } else if (typeof message.data === 'number') {
+            removeNotDownloadingItem(message.data);
         }
         changeActionIcon();
-        Util.responseMessage(response);
-    } else if (request.method === 'changeNotice') {
+    } else if (message.method === 'changeNotice') {
         //options页面请求
-        notice = request.data;
-        Util.responseMessage(response);
-    } else if (request.method === 'changeSound') {
+        notice = message.data;
+    } else if (message.method === 'changeSound') {
         //options页面请求
-        sound = request.data;
-        Util.responseMessage(response);
-    } else if (request.method === 'alsoDeleteFile') {
+        sound = message.data;
+    } else if (message.method === 'alsoDeleteFile') {
         //options页面请求
-        deleteFile = request.data;
-        Util.responseMessage(response);
-    } else if (request.method === 'alsoDeleteFileState') {
+        deleteFile = message.data;
+    } else if (message.method === 'alsoDeleteFileState') {
         //main页面获取deleteFile状态
-        Util.responseMessage(response, deleteFile);
-    } else if (request.method === 'iconProgress') {
+    } else if (message.method === 'iconProgress') {
         //options页面请求
-        iconProgress = request.data;
-        Util.responseMessage(response);
-    } else {
-        Util.responseMessage(response);
+        iconProgress = message.data;
     }
+    Util.responseMessage(response);
 });
 
 chrome.notifications.onClicked.addListener(id => {
@@ -300,36 +296,56 @@ chrome.notifications.onButtonClicked.addListener((id, index) => {
 });
 
 /**
- * 改变插件在浏览器工具栏中的图标
+ * 恢复配置后执行
+ * @param obj {{}}
  */
-function changeIcon() {
-    if (downloadingItems.length === 0) {
-        if (downloading)
-            return;
-        icon.drawProcessIcon(0, iconProgress);
+function afterRestoreOption(obj) {
+    notice = obj.downloadNotice;
+    sound = obj.downloadSound;
+    deleteFile = obj.alsoDeleteFile;
+    iconProgress = obj.iconProgress;
+    iconType = IconType.toEnum(obj.iconType);
+    if (iconType !== IconType.auto) {
+        icon.setIconType(iconType);
+        changeActionIcon();
+    } else {
+        autoChangeActionIcon();
     }
 }
 
 /**
  * 从云端恢复
  */
-function restoreOption() {
+function restoreOptionFromCloud() {
     chrome.storage.sync.get(
         {
-            iconType: IconType.default.toString(),
+            iconType: IconType.auto.toString(),
             downloadNotice: 'off',
             downloadSound: 'off',
             alsoDeleteFile: 'off',
             iconProgress: 'off'
         }, function (obj) {
-            icon.setIconType(IconType.toEnum(obj.iconType));
-            notice = obj.downloadNotice;
-            sound = obj.downloadSound;
-            deleteFile = obj.alsoDeleteFile;
-            iconProgress = obj.iconProgress;
-            changeIcon();
+            chrome.storage.local.set(obj);
+            afterRestoreOption(obj);
         }
     );
+}
+
+/**
+ * 从本地储存恢复
+ */
+function restoreOptionFromLocal() {
+    chrome.storage.local.get(
+        {
+            iconType: IconType.auto.toString(),
+            downloadNotice: 'off',
+            downloadSound: 'off',
+            alsoDeleteFile: 'off',
+            iconProgress: 'off'
+        }, function (obj) {
+            afterRestoreOption(obj);
+        }
+    )
 }
 
 /**
@@ -434,6 +450,11 @@ function cacheIcon(id, callback) {
  * 根据搜索结果改变浏览器中插件的图标
  */
 function changeActionIcon() {
+    if (downloadingItems.length === 0) {
+        if (downloading)
+            return;
+        icon.drawProcessIcon(0, iconProgress);
+    }
     chrome.downloads.search({state: State.in_progress.code, paused: false}, results => {
         results = results.filter(item => !Util.emptyString(item.filename));
         setActionIcon(results);
@@ -503,7 +524,7 @@ function createDownloadItem(downloadDelta) {
 }
 
 /**
- * 播放下载完成声音
+ * 创建新窗口来播放下载完成声音
  */
 function playSound() {
     if (sound === 'on') {
@@ -520,13 +541,36 @@ function playSound() {
     }
 }
 
+/**
+ * 创建新窗口来根据浏览器模式自动改变图标
+ */
+function autoChangeActionIcon() {
+    if (iconType === IconType.auto) {
+        let url = chrome.runtime.getURL('darkmode.html');
+        chrome.windows.create({
+            type: 'popup',
+            focused: false,
+            top: 0,
+            left: 0,
+            height: 1,
+            width: 1,
+            url,
+        });
+    }
+}
+
+//插件启动时，从本地储存恢复配置
 chrome.runtime.onStartup.addListener(() => {
-    restoreOption();
+    restoreOptionFromLocal();
     startPolling();
 });
 
+//插件安装时，从云端恢复配置
 chrome.runtime.onInstalled.addListener(() => {
-    restoreOption();
+    restoreOptionFromCloud();
     startPolling();
 });
 
+// chrome.windows.onFocusChanged.addListener(() => {
+//     autoChangeActionIcon();
+// });

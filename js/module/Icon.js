@@ -20,12 +20,6 @@ class Icon {
     #light = '#ebedef';
 
     /**
-     * 默认图标颜色
-     * @type {string}
-     */
-    #default = '#2487fa';
-
-    /**
      * 图标宽，由于svg是按128x128生成，所以这个写死128
      * @type {number}
      */
@@ -56,16 +50,10 @@ class Icon {
     #context = this.#canvas.getContext('2d');
 
     /**
-     * 下载总进度
-     * @type {number}
-     */
-    #percent = 0;
-
-    /**
      * 图标类型
      * @type {IconType}
      */
-    #iconType = IconType.auto;
+    #iconType = IconType.dark;
 
     /**
      * 是否在图标上显示下载进度
@@ -92,9 +80,6 @@ class Icon {
         } else if (this.#iconType === IconType.dark) {
             gradient.addColorStop(percent, this.#dark);
             gradient.addColorStop(1, this.#dark)
-        } else {
-            gradient.addColorStop(percent, this.#default);
-            gradient.addColorStop(1, this.#default);
         }
 
         this.#context.fillStyle = gradient;
@@ -106,7 +91,7 @@ class Icon {
      */
     #drawNormalIcon() {
         this.#context.clearRect(0, 0, this.#canvas.width, this.#canvas.height);
-        this.#context.fillStyle = this.#iconType === IconType.dark ? this.#dark : this.#iconType === IconType.light ? this.#light : this.#default;
+        this.#context.fillStyle = this.#iconType === IconType.dark ? this.#dark : this.#light;
         this.#context.fill(this.#path);
     }
 
@@ -115,7 +100,15 @@ class Icon {
      * @param iconType {IconType} 图标类型
      */
     setIconType(iconType) {
-        this.#iconType = iconType == null ? IconType.default : iconType;
+        this.#iconType = iconType == null ? IconType.auto : iconType;
+    }
+
+    /**
+     * 获取当前的图标类型
+     * @returns {IconType} 图标类型
+     */
+    getIconType() {
+        return this.#iconType;
     }
 
     /**
@@ -124,7 +117,6 @@ class Icon {
      * @param iconProgress {string} 是否在浏览器图标上显示下载进度。on-显示，off-不显示
      */
     drawProcessIcon(percent, iconProgress) {
-        this.#percent = percent;
         this.#iconProgress = iconProgress;
         if (percent > 0) {
             this.#drawDownloadingIcon(iconProgress === 'on' ? percent : 1);

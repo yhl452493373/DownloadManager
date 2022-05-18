@@ -209,37 +209,29 @@ function downloadStart(urls, index = 0, maxToastDuration) {
     });
 }
 
-chrome.runtime.onMessage.addListener((request, sender, response) => {
-    if (request.method === 'updateProgress') {
-        request.data.forEach(downloadItem => {
+chrome.runtime.onMessage.addListener((message, sender, response) => {
+    if (message.method === 'updateProgress') {
+        message.data.forEach(downloadItem => {
             //此处的downloadItem为background传递过来的downloadItem，为一个json格式数据，需要转为DownloadItem对象
             updateProgress(new DownloadItem(downloadItem, downloadItem.lastBytesReceived));
         });
-        Util.responseMessage(response);
-    } else if (request.method === 'downloadComplete') {
+    } else if (message.method === 'downloadComplete') {
         //此处的request.data为background传递过来的downloadDelta，为一个json格式数据，需要转为DownloadDelta对象
-        downloadComplete(new DownloadDelta(request.data));
-        Util.responseMessage(response);
-    } else if (request.method === 'createDownloadItem') {
+        downloadComplete(new DownloadDelta(message.data));
+    } else if (message.method === 'createDownloadItem') {
         //此处的request.data为background传递过来的downloadItem，为一个json格式数据，需要转为DownloadItem对象
-        createDownloadItem(new DownloadItem(request.data));
-        Util.responseMessage(response);
-    } else if (request.method === 'updateIcon') {
-        updateIcon(request.data);
-        Util.responseMessage(response);
-    } else if (request.method === 'eraseDownloadItem') {
-        eraseDownloadItem(request.data);
-        Util.responseMessage(response);
-    } else if (request.method === 'pauseDownloadItem') {
-        pauseDownloadItem(request.data);
-        Util.responseMessage(response);
-    } else if (request.method === 'cancelDownloadItem') {
+        createDownloadItem(new DownloadItem(message.data));
+    } else if (message.method === 'updateIcon') {
+        updateIcon(message.data);
+    } else if (message.method === 'eraseDownloadItem') {
+        eraseDownloadItem(message.data);
+    } else if (message.method === 'pauseDownloadItem') {
+        pauseDownloadItem(message.data);
+    } else if (message.method === 'cancelDownloadItem') {
         //此处的request.data为background传递过来的downloadDelta，为一个json格式数据，需要转为DownloadDelta对象
-        cancelDownloadItem(new DownloadDelta(request.data));
-        Util.responseMessage(response);
-    } else {
-        Util.responseMessage(response);
+        cancelDownloadItem(new DownloadDelta(message.data));
     }
+    Util.responseMessage(response);
 });
 
 /**

@@ -175,9 +175,9 @@
     "message": "Icon Color",
     "description": "Set plugin icon"
   },
-  "iconDefault": {
-    "message": "Default",
-    "description": "Default icon"
+  "iconAuto": {
+    "message": "Automatic",
+    "description": "Select the icon according to the browser color mode"
   },
   "iconDark": {
     "message": "Dark color",

@@ -175,9 +175,9 @@
     "message": "图标颜色",
     "description": "设置插件图标"
   },
-  "iconDefault": {
-    "message": "默认",
-    "description": "默认图标"
+  "iconAuto": {
+    "message": "自动",
+    "description": "根据浏览器颜色模式选择图标"
   },
   "iconDark": {
     "message": "深色",

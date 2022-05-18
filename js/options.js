@@ -2,7 +2,7 @@ import IconType from "./module/IconType.js";
 
 document.querySelector('title').innerText = chrome.i18n.getMessage('options');
 document.querySelector('#iconType').innerText = chrome.i18n.getMessage('iconType') + ':';
-document.querySelector('#iconDefault').innerText = chrome.i18n.getMessage('iconDefault');
+document.querySelector('#iconAuto').innerText = chrome.i18n.getMessage('iconAuto');
 document.querySelector('#iconDark').innerText = chrome.i18n.getMessage('iconDark');
 document.querySelector('#iconLight').innerText = chrome.i18n.getMessage('iconLight');
 document.querySelector('#downloadSound').innerText = chrome.i18n.getMessage('downloadSound') + ':';
@@ -21,7 +21,7 @@ document.querySelector('#iconProgressOff').innerText = chrome.i18n.getMessage('s
 document.querySelector('#iconProgressOn').innerText = chrome.i18n.getMessage('showProgressOnIconOn');
 
 chrome.storage.sync.get({
-        iconType: IconType.default.toString(),
+        iconType: IconType.auto.toString(),
         downloadSound: 'off',
         downloadNotice: 'off',
         alsoDeleteFile: 'off',
@@ -44,13 +44,17 @@ chrome.storage.sync.get({
 
 document.querySelectorAll("input[name=iconType]").forEach(input => {
     input.onchange = function () {
+        let isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
         let iconType = this.value;
         chrome.storage.sync.set({
             iconType: iconType
         });
+        chrome.storage.local.set({
+            iconType: iconType
+        });
         chrome.runtime.sendMessage({
             method: 'changeActionIcon',
-            data: iconType
+            data: iconType !== IconType.auto.toString() ? iconType : isDarkMode ? IconType.light.toString() : IconType.dark.toString()
         });
     };
 });
@@ -59,6 +63,9 @@ document.querySelectorAll("input[name=downloadSound]").forEach(input => {
     input.onchange = function () {
         let downloadSound = this.value;
         chrome.storage.sync.set({
+            downloadSound: downloadSound
+        });
+        chrome.storage.local.set({
             downloadSound: downloadSound
         });
         chrome.runtime.sendMessage({
@@ -90,10 +97,11 @@ document.querySelectorAll("input[name=downloadNotice]").forEach(input => {
                 document.querySelector("input[name=downloadNotice][value=off]").checked = true;
         }
         chrome.storage.sync.set({
-                downloadNotice: notices
-            }, function () {
-            }
-        );
+            downloadNotice: notices
+        });
+        chrome.storage.local.set({
+            downloadNotice: notices
+        });
         chrome.runtime.sendMessage({
             method: 'changeNotice',
             data: notices
@@ -107,6 +115,9 @@ document.querySelectorAll("input[name=alsoDeleteFile]").forEach(input => {
         chrome.storage.sync.set({
             alsoDeleteFile: alsoDeleteFile
         });
+        chrome.storage.local.set({
+            alsoDeleteFile: alsoDeleteFile
+        });
         chrome.runtime.sendMessage({
             method: 'alsoDeleteFile',
             data: alsoDeleteFile
@@ -118,6 +129,9 @@ document.querySelectorAll("input[name=iconProgress]").forEach(input => {
     input.onchange = function () {
         let iconProgress = this.value;
         chrome.storage.sync.set({
+            iconProgress: iconProgress
+        });
+        chrome.storage.local.set({
             iconProgress: iconProgress
         });
         chrome.runtime.sendMessage({
