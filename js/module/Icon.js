@@ -62,7 +62,15 @@ class Icon {
     #iconProgress = 'off';
 
     constructor() {
+        this.drawNotificationIcon();
+    }
 
+    /**
+     * 设置使用的图标类型
+     * @param iconType {IconType} 图标类型
+     */
+    setIconType(iconType) {
+        this.#iconType = iconType == null ? IconType.auto : iconType;
     }
 
     /**
@@ -95,12 +103,20 @@ class Icon {
         this.#context.fill(this.#path);
     }
 
-    /**
-     * 设置使用的图标类型
-     * @param iconType {IconType} 图标类型
-     */
-    setIconType(iconType) {
-        this.#iconType = iconType == null ? IconType.auto : iconType;
+    static notificationIcon;
+
+    drawNotificationIcon() {
+        let canvas = new OffscreenCanvas(this.#iconWith, this.#iconHeight);
+        let context = canvas.getContext('2d');
+        context.fillStyle = this.#green;
+        context.fill(this.#path);
+        canvas.convertToBlob().then(blob => {
+            let reader = new FileReader();
+            reader.addEventListener('load', () => {
+                Icon.notificationIcon = reader.result;
+            });
+            reader.readAsDataURL(blob);
+        })
     }
 
     /**

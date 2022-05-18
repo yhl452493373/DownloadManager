@@ -106,7 +106,7 @@ chrome.downloads.onChanged.addListener(downloadDeltaInfo => {
                 type: 'basic',
                 title: chrome.i18n.getMessage('downloadStart'),
                 message: chrome.i18n.getMessage('downloadStart') + '：' + Util.filename(downloadDelta.filename.current),
-                iconUrl: itemIcons[downloadDelta.id] && itemIcons[downloadDelta.id].icon || Icon.downloadingIconImage,
+                iconUrl: itemIcons[downloadDelta.id] && itemIcons[downloadDelta.id].icon || Icon.notificationIcon,
                 isClickable: true
             });
         }
@@ -123,7 +123,7 @@ chrome.downloads.onChanged.addListener(downloadDeltaInfo => {
                                 title: chrome.i18n.getMessage('safetyWaring'),
                                 message: Util.filename(results[0].filename),
                                 contextMessage: DangerType.valueOf(downloadDelta.danger.current).name,
-                                iconUrl: itemIcons[downloadDelta.id].icon || Icon.downloadingIconImage,
+                                iconUrl: itemIcons[downloadDelta.id].icon || Icon.notificationIcon,
                                 isClickable: true
                             });
                         }
@@ -152,7 +152,7 @@ chrome.downloads.onChanged.addListener(downloadDeltaInfo => {
                                     type: 'basic',
                                     title: chrome.i18n.getMessage('downloadComplete'),
                                     message: results[0].filename,
-                                    iconUrl: itemIcons[downloadDelta.id].icon || Icon.downloadingIconImage,
+                                    iconUrl: itemIcons[downloadDelta.id].icon || Icon.notificationIcon,
                                     buttons: [{
                                         title: chrome.i18n.getMessage('open'),
                                     }, {
@@ -211,7 +211,7 @@ chrome.downloads.onChanged.addListener(downloadDeltaInfo => {
                         type: 'basic',
                         title: chrome.i18n.getMessage('downloadStart'),
                         message: chrome.i18n.getMessage('downloadStart') + '：' + downloadItem.simpleFilename,
-                        iconUrl: itemIcons[downloadDelta.id].icon || Icon.downloadingIconImage,
+                        iconUrl: itemIcons[downloadDelta.id].icon || Icon.notificationIcon,
                         isClickable: true
                     });
                 }
