@@ -104,14 +104,6 @@ class Icon {
     }
 
     /**
-     * 获取当前的图标类型
-     * @returns {IconType} 图标类型
-     */
-    getIconType() {
-        return this.#iconType;
-    }
-
-    /**
      * 绘制进度图标
      * @param percent 进度 0 - 1.0
      * @param iconProgress {string} 是否在浏览器图标上显示下载进度。on-显示，off-不显示
