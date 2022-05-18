@@ -536,7 +536,7 @@ function playSound() {
             left: 0,
             height: 1,
             width: 1,
-            url,
+            url
         });
     }
 }
@@ -557,7 +557,7 @@ function autoChangeActionIcon() {
                 left: 0,
                 height: 1,
                 width: 1,
-                url,
+                url
             });
         }
     });

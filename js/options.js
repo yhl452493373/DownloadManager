@@ -1,5 +1,11 @@
 import IconType from "./module/IconType.js";
 
+chrome.runtime.getPlatformInfo(platformInfo => {
+    if (platformInfo.os === 'mac') {
+        document.querySelector('#iconAutoLabel').style.display = '';
+    }
+});
+
 document.querySelector('title').innerText = chrome.i18n.getMessage('options');
 document.querySelector('#iconType').innerText = chrome.i18n.getMessage('iconType') + ':';
 document.querySelector('#iconAuto').innerText = chrome.i18n.getMessage('iconAuto');

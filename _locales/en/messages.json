@@ -334,5 +334,13 @@
   "invalidUrl": {
     "message": "Invalid Url",
     "description": "The text of invalid url error"
+  },
+  "audioPageTitle": {
+    "message": "Download Manager - Audio",
+    "description": "The title of audio play page"
+  },
+  "darkmodePageTitle": {
+    "message": "Download Manager - Detect Dark Mode",
+    "description": "The title of dark mode detect page"
   }
 }

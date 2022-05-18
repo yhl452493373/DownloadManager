@@ -334,5 +334,13 @@
   "invalidUrl": {
     "message": "下載地址不正確",
     "description": "下載地址不正確的异常描述文字"
+  },
+  "audioPageTitle": {
+    "message": "下載管理 - 播放提示音",
+    "description": "播放提示音的頁面標題"
+  },
+  "darkmodePageTitle": {
+    "message": "下載管理 - 深色模式檢測",
+    "description": "深色模式檢測的頁面標題"
   }
 }
