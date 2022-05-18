@@ -545,18 +545,22 @@ function playSound() {
  * 创建新窗口来根据浏览器模式自动改变图标
  */
 function autoChangeActionIcon() {
-    if (iconType === IconType.auto) {
-        let url = chrome.runtime.getURL('darkmode.html');
-        chrome.windows.create({
-            type: 'popup',
-            focused: false,
-            top: 0,
-            left: 0,
-            height: 1,
-            width: 1,
-            url,
-        });
-    }
+    chrome.storage.local.get({
+        iconType: IconType.dark.toString(),
+    }, async (obj) => {
+        if (obj.iconType === IconType.auto.toString()) {
+            let url = chrome.runtime.getURL('darkmode.html');
+            chrome.windows.create({
+                type: 'popup',
+                focused: false,
+                top: 0,
+                left: 0,
+                height: 1,
+                width: 1,
+                url,
+            });
+        }
+    });
 }
 
 //插件启动时，从本地储存恢复配置
@@ -571,6 +575,6 @@ chrome.runtime.onInstalled.addListener(() => {
     startPolling();
 });
 
-// chrome.windows.onFocusChanged.addListener(() => {
-//     autoChangeActionIcon();
-// });
+chrome.windows.onFocusChanged.addListener(() => {
+    autoChangeActionIcon();
+});
