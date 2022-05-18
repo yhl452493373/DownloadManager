@@ -39,12 +39,6 @@ let itemIcons = {};
 let pollProgressRunning = false;
 
 /**
- * 常规情况下，浏览器中的图标
- * @type {IconType}
- */
-let iconType = IconType.auto;
-
-/**
  * 是否开启通知
  * @type {string}
  */
@@ -257,7 +251,7 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
     } else if (request.method === 'changeActionIcon') {
         //main,options页面请求
         if (typeof request.data === "string") {
-            iconType = IconType.toEnum(request.data);
+            icon.setIconType(IconType.toEnum(request.data))
         } else if (typeof request.data === 'number') {
             removeNotDownloadingItem(request.data);
         }
@@ -312,7 +306,7 @@ function changeIcon() {
     if (downloadingItems.length === 0) {
         if (downloading)
             return;
-        icon.drawProcessIcon(0, iconProgress, iconType);
+        icon.drawProcessIcon(0, iconProgress);
     }
 }
 
@@ -322,18 +316,18 @@ function changeIcon() {
 function restoreOption() {
     chrome.storage.sync.get(
         {
-            iconType: IconType.auto.toString(),
+            iconType: IconType.default.toString(),
             downloadNotice: 'off',
             downloadSound: 'off',
             alsoDeleteFile: 'off',
             iconProgress: 'off'
         }, function (obj) {
-            iconType = IconType.toEnum(obj.iconType);
+            icon.setIconType(IconType.toEnum(obj.iconType));
             notice = obj.downloadNotice;
             sound = obj.downloadSound;
             deleteFile = obj.alsoDeleteFile;
             iconProgress = obj.iconProgress;
-            updateIcon();
+            changeIcon();
         }
     );
 }
@@ -475,9 +469,9 @@ function setActionIcon(results) {
             text: results.length === 0 ? '' : (results.length + '')
         });
         if (results.length === 0) {
-            icon.drawProcessIcon(0, iconProgress, iconType);
+            icon.drawProcessIcon(0, iconProgress);
         } else {
-            icon.drawProcessIcon(totalSize === 0 ? 0 : totalSize < 0 ? 1 : (receivedSize / totalSize), iconProgress, iconType);
+            icon.drawProcessIcon(totalSize === 0 ? 0 : totalSize < 0 ? 1 : (receivedSize / totalSize), iconProgress);
         }
     }
 }
@@ -526,27 +520,13 @@ function playSound() {
     }
 }
 
-function updateIcon() {
-    if (iconType === IconType.auto) {
-        let url = chrome.runtime.getURL('darkmode.html');
-        chrome.windows.create({
-            type: 'popup',
-            focused: false,
-            top: 0,
-            left: 0,
-            height: 1,
-            width: 1,
-            url,
-        });
-    }
-    changeIcon();
-}
+chrome.runtime.onStartup.addListener(() => {
+    restoreOption();
+    startPolling();
+});
 
-// function watchDarkModeChange() {
-//     //每秒检测深色模式情况
-//     setInterval(changeIcon, 1000);
-// }
-//
-// watchDarkModeChange();
-restoreOption();
-startPolling();
+chrome.runtime.onInstalled.addListener(() => {
+    restoreOption();
+    startPolling();
+});
+

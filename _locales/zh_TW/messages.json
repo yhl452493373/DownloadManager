@@ -175,9 +175,9 @@
     "message": "圖標顏色",
     "description": "設置外掛程式圖標"
   },
-  "iconAuto": {
-    "message": "自動",
-    "description": "根據瀏覽器顏色模式選擇圖標"
+  "iconDefault": {
+    "message": "默認",
+    "description": "默認圖標"
   },
   "iconDark": {
     "message": "深色",

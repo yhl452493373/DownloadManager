@@ -4,7 +4,6 @@
     "type": "module"
   },
   "action": {
-    "default_icon": "img/icon.png",
     "default_popup": "main.html",
     "default_title": "__MSG_extTitle__"
   },
@@ -27,7 +26,7 @@
     "storage"
   ],
   "options_page": "options.html",
-  "version": "1.11.14",
+  "version": "2.0.0",
   "homepage_url": "https://github.com/yhl452493373/DownloadManager",
   "author": "yhl452493373",
   "minimum_chrome_version": "92"

@@ -2,7 +2,7 @@ import IconType from "./module/IconType.js";
 
 document.querySelector('title').innerText = chrome.i18n.getMessage('options');
 document.querySelector('#iconType').innerText = chrome.i18n.getMessage('iconType') + ':';
-document.querySelector('#iconAuto').innerText = chrome.i18n.getMessage('iconAuto');
+document.querySelector('#iconDefault').innerText = chrome.i18n.getMessage('iconDefault');
 document.querySelector('#iconDark').innerText = chrome.i18n.getMessage('iconDark');
 document.querySelector('#iconLight').innerText = chrome.i18n.getMessage('iconLight');
 document.querySelector('#downloadSound').innerText = chrome.i18n.getMessage('downloadSound') + ':';
@@ -21,7 +21,7 @@ document.querySelector('#iconProgressOff').innerText = chrome.i18n.getMessage('s
 document.querySelector('#iconProgressOn').innerText = chrome.i18n.getMessage('showProgressOnIconOn');
 
 chrome.storage.sync.get({
-        iconType: IconType.auto.toString(),
+        iconType: IconType.default.toString(),
         downloadSound: 'off',
         downloadNotice: 'off',
         alsoDeleteFile: 'off',
