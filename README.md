@@ -14,12 +14,27 @@
 
 + 感谢[Harshil783](https://github.com/Harshil783)的英文翻译修正
 + 感谢[gitqwerty777](https://github.com/gitqwerty777)的繁体中文翻译
++ 感谢[Jeremy-Hibiki](https://github.com/Jeremy-Hibiki)的bug修复
 
 ---
-#### 由于采用了ES6的模块写法,因此需要 ***Chrome版本54*** 以上才能运行
+#### 由于2.0把Manifest从原来的V2更新到了V3，为了支持之前的的模块写法,因此需要最低 ***Chrome版本92*** 以上才能运行
 #### 主要用于chrome,chromium,微软的新版edge浏览器
 #### chrome商店地址：[下载管理](https://chrome.google.com/webstore/detail/%E4%B8%8B%E8%BD%BD%E7%AE%A1%E7%90%86/dgoaeahpciglgomkbmfblkcfanpfckhb) 
 #### edge商店地址：[下载管理](https://microsoftedge.microsoft.com/addons/detail/%E4%B8%8B%E8%BD%BD%E7%AE%A1%E7%90%86/oljecelfndgchlbkmodifnpodpialkjo)
+
+---
+
+由于Manifest V3的限制，功能有变动。因为Manifest V3移除了部分HTMLDOM对象，如window，Audio，Image等，导致无法通过直接执行`window.matchMedia("(prefers-color-scheme: dark)").matches`来确定是否是深色模式。为了实现这个功能，每次检测是否深色模式时，必须先打开一个窗口来执行某些代码，然后通过storage或其他方式返回。而播放音频也是同样问题，由于移除了Audio对象，要播放音频，也只能另起窗口。
+
+具体情况请看[这里](https://developer.chrome.com/docs/extensions/mv3/migrating_to_service_workers/#audio_vidio) ，现在播放音视频、检测深色模式等均需要使用`chrome.windows.create`来创建新窗口，在新窗口中执行js代码
+
+在非macOS的系统下，打开窗口会有个弹窗一闪而过（如果是播放音频，还需要等播放音频时长的时间），体验很不好，所以有以下改动：
+
++ 屏蔽非macOS下的自动改变浏览器中插件图标颜色功能。
++ macOS下自动改变浏览器插件图标功能改为浏览器焦点发生改变时执行，以减少打开窗口的次数
++ 图标由原来的png图片文件改为采用`OffscreenCanvas`实时绘制，因此某些情况会出现浏览器中图标一闪而过的情况
+
+
 
 chrome商店和edge商店，因为审核的原因，版本不一定一致。
  
