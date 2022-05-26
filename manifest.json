@@ -23,10 +23,16 @@
     "downloads.shelf",
     "notifications",
     "background",
-    "storage"
+    "storage",
+    "scripting",
+    "tabs"
+  ],
+  "host_permissions": [
+    "*://*/*",
+    "<all_urls>"
   ],
   "options_page": "options.html",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "homepage_url": "https://github.com/yhl452493373/DownloadManager",
   "author": "yhl452493373",
   "minimum_chrome_version": "92"

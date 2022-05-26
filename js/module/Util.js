@@ -212,6 +212,20 @@ class Util {
     }
 
     /**
+     * 发送消息
+     * @param message {{any}} 需要发送的消息,JSON格式
+     * @returns {Promise<{any}>} 第一个参数为响应数据,JSON格式
+     */
+    static sendMessage(message) {
+        return new Promise(resolve => {
+            chrome.runtime.sendMessage(message, response => {
+                console.log(3)
+                resolve(response);
+            });
+        });
+    }
+
+    /**
      * 响应消息给发送端。在消息接收端都要调用这个方法，否则会出现 The message port closed before a response was received 异常。
      * 具体参考：https://blog.csdn.net/m0_37729058/article/details/89186257
      * @param response 接收端的response
@@ -222,6 +236,78 @@ class Util {
             response({received: true});
         else
             response(data);
+    }
+
+    /**
+     * 获取系统类型
+     * @returns {Promise<string>} 第一个参数为系统类型,可选值：mac,win,android,cros,linux,openbsd,fuchsia
+     */
+    static osType() {
+        return new Promise((resolve) => {
+            chrome.runtime.getPlatformInfo(platformInfo => {
+                resolve(platformInfo.os);
+            });
+        })
+    }
+
+    /**
+     * 获取当前窗口是否全屏
+     * @returns {Promise<boolean>}
+     */
+    static isFullScreen() {
+        return new Promise((resolve) => {
+            chrome.windows.getCurrent(window => {
+                resolve(window.state.indexOf("fullscreen") !== -1);
+            });
+        });
+    }
+
+    /**
+     * 获取云端保存的数据
+     * @param getItems 需要获取的数据，键值对形式，key为名称，value为默认值
+     * @returns {Promise<all>}
+     */
+    static getCloudStorage(getItems) {
+        return new Promise(resolve => {
+            chrome.storage.sync.get(getItems, (items) => {
+                resolve(items);
+            });
+        });
+    }
+
+    /**
+     * 云端保存数据
+     * @param setItems 需要保存的数据
+     * @returns {Promise<null>}
+     */
+    static setCloudStorage(setItems) {
+        return new Promise(resolve => {
+            chrome.storage.sync.set(setItems, resolve);
+        });
+    }
+
+    /**
+     * 获取本地保存的数据
+     * @param getItems 需要获取的数据，键值对形式，key为名称，value为默认值
+     * @returns {Promise<all>}
+     */
+    static getLocalStorage(getItems) {
+        return new Promise(resolve => {
+            chrome.storage.local.get(getItems, (items) => {
+                resolve(items);
+            });
+        });
+    }
+
+    /**
+     * 本地保存数据
+     * @param setItems 需要保存的数据
+     * @returns {Promise<null>}
+     */
+    static setLocalStorage(setItems) {
+        return new Promise(resolve => {
+            chrome.storage.local.set(setItems, resolve);
+        });
     }
 }
 

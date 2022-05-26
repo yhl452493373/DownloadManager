@@ -1,10 +1,20 @@
 import IconType from "./module/IconType.js";
+import Util from "./module/Util.js";
+import OSType from "./module/OSType.js";
 
-chrome.runtime.getPlatformInfo(platformInfo => {
-    if (platformInfo.os === 'mac') {
-        document.querySelector('#iconAutoLabel').style.display = '';
-    }
+/**
+ * 操作系统类型
+ * @type {OSType}
+ */
+let osType;
+await Util.osType().then(os => {
+    osType = OSType.toEnum(os);
 });
+
+//非mac隐藏自动改变图标功能
+if (osType === OSType.mac) {
+    document.querySelector('#iconAutoLabel').style.display = '';
+}
 
 document.querySelector('title').innerText = chrome.i18n.getMessage('options');
 document.querySelector('#iconType').innerText = chrome.i18n.getMessage('iconType') + ':';
@@ -26,39 +36,43 @@ document.querySelector('#iconProgress').innerText = chrome.i18n.getMessage('show
 document.querySelector('#iconProgressOff').innerText = chrome.i18n.getMessage('showProgressOnIconOff');
 document.querySelector('#iconProgressOn').innerText = chrome.i18n.getMessage('showProgressOnIconOn');
 
-chrome.storage.sync.get({
-        iconType: IconType.auto.toString(),
-        downloadSound: 'off',
-        downloadNotice: 'off',
-        alsoDeleteFile: 'off',
-        iconProgress: 'off'
-    }, obj => {
-        document.querySelector("input[name=iconType][value=" + obj.iconType + "]").click();
-        document.querySelector("input[name=downloadSound][value=" + obj.downloadSound + "]").click();
-        document.querySelector("input[name=alsoDeleteFile][value=" + obj.alsoDeleteFile + "]").click();
-        document.querySelector("input[name=iconProgress][value=" + obj.iconProgress + "]").click();
-        if (typeof obj.downloadNotice === "string" || obj.downloadNotice.length === 0)
-            document.querySelector("input[name=downloadNotice][value=off]").click();
-        else if (Array.isArray(obj.downloadNotice)) {
-            if (obj.downloadNotice.length > 0)
-                obj.downloadNotice.forEach(value => {
-                    document.querySelector("input[name=downloadNotice][value=" + value + "]").click();
-                });
-        }
+const cloudData = await Util.getCloudStorage({
+    iconType: osType === OSType.mac ? IconType.auto.toString() : IconType.dark.toString(),
+    downloadSound: 'off',
+    downloadNotice: 'off',
+    alsoDeleteFile: 'off',
+    iconProgress: 'off'
+});
+
+//非mac下，原配置为自动改变图标的，改为默认的深色图标
+cloudData.iconType = IconType.toEnum(cloudData.iconType) === IconType.auto ? (osType === OSType.mac ? cloudData.iconType : IconType.dark.toString()) : cloudData.iconType;
+document.querySelector("input[name=iconType][value=" + cloudData.iconType + "]").click();
+document.querySelector("input[name=downloadSound][value=" + cloudData.downloadSound + "]").click();
+document.querySelector("input[name=alsoDeleteFile][value=" + cloudData.alsoDeleteFile + "]").click();
+document.querySelector("input[name=iconProgress][value=" + cloudData.iconProgress + "]").click();
+if (typeof cloudData.downloadNotice === "string" || cloudData.downloadNotice.length === 0)
+    document.querySelector("input[name=downloadNotice][value=off]").click();
+else if (Array.isArray(cloudData.downloadNotice)) {
+    if (cloudData.downloadNotice.length > 0) {
+        cloudData.downloadNotice.forEach(value => {
+            document.querySelector("input[name=downloadNotice][value=" + value + "]").click();
+        });
     }
-);
+}
 
 document.querySelectorAll("input[name=iconType]").forEach(input => {
-    input.onchange = function () {
+    input.onchange = async function () {
         let isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
         let iconType = this.value;
-        chrome.storage.sync.set({
+        await Util.setCloudStorage({
             iconType: iconType
         });
-        chrome.storage.local.set({
+
+        await Util.setLocalStorage({
             iconType: iconType
         });
-        chrome.runtime.sendMessage({
+
+        await Util.sendMessage({
             method: 'changeActionIcon',
             data: iconType !== IconType.auto.toString() ? iconType : isDarkMode ? IconType.light.toString() : IconType.dark.toString()
         });
@@ -66,15 +80,15 @@ document.querySelectorAll("input[name=iconType]").forEach(input => {
 });
 
 document.querySelectorAll("input[name=downloadSound]").forEach(input => {
-    input.onchange = function () {
+    input.onchange = async function () {
         let downloadSound = this.value;
-        chrome.storage.sync.set({
+        await Util.setCloudStorage({
             downloadSound: downloadSound
         });
-        chrome.storage.local.set({
+        await Util.setLocalStorage({
             downloadSound: downloadSound
         });
-        chrome.runtime.sendMessage({
+        await Util.sendMessage({
             method: 'changeSound',
             data: downloadSound
         });
@@ -83,7 +97,7 @@ document.querySelectorAll("input[name=downloadSound]").forEach(input => {
 
 let notices = [];
 document.querySelectorAll("input[name=downloadNotice]").forEach(input => {
-    input.onchange = function () {
+    input.onchange = async function () {
         notices = [];
         if (this.value === 'off') {
             notices = [];
@@ -102,13 +116,13 @@ document.querySelectorAll("input[name=downloadNotice]").forEach(input => {
             if (notices.length === 0)
                 document.querySelector("input[name=downloadNotice][value=off]").checked = true;
         }
-        chrome.storage.sync.set({
+        await Util.setCloudStorage({
             downloadNotice: notices
         });
-        chrome.storage.local.set({
+        await Util.setLocalStorage({
             downloadNotice: notices
         });
-        chrome.runtime.sendMessage({
+        await Util.sendMessage({
             method: 'changeNotice',
             data: notices
         });
@@ -116,15 +130,15 @@ document.querySelectorAll("input[name=downloadNotice]").forEach(input => {
 });
 
 document.querySelectorAll("input[name=alsoDeleteFile]").forEach(input => {
-    input.onchange = function () {
+    input.onchange = async function () {
         let alsoDeleteFile = this.value;
-        chrome.storage.sync.set({
+        await Util.setCloudStorage({
             alsoDeleteFile: alsoDeleteFile
         });
-        chrome.storage.local.set({
+        await Util.setLocalStorage({
             alsoDeleteFile: alsoDeleteFile
         });
-        chrome.runtime.sendMessage({
+        await Util.sendMessage({
             method: 'alsoDeleteFile',
             data: alsoDeleteFile
         });
@@ -132,15 +146,15 @@ document.querySelectorAll("input[name=alsoDeleteFile]").forEach(input => {
 });
 
 document.querySelectorAll("input[name=iconProgress]").forEach(input => {
-    input.onchange = function () {
+    input.onchange = async function () {
         let iconProgress = this.value;
-        chrome.storage.sync.set({
+        await Util.setCloudStorage({
             iconProgress: iconProgress
         });
-        chrome.storage.local.set({
+        await Util.setLocalStorage({
             iconProgress: iconProgress
         });
-        chrome.runtime.sendMessage({
+        await Util.sendMessage({
             method: 'iconProgress',
             data: iconProgress
         });

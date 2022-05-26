@@ -6,5 +6,4 @@ class IconType extends Enum {
     static auto = new IconType("auto");
 }
 
-
 export default IconType

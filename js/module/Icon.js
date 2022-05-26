@@ -1,4 +1,6 @@
 import IconType from './IconType.js'
+import Util from "./Util.js";
+import OSType from "./OSType.js";
 
 class Icon {
     /**
@@ -17,7 +19,7 @@ class Icon {
      * 深色图标颜色
      * @type {string}
      */
-    #light = '#ebedef';
+    #light = '#f1f3f4';
 
     /**
      * 图标宽，由于svg是按128x128生成，所以这个写死128
@@ -61,8 +63,17 @@ class Icon {
      */
     #iconProgress = 'off';
 
+    /**
+     * 操作系统类型
+     * @type {OSType}
+     */
+    #osType;
+
     constructor() {
-        this.drawNotificationIcon();
+        Util.osType().then(os => {
+            this.#osType = OSType.toEnum(os);
+            this.drawNotificationIcon();
+        });
     }
 
     /**
@@ -70,7 +81,7 @@ class Icon {
      * @param iconType {IconType} 图标类型
      */
     setIconType(iconType) {
-        this.#iconType = iconType == null ? IconType.auto : iconType;
+        this.#iconType = iconType == null ? (this.#osType === OSType.mac ? IconType.auto : IconType.dark) : iconType;
     }
 
     /**
@@ -116,7 +127,7 @@ class Icon {
                 Icon.notificationIcon = reader.result;
             });
             reader.readAsDataURL(blob);
-        })
+        });
     }
 
     /**

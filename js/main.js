@@ -20,7 +20,7 @@ let clickedItemId;
  *
  * @param data {{id:number,icon:string?}}
  */
-function updateIcon(data) {
+async function updateIcon(data) {
     if (data.hasOwnProperty('id') && Util.emptyString(data.id))
         return;
     let id = data.id;
@@ -29,7 +29,7 @@ function updateIcon(data) {
         if (item != null)
             item.querySelector('img.icon').src = data.icon;
     } else {
-        chrome.runtime.sendMessage({
+        await Util.sendMessage({
             method: 'cacheIcon',
             data: id
         });
@@ -63,7 +63,7 @@ function downloadComplete(downloadDelta) {
  *
  * @param downloadItem {DownloadItem}
  */
-function createDownloadItem(downloadItem) {
+async function createDownloadItem(downloadItem) {
     let item = Item.of(downloadItem.id);
     if (item == null) {
         item = new Item(downloadItem).render();
@@ -76,18 +76,18 @@ function createDownloadItem(downloadItem) {
             body.insertBefore(item, body.childNodes[0]);
         }
     }
-    updateIcon(downloadItem);
+    await updateIcon(downloadItem);
 }
 
 /**
  *
  * @param id {number}
  */
-function eraseDownloadItem(id) {
+async function eraseDownloadItem(id) {
     let item = Item.of(id);
     if (item != null)
         item.eraseDownloadItem();
-    chrome.runtime.sendMessage({
+    await Util.sendMessage({
         method: 'deleteIconCache',
         data: id
     });
@@ -209,7 +209,11 @@ function downloadStart(urls, index = 0, maxToastDuration) {
     });
 }
 
-chrome.runtime.onMessage.addListener((message, sender, response) => {
+chrome.runtime.onMessage.addListener(async (message, sender, response) => {
+    if (chrome.runtime.lastError) {
+        let msg = chrome.runtime.lastError;
+    }
+
     if (message.method === 'updateProgress') {
         message.data.forEach(downloadItem => {
             //此处的downloadItem为background传递过来的downloadItem，为一个json格式数据，需要转为DownloadItem对象
@@ -220,11 +224,11 @@ chrome.runtime.onMessage.addListener((message, sender, response) => {
         downloadComplete(new DownloadDelta(message.data));
     } else if (message.method === 'createDownloadItem') {
         //此处的request.data为background传递过来的downloadItem，为一个json格式数据，需要转为DownloadItem对象
-        createDownloadItem(new DownloadItem(message.data));
+        await createDownloadItem(new DownloadItem(message.data));
     } else if (message.method === 'updateIcon') {
-        updateIcon(message.data);
+        await updateIcon(message.data);
     } else if (message.method === 'eraseDownloadItem') {
-        eraseDownloadItem(message.data);
+        await eraseDownloadItem(message.data);
     } else if (message.method === 'pauseDownloadItem') {
         pauseDownloadItem(message.data);
     } else if (message.method === 'cancelDownloadItem') {
@@ -240,13 +244,13 @@ chrome.runtime.onMessage.addListener((message, sender, response) => {
 chrome.downloads.search({orderBy: ["-startTime"]}, results => {
     if (results.length > 0)
         Util.getElement('#empty').style.display = 'none';
-    results.forEach(result => {
+    results.forEach(async result => {
         if (Util.emptyString(result.filename))
             return;
         let downloadItem = new DownloadItem(result);
         let item = new Item(downloadItem).render();
         Util.getElement('#body').appendChild(item);
-        updateIcon({
+        await updateIcon({
             id: downloadItem.id
         });
     });
@@ -281,7 +285,7 @@ $(document).on('dblclick', '.item > .type, .item > .info', e => {
     chrome.downloads.open(getDownloadItemId(e.target));
 }).on('click', '.event .icon-delete, .event .reject', e => {
     let id = getDownloadItemId(e.target);
-    chrome.downloads.search({id: id, state: State.in_progress.code}, results => {
+    chrome.downloads.search({id: id, state: State.in_progress.code}, async results => {
         if (results.length > 0) {
             chrome.downloads.cancel(id);
         } else {
@@ -289,7 +293,7 @@ $(document).on('dblclick', '.item > .type, .item > .info', e => {
                 id: id
             });
         }
-        chrome.runtime.sendMessage({
+        await Util.sendMessage({
             method: 'changeActionIcon',
             data: id
         });
@@ -327,22 +331,22 @@ $(document).on('dblclick', '.item > .type, .item > .info', e => {
     chrome.downloads.acceptDanger(getDownloadItemId(e.target));
 }).on('click', '.open-download-folder', e => {
     chrome.downloads.showDefaultFolder();
-}).on('click', '.clear-download-item', e => {
-    chrome.runtime.sendMessage({
+}).on('click', '.clear-download-item', async e => {
+    await Util.sendMessage({
         method: 'alsoDeleteFileState'
-    }, response => {
+    }).then(response => {
         if (response === 'on') {
             chrome.downloads.search({}, results => {
                 results.forEach(result => {
                     //不在下载中，则清空
                     if (State.valueOf(result.state) === State.in_progress)
                         return;
-                    chrome.downloads.removeFile(result.id, function () {
+                    chrome.downloads.removeFile(result.id, async () => {
                         //防止删除的文件未完成，扩展程序管理中报chrome.runtime.lastError
                         if (chrome.runtime.lastError) {
                             //报错为文件已被删除时，直接清除下载项
                             if (chrome.runtime.lastError.message === 'Download file already deleted') {
-                                eraseDownloadItem(result.id);
+                                await eraseDownloadItem(result.id);
                             }
                             chrome.downloads.erase({
                                 id: result.id
