@@ -1,20 +1,5 @@
 import IconType from "./module/IconType.js";
 import Util from "./module/Util.js";
-import OSType from "./module/OSType.js";
-
-/**
- * 操作系统类型
- * @type {OSType}
- */
-let osType;
-await Util.osType().then(os => {
-    osType = OSType.toEnum(os);
-});
-
-//非mac隐藏自动改变图标功能
-if (osType === OSType.mac) {
-    document.querySelector('#iconAutoLabel').style.display = '';
-}
 
 document.querySelector('title').innerText = chrome.i18n.getMessage('options');
 document.querySelector('#iconType').innerText = chrome.i18n.getMessage('iconType') + ':';
@@ -37,15 +22,13 @@ document.querySelector('#iconProgressOff').innerText = chrome.i18n.getMessage('s
 document.querySelector('#iconProgressOn').innerText = chrome.i18n.getMessage('showProgressOnIconOn');
 
 const cloudData = await Util.getCloudStorage({
-    iconType: osType === OSType.mac ? IconType.auto.toString() : IconType.dark.toString(),
+    iconType: IconType.auto.toString(),
     downloadSound: 'off',
     downloadNotice: 'off',
     alsoDeleteFile: 'off',
     iconProgress: 'off'
 });
 
-//非mac下，原配置为自动改变图标的，改为默认的深色图标
-cloudData.iconType = IconType.toEnum(cloudData.iconType) === IconType.auto ? (osType === OSType.mac ? cloudData.iconType : IconType.dark.toString()) : cloudData.iconType;
 document.querySelector("input[name=iconType][value=" + cloudData.iconType + "]").click();
 document.querySelector("input[name=downloadSound][value=" + cloudData.downloadSound + "]").click();
 document.querySelector("input[name=alsoDeleteFile][value=" + cloudData.alsoDeleteFile + "]").click();

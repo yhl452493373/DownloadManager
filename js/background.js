@@ -5,12 +5,8 @@ import DownloadDelta from "./module/DownloadDelta.js";
 import Util from "./module/Util.js";
 import Icon from "./module/Icon.js";
 import IconType from "./module/IconType.js";
-import OSType from "./module/OSType.js";
 
-Util.osType().then(async os => {
-
-    const osType = OSType.toEnum(os);
-
+(async () => {
     // 隐藏下载界面
     await chrome.downloads.setUiOptions({enabled: false});
 
@@ -24,7 +20,7 @@ Util.osType().then(async os => {
      * 设置的图标类型
      * @type {IconType}
      */
-    let iconType = osType === OSType.mac ? IconType.auto : IconType.dark;
+    let iconType = IconType.auto;
 
     /**
      * 定时获取下载进度
@@ -315,7 +311,6 @@ Util.osType().then(async os => {
             deleteFile = obj.alsoDeleteFile;
             iconProgress = obj.iconProgress;
             iconType = IconType.toEnum(obj.iconType);
-            iconType = iconType === IconType.auto ? (osType === OSType.mac ? iconType : IconType.dark) : iconType;
             icon.setIconType(iconType);
             if (iconType !== IconType.auto) {
                 changeActionIcon();
@@ -332,7 +327,7 @@ Util.osType().then(async os => {
     function restoreOptionFromCloud() {
         return new Promise(async resolve => {
             const cloudData = await Util.getCloudStorage({
-                iconType: osType === OSType.mac ? IconType.auto.toString() : IconType.dark.toString(),
+                iconType: IconType.auto.toString(),
                 downloadNotice: 'off',
                 downloadSound: 'off',
                 alsoDeleteFile: 'off',
@@ -350,7 +345,7 @@ Util.osType().then(async os => {
     function restoreOptionFromLocal() {
         return new Promise(async resolve => {
             const localData = await Util.getLocalStorage({
-                iconType: osType === OSType.mac ? IconType.auto.toString() : IconType.dark.toString(),
+                iconType: IconType.auto.toString(),
                 downloadNotice: 'off',
                 downloadSound: 'off',
                 alsoDeleteFile: 'off',
@@ -571,7 +566,7 @@ Util.osType().then(async os => {
      */
     async function autoChangeActionIcon() {
         const localData = await Util.getLocalStorage({
-            iconType: osType === OSType.mac ? IconType.auto.toString() : IconType.dark.toString()
+            iconType: IconType.auto.toString()
         });
         if (localData.iconType === IconType.auto.toString()) {
             await Util.sendMessage({
@@ -580,18 +575,18 @@ Util.osType().then(async os => {
         }
     }
 
-    //插件第一次安装时，从云端恢复配置
+//插件第一次安装时，从云端恢复配置
     chrome.runtime.onInstalled.addListener(async () => {
         await restoreOptionFromCloud();
         startPolling();
     });
 
-    //标签页激活时监听
+//标签页激活时监听
     chrome.tabs.onActivated.addListener(async (activeTabInfo) => {
         await autoChangeActionIcon();
     });
 
-    //窗口焦点改变时，重新绘制图标
+//窗口焦点改变时，重新绘制图标
     chrome.windows.onFocusChanged.addListener(async () => {
         await autoChangeActionIcon();
     });
@@ -599,4 +594,4 @@ Util.osType().then(async os => {
     await createOffscreenDocument();
     await restoreOptionFromLocal();
     startPolling();
-});
+})();

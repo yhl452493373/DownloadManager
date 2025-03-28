@@ -1,6 +1,4 @@
 import IconType from './IconType.js'
-import Util from "./Util.js";
-import OSType from "./OSType.js";
 
 class Icon {
     /**
@@ -63,17 +61,8 @@ class Icon {
      */
     #iconProgress = 'off';
 
-    /**
-     * 操作系统类型
-     * @type {OSType}
-     */
-    #osType;
-
     constructor() {
-        Util.osType().then(os => {
-            this.#osType = OSType.toEnum(os);
-            this.drawNotificationIcon();
-        });
+        this.drawNotificationIcon();
     }
 
     /**
@@ -81,7 +70,7 @@ class Icon {
      * @param iconType {IconType} 图标类型
      */
     setIconType(iconType) {
-        this.#iconType = iconType == null ? (this.#osType === OSType.mac ? IconType.auto : IconType.dark) : iconType;
+        this.#iconType = iconType == null ? IconType.auto : iconType;
     }
 
     /**

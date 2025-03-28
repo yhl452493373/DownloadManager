@@ -238,18 +238,6 @@ class Util {
     }
 
     /**
-     * 获取系统类型
-     * @returns {Promise<string>} 第一个参数为系统类型,可选值：mac,win,android,cros,linux,openbsd,fuchsia
-     */
-    static osType() {
-        return new Promise((resolve) => {
-            chrome.runtime.getPlatformInfo(platformInfo => {
-                resolve(platformInfo.os);
-            });
-        })
-    }
-
-    /**
      * 获取当前窗口是否全屏
      * @returns {Promise<boolean>}
      */
