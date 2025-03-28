@@ -236,6 +236,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, response) => {
         cancelDownloadItem(new DownloadDelta(message.data));
     }
     Util.responseMessage(response);
+    return true;
 });
 
 /**

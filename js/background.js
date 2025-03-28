@@ -11,7 +11,8 @@ Util.osType().then(async os => {
 
     const osType = OSType.toEnum(os);
 
-    chrome.downloads.setShelfEnabled(false);
+    // 隐藏下载界面
+    await chrome.downloads.setUiOptions({enabled: false});
 
     /**
      * action的图标
@@ -283,6 +284,7 @@ Util.osType().then(async os => {
             iconProgress = message.data;
         }
         Util.responseMessage(response);
+        return true;
     });
 
     chrome.notifications.onClicked.addListener(id => {
@@ -318,15 +320,7 @@ Util.osType().then(async os => {
             if (iconType !== IconType.auto) {
                 changeActionIcon();
             } else {
-                if (osType === OSType.mac) {
-                    //mac全屏时，第一次安装默认为深色图标
-                    const isFullScreen = await Util.isFullScreen();
-                    if (isFullScreen) {
-                        iconType = IconType.dark;
-                        icon.setIconType(iconType);
-                    }
-                    await autoChangeActionIcon();
-                }
+                await autoChangeActionIcon();
             }
             resolve();
         });
@@ -543,75 +537,45 @@ Util.osType().then(async os => {
     }
 
     /**
-     * 创建新窗口来播放下载完成声音
+     * 播放音频
      */
     async function playSound() {
-        const isFullScreen = await Util.isFullScreen();
-        //非全屏下才播放声音
-        if (!isFullScreen) {
-            if (sound === 'on') {
-                let url = chrome.runtime.getURL('audio.html');
-                chrome.windows.create({
-                    type: 'popup',
-                    focused: false,
-                    top: 0,
-                    left: 0,
-                    height: 1,
-                    width: 1,
-                    url
-                });
-            }
+        if (sound === 'on') {
+            await Util.sendMessage({
+                method: 'playSound'
+            });
         }
     }
 
     /**
-     * 创建新窗口来根据浏览器模式自动改变图标
+     * 创建离屏窗口来获取深色模式、播放下载完成声音
+     */
+    async function createOffscreenDocument() {
+        try {
+            if (await chrome.offscreen.hasDocument()) {
+                console.log('Offscreen document already exists');
+                return;
+            }
+            await chrome.offscreen.createDocument({
+                url: 'offscreen.html',
+                reasons: ['AUDIO_PLAYBACK', 'MATCH_MEDIA'],
+                justification: 'Play downloaded audio and detect dark mode'
+            });
+        } catch (error) {
+            console.error('Error maintaining offscreen document:', error);
+        }
+    }
+
+    /**
+     * 浏览器模式自动改变图标
      */
     async function autoChangeActionIcon() {
-        const isFullScreen = await Util.isFullScreen();
-        //非全屏下才自动改变图标
-        if (!isFullScreen) {
-            const localData = await Util.getLocalStorage({
-                iconType: osType === OSType.mac ? IconType.auto.toString() : IconType.dark.toString()
-            });
-            if (localData.iconType === IconType.auto.toString()) {
-                let url = chrome.runtime.getURL('darkmode.html');
-                chrome.windows.create({
-                    type: 'popup',
-                    focused: false,
-                    top: 0,
-                    left: 0,
-                    height: 1,
-                    width: 1,
-                    url
-                });
-            }
-        }
-    }
-
-    /**
-     * 当tab切换时，根据浏览器模式自动改变图标
-     */
-    async function autoChangeActionIconByTabId(tabId) {
         const localData = await Util.getLocalStorage({
             iconType: osType === OSType.mac ? IconType.auto.toString() : IconType.dark.toString()
         });
-        if (IconType.toEnum(localData.iconType) === IconType.auto) {
-            chrome.scripting.executeScript({
-                target: {
-                    tabId: tabId
-                },
-                func: () => {
-                    let isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
-                    return new Promise((resolve) => {
-                        resolve(isDarkMode);
-                    });
-                }
-            }, results => {
-                if (results !== undefined) {
-                    icon.setIconType(IconType.toEnum(results[0].result ? IconType.light.toString() : IconType.dark.toString()));
-                    changeActionIcon();
-                }
+        if (localData.iconType === IconType.auto.toString()) {
+            await Util.sendMessage({
+                method: 'detectIconType',
             });
         }
     }
@@ -622,17 +586,17 @@ Util.osType().then(async os => {
         startPolling();
     });
 
-    if (osType === OSType.mac) {
-        //标签页激活时监听
-        chrome.tabs.onActivated.addListener(async (activeTabInfo) => {
-            await autoChangeActionIconByTabId(activeTabInfo.tabId);
-        });
+    //标签页激活时监听
+    chrome.tabs.onActivated.addListener(async (activeTabInfo) => {
+        await autoChangeActionIcon();
+    });
 
-        //窗口焦点改变时，重新绘制图标
-        chrome.windows.onFocusChanged.addListener(async () => {
-            await autoChangeActionIcon();
-        });
-    }
+    //窗口焦点改变时，重新绘制图标
+    chrome.windows.onFocusChanged.addListener(async () => {
+        await autoChangeActionIcon();
+    });
+
+    await createOffscreenDocument();
     await restoreOptionFromLocal();
     startPolling();
 });

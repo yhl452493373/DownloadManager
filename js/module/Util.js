@@ -219,7 +219,6 @@ class Util {
     static sendMessage(message) {
         return new Promise(resolve => {
             chrome.runtime.sendMessage(message, response => {
-                console.log(3)
                 resolve(response);
             });
         });

@@ -4,7 +4,7 @@ class DangerType extends Enum {
 
     static file = new DangerType("file", chrome.i18n.getMessage('fileDanger'));
 
-    static  url = new DangerType('url', chrome.i18n.getMessage('urlDanger'));
+    static url = new DangerType('url', chrome.i18n.getMessage('urlDanger'));
 
     static content = new DangerType('content', chrome.i18n.getMessage('contentDanger'));
 

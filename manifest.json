@@ -19,21 +19,23 @@
   "short_name": "__MSG_extShortName__",
   "permissions": [
     "downloads",
+    "downloads.ui",
     "downloads.open",
     "downloads.shelf",
     "notifications",
     "background",
     "storage",
     "scripting",
-    "tabs"
+    "tabs",
+    "offscreen"
   ],
   "host_permissions": [
     "*://*/*",
     "<all_urls>"
   ],
   "options_page": "options.html",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "homepage_url": "https://github.com/yhl452493373/DownloadManager",
   "author": "yhl452493373",
-  "minimum_chrome_version": "92"
+  "minimum_chrome_version": "109"
 }
