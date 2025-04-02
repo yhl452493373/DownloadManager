@@ -21,12 +21,9 @@
     "downloads",
     "downloads.ui",
     "downloads.open",
-    "downloads.shelf",
     "notifications",
     "background",
     "storage",
-    "scripting",
-    "tabs",
     "offscreen"
   ],
   "host_permissions": [
